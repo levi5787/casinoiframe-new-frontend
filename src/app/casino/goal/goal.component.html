@@ -1,0 +1,926 @@
+<div style="display: flex; flex-wrap: wrap">
+    <div class="center-container">
+        <div class="casino-page-container ball-by-ball goal">
+            <div class="casino-header"><span class="casino-name">Goal<a class="ms-1"><small
+                            (click)="open(rules)">Rules</small></a></span><span
+                    class="casino-rid d-none d-xl-inline-block"><small>Round ID: <span>{{roundId}}</span></small></span>
+            </div>
+            <!-- Mobile nav tab -->
+            <div class="casino-title-header-mobile d-xl-none">
+                <ul class="nav nav-tabs menu-tabs">
+                    <li class="nav-item">
+                        <div (click)="gameTabClicked()" class="nav-link" [class.active]="gametab">Game</div>
+                    </li>
+                    <li class="nav-item">
+                        <div (click)="betTabClicked()" class="nav-link" [class.active]="bettab">Placed Bet
+                            ({{mybets.length}})</div>
+                    </li>
+                </ul>
+                <div class="pe-2">
+                    <span class="casino-rid">Round ID: <span>{{roundId}}</span></span>
+                </div>
+            </div>
+            <!-- Gametab -->
+            <div [class.d-none]="bettab">
+                <div class="casino-video">
+                    <div class="video-box-container">
+                        <div class="casino-video-box">
+                            <iframe [src]="safeURL"></iframe>
+                            <div *ngIf="bounceEnter" class="cricket20ballpopup">
+                                <img src="/img/balls/soccer-ball.png" />
+                                <span>{{ rdesc }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="flipdown" class="flipdown flipdown__theme-dark clock flip-clock-wrapper">
+                        <div class="rotor-group">
+                            <div class="rotor">
+                                <div class="rotor-leaf" [class.flipped]="flipfirst">
+                                    <figure class="rotor-leaf-rear">{{cfirstnum}}</figure>
+                                    <figure class="rotor-leaf-front">{{cfirstnum}}</figure>
+                                </div>
+                                <div class="rotor-top">{{cfirstnum}}</div>
+                                <div class="rotor-bottom">{{cfirstnum}}</div>
+                            </div>
+                            <div class="rotor">
+                                <div class="rotor-leaf" [class.flipped]="flipsecond">
+                                    <figure class="rotor-leaf-rear">{{clastnum}}</figure>
+                                    <figure class="rotor-leaf-front">{{clastnum}}</figure>
+                                </div>
+                                <div class="rotor-top">{{clastnum}}</div>
+                                <div class="rotor-bottom">{{clastnum}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="casino-detail detail-page-container position-relative">
+                    <div class="game-market market-6 container-fluid container-fluid-5" *ngIf="data">
+                        <div class="market-title row row5">Who Will Goal Next?</div>
+                        <div class="market-header row row5">
+                            <div class="col-12 col-md-12 d-none d-md-block">
+                                <div class="market-row">
+                                    <div class="market-nation-detail"></div>
+                                    <div class="market-odd-box back"><b>Back</b></div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4 d-md-none">
+                                <div class="market-row">
+                                    <div class="market-nation-detail"></div>
+                                    <div class="market-odd-box back"><b>Back</b></div>
+                                </div>
+                            </div>
+                            <div class="fancy-min-max-box"></div>
+                        </div>
+                        <div class="market-body row">
+                            <div class="col-12 col-md-12">
+                                <div class="fancy-market" data-title="OPEN">
+                                    <div class="market-row">
+                                        <div class="market-nation-detail">
+                                            <span class="market-nation-name pointer">{{CRdata.nat}}</span>
+                                            <span *ngIf="CRBook.length>0" [class.text-success]="CRBook[1].amount>0"
+                                                [class.text-danger]="CRBook[1].amount<0">{{CRBook[1].amount}}</span>
+                                        </div>
+                                        <div class=" blb-box " [class.suspended-box]="CRdata.gstatus!='OPEN'"
+                                            (click)="openBetForm(placebet,'Cristiano Ronaldo',CRdata.b,'back',1,'Cristiano Ronaldo')">
+                                            <div class="market-odd-box back "><span
+                                                    class="market-odd">{{CRdata.gstatus!='OPEN'?'':CRdata.b}}</span><span
+                                                    class="market-volume">{{CRdata.bs}}</span></div>
+                                        </div>
+                                        <div class="fancy-min-max-box">
+                                            <div class="fancy-min-max"><span class="w-100 d-block">Min:
+                                                    {{CRdata.min}}</span><span class="w-100 d-block">Max:
+                                                    {{CRdata.max|shortNumber}}</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <div class="fancy-market" data-title="OPEN">
+                                    <div class="market-row">
+                                        <div class="market-nation-detail">
+                                            <span class="market-nation-name pointer">{{LMdata.nat}}</span>
+                                            <span *ngIf="LMBook.length>0" [class.text-success]="LMBook[1].amount>0"
+                                                [class.text-danger]="LMBook[1].amount<0">{{LMBook[1].amount}}</span>
+                                        </div>
+                                        <div class=" blb-box " [class.suspended-box]="LMdata.gstatus!='OPEN'"
+                                            (click)="openBetForm(placebet,'Lionel Messi',LMdata.b,'back',2,'Lionel Messi')">
+                                            <div class="market-odd-box back "><span
+                                                    class="market-odd">{{LMdata.gstatus!='OPEN'?'':LMdata.b}}</span><span
+                                                    class="market-volume">{{LMdata.bs}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="fancy-min-max-box">
+                                            <div class="fancy-min-max"><span class="w-100 d-block">Min:
+                                                    {{LMdata.min}}</span><span class="w-100 d-block">Max:
+                                                    {{LMdata.max|shortNumber}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <div class="fancy-market" data-title="OPEN">
+                                    <div class="market-row">
+                                        <div class="market-nation-detail">
+                                            <span class="market-nation-name pointer">{{RLdata.nat}}</span>
+                                            <span *ngIf="RLBook.length>0" [class.text-success]="RLBook[1].amount>0"
+                                                [class.text-danger]="RLBook[1].amount<0">{{RLBook[1].amount}}</span>
+                                        </div>
+                                        <div class=" blb-box " [class.suspended-box]="RLdata.gstatus!='OPEN'"
+                                            (click)="openBetForm(placebet,'Robert Lewandowski',RLdata.b,'back',3,'Robert Lewandowski')">
+                                            <div class="market-odd-box back "><span
+                                                    class="market-odd">{{RLdata.gstatus!='OPEN'?'':RLdata.b}}</span><span
+                                                    class="market-volume">{{RLdata.bs}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="fancy-min-max-box">
+                                            <div class="fancy-min-max"><span class="w-100 d-block">Min:
+                                                    {{RLdata.min}}</span><span class="w-100 d-block">Max:
+                                                    {{RLdata.max|shortNumber}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <div class="fancy-market" data-title="OPEN">
+                                    <div class="market-row">
+                                        <div class="market-nation-detail">
+                                            <span class="market-nation-name pointer">{{NJdata.nat}}</span>
+                                            <span *ngIf="NJBook.length>0" [class.text-success]="NJBook[1].amount>0"
+                                                [class.text-danger]="NJBook[1].amount<0">{{NJBook[1].amount}}</span>
+                                        </div>
+                                        <div class=" blb-box " [class.suspended-box]="NJdata.gstatus!='OPEN'"
+                                            (click)="openBetForm(placebet,'Neymar',NJdata.b,'back',4,'Neymar')">
+                                            <div class="market-odd-box back "><span
+                                                    class="market-odd">{{NJdata.gstatus!='OPEN'?'':NJdata.b}}</span>
+                                                <span class="market-volume">{{NJdata.bs}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="fancy-min-max-box">
+                                            <div class="fancy-min-max"><span class="w-100 d-block">Min:
+                                                    {{NJdata.min}}</span><span class="w-100 d-block">Max:
+                                                    {{NJdata.max|shortNumber}}</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <div class="fancy-market" data-title="OPEN">
+                                    <div class="market-row">
+                                        <div class="market-nation-detail">
+                                            <span class="market-nation-name pointer">{{HKdata.nat}}</span>
+                                            <span *ngIf="HKBook.length>0" [class.text-success]="HKBook[1].amount>0"
+                                                [class.text-danger]="HKBook[1].amount<0">{{HKBook[1].amount}}</span>
+                                        </div>
+                                        <div class=" blb-box " [class.suspended-box]="HKdata.gstatus!='OPEN'"
+                                            (click)="openBetForm(placebet,'Harry Kane',HKdata.b,'back',5,'Harry Kane')">
+                                            <div class="market-odd-box back ">
+                                                <span class="market-odd">{{HKdata.gstatus!='OPEN'?'':HKdata.b}}</span>
+                                                <span class="market-volume">{{HKdata.bs}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="fancy-min-max-box">
+                                            <div class="fancy-min-max"><span class="w-100 d-block">Min:
+                                                    {{HKdata.min}}</span><span class="w-100 d-block">Max:
+                                                    {{HKdata.max|shortNumber}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <div class="fancy-market" data-title="OPEN">
+                                    <div class="market-row">
+                                        <div class="market-nation-detail">
+                                            <span class="market-nation-name pointer">{{ZIdata.nat}}</span>
+                                            <span *ngIf="ZIBook.length>0" [class.text-success]="ZIBook[1].amount>0"
+                                                [class.text-danger]="ZIBook[1].amount<0">{{ZIBook[1].amount}}</span>
+                                        </div>
+                                        <div class=" blb-box " [class.suspended-box]="ZIdata.gstatus!='OPEN'"
+                                            (click)="openBetForm(placebet,'Zlatan Ibrahimovic',ZIdata.b,'back',6,'Zlatan Ibrahimovic')">
+                                            <div class="market-odd-box back "><span
+                                                    class="market-odd">{{ZIdata.gstatus!='OPEN'?'':ZIdata.b}}</span><span
+                                                    class="market-volume">{{ZIdata.bs}}</span></div>
+                                        </div>
+                                        <div class="fancy-min-max-box">
+                                            <div class="fancy-min-max">
+                                                <span class="w-100 d-block">Min:{{ZIdata.min}}</span>
+                                                <span class="w-100 d-block">Max: {{ZIdata.max|shortNumber}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <div class="fancy-market" data-title="OPEN">
+                                    <div class="market-row">
+                                        <div class="market-nation-detail">
+                                            <span class="market-nation-name pointer">{{RuLdata.nat}}</span>
+                                            <span *ngIf="RuLBook.length>0" [class.text-success]="RuLBook[1].amount>0"
+                                                [class.text-danger]="RuLBook[1].amount<0">{{RuLBook[1].amount}}</span>
+                                        </div>
+                                        <div class=" blb-box " [class.suspended-box]="RuLdata.gstatus!='OPEN'"
+                                            (click)="openBetForm(placebet,'Romelu Lukaku',RuLdata.b,'back',7,'Romelu Lukaku')">
+                                            <div class="market-odd-box back "><span
+                                                    class="market-odd">{{RuLdata.gstatus!='OPEN'?'':RuLdata.b}}</span><span
+                                                    class="market-volume">{{RuLdata.bs}}</span></div>
+                                        </div>
+                                        <div class="fancy-min-max-box">
+                                            <div class="fancy-min-max"><span class="w-100 d-block">Min:
+                                                    {{RuLdata.min}}</span><span class="w-100 d-block">Max:
+                                                    {{RuLdata.max|shortNumber}}</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <div class="fancy-market" data-title="OPEN">
+                                    <div class="market-row">
+                                        <div class="market-nation-detail">
+                                            <span class="market-nation-name pointer">{{KMdata.nat}}</span>
+                                            <span *ngIf="KMBook.length>0" [class.text-success]="KMBook[1].amount>0"
+                                                [class.text-danger]="KMBook[1].amount<0">{{KMBook[1].amount}}</span>
+                                        </div>
+                                        <div class=" blb-box " [class.suspended-box]="KMdata.gstatus!='OPEN'"
+                                            (click)="openBetForm(placebet,'Kylian Mbappe',KMdata.b,'back',8,'Kylian Mbappe')">
+                                            <div class="market-odd-box back ">
+                                                <span class="market-odd">{{KMdata.gstatus!='OPEN'?'':KMdata.b}}</span>
+                                                <span class="market-volume">{{KMdata.bs}}</span>
+
+                                            </div>
+                                        </div>
+                                        <div class="fancy-min-max-box">
+                                            <div class="fancy-min-max"><span class="w-100 d-block">Min:
+                                                    {{KMdata.min}}</span><span class="w-100 d-block">Max:
+                                                    {{KMdata.max|shortNumber}}</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <div class="fancy-market" data-title="OPEN">
+                                    <div class="market-row">
+                                        <div class="market-nation-detail">
+                                            <span class="market-nation-name pointer">{{EHdata.nat}}</span>
+                                            <span *ngIf="EHBook.length>0" [class.text-success]="EHBook[1].amount>0"
+                                                [class.text-danger]="EHBook[1].amount<0">{{EHBook[1].amount}}</span>
+                                        </div>
+                                        <div class=" blb-box " [class.suspended-box]="EHdata.gstatus!='OPEN'"
+                                            (click)="openBetForm(placebet,'Erling Haaland',EHdata.b,'back',9,'Erling Haaland')">
+                                            <div class="market-odd-box back ">
+                                                <span class="market-odd">{{EHdata.gstatus!='OPEN'?'':EHdata.b}}</span>
+                                                <span class="market-volume">{{EHdata.bs}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="fancy-min-max-box">
+                                            <div class="fancy-min-max">
+                                                <span class="w-100 d-block">Min: {{EHdata.min}}</span>
+                                                <span class="w-100 d-block">Max: {{EHdata.max|shortNumber}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <div class="fancy-market" data-title="OPEN">
+                                    <div class="market-row">
+                                        <div class="market-nation-detail">
+                                            <span class="market-nation-name pointer">{{NoGoaldata.nat}}</span>
+                                            <span *ngIf="NoGoalBook.length>0"
+                                                [class.text-success]="NoGoalBook[1].amount>0"
+                                                [class.text-danger]="NoGoalBook[1].amount<0">{{NoGoalBook[1].amount}}</span>
+                                        </div>
+                                        <div class=" blb-box " [class.suspended-box]="NoGoaldata.gstatus!='OPEN'"
+                                            (click)="openBetForm(placebet,'No Goal',NoGoaldata.b,'back',10,'No Goal')">
+                                            <div class="market-odd-box back ">
+                                                <span
+                                                    class="market-odd">{{NoGoaldata.gstatus!='OPEN'?'':NoGoaldata.b}}</span>
+                                                <span class="market-volume">{{NoGoaldata.bs}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="fancy-min-max-box">
+                                            <div class="fancy-min-max"><span class="w-100 d-block">Min:
+                                                    {{NoGoaldata.min}}</span><span class="w-100 d-block">Max:
+                                                    {{NoGoaldata.max|shortNumber}}</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="game-market market-6 container-fluid container-fluid-5" *ngIf="data">
+                        <div class="market-title row row5">Method Of Next Goal</div>
+                        <div class="market-header row row5">
+                            <div class="col-12 col-md-12 d-none d-md-block">
+                                <div class="market-row">
+                                    <div class="market-nation-detail"></div>
+                                    <div class="market-odd-box back"><b>Back</b></div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4 d-md-none">
+                                <div class="market-row">
+                                    <div class="market-nation-detail"></div>
+                                    <div class="market-odd-box back"><b>Back</b></div>
+                                </div>
+                            </div>
+                            <div class="fancy-min-max-box"></div>
+                        </div>
+                        <div class="market-body row">
+                            <div class="col-12 col-md-12">
+                                <div class="fancy-market" data-title="OPEN">
+                                    <div class="market-row">
+                                        <div class="market-nation-detail">
+                                            <span class="market-nation-name pointer">{{ShotGoaldata.nat}}</span>
+                                            <span *ngIf="ShotGoalBook.length>0"
+                                                [class.text-success]="ShotGoalBook[1].amount>0"
+                                                [class.text-danger]="ShotGoalBook[1].amount<0">{{ShotGoalBook[1].amount}}</span>
+                                        </div>
+                                        <div class=" blb-box " [class.suspended-box]="ShotGoaldata.gstatus!='OPEN'"
+                                            (click)="openBetForm(placebet,'Shot Goal',ShotGoaldata.b,'back',11,'Shot Goal')">
+                                            <div class="market-odd-box back ">
+                                                <span
+                                                    class="market-odd">{{ShotGoaldata.gstatus!='OPEN'?'':ShotGoaldata.b}}</span>
+                                                <span class="market-volume">{{ShotGoaldata.bs}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="fancy-min-max-box">
+                                            <div class="fancy-min-max">
+                                                <span class="w-100 d-block">Min: {{ShotGoaldata.min}}</span>
+                                                <span class="w-100 d-block">Max: {{ShotGoaldata.max|shortNumber}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <div class="fancy-market" data-title="OPEN">
+                                    <div class="market-row">
+                                        <div class="market-nation-detail">
+                                            <span class="market-nation-name pointer">{{HeaderGoaldata.nat}}</span>
+                                            <span *ngIf="HeaderGoalBook.length>0"
+                                                [class.text-success]="HeaderGoalBook[1].amount>0"
+                                                [class.text-danger]="HeaderGoalBook[1].amount<0">{{HeaderGoalBook[1].amount}}</span>
+                                        </div>
+                                        <div class=" blb-box " [class.suspended-box]="HeaderGoaldata.gstatus!='OPEN'"
+                                            (click)="openBetForm(placebet,'Header Goal',HeaderGoaldata.b,'back',12,'Header Goal')">
+                                            <div class="market-odd-box back ">
+                                                <span
+                                                    class="market-odd">{{HeaderGoaldata.gstatus!='OPEN'?'':HeaderGoaldata.b}}</span>
+                                                <span class="market-volume">{{HeaderGoaldata.bs}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="fancy-min-max-box">
+                                            <div class="fancy-min-max">
+                                                <span class="w-100 d-block">Min: {{HeaderGoaldata.min}}</span>
+                                                <span class="w-100 d-block">Max:
+                                                    {{HeaderGoaldata.max|shortNumber}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <div class="fancy-market" data-title="OPEN">
+                                    <div class="market-row">
+                                        <div class="market-nation-detail">
+                                            <span class="market-nation-name pointer">{{PenaltyGoaldata.nat}}</span>
+                                            <span *ngIf="PenaltyGoalBook.length>0"
+                                                [class.text-success]="PenaltyGoalBook[1].amount>0"
+                                                [class.text-danger]="PenaltyGoalBook[1].amount<0">{{PenaltyGoalBook[1].amount}}</span>
+                                        </div>
+                                        <div class=" blb-box " [class.suspended-box]="PenaltyGoaldata.gstatus!='OPEN'"
+                                            (click)="openBetForm(placebet,'Penalty Goal',PenaltyGoaldata.b,'back',13,'Penalty Goal')">
+                                            <div class="market-odd-box back ">
+                                                <span
+                                                    class="market-odd">{{PenaltyGoaldata.gstatus!='OPEN'?'':PenaltyGoaldata.b}}</span>
+                                                <span class="market-volume">{{PenaltyGoaldata.bs}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="fancy-min-max-box">
+                                            <div class="fancy-min-max">
+                                                <span class="w-100 d-block">Min: {{PenaltyGoaldata.min}}</span>
+                                                <span class="w-100 d-block">Max:
+                                                    {{PenaltyGoaldata.max|shortNumber}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <div class="fancy-market" data-title="OPEN">
+                                    <div class="market-row">
+                                        <div class="market-nation-detail">
+                                            <span class="market-nation-name pointer">{{FreeKickGoaldata.nat}}</span>
+                                            <span *ngIf="FreeKickGoalBook.length>0"
+                                                [class.text-success]="FreeKickGoalBook[1].amount>0"
+                                                [class.text-danger]="FreeKickGoalBook[1].amount<0">{{FreeKickGoalBook[1].amount}}</span>
+                                        </div>
+                                        <div class=" blb-box " [class.suspended-box]="FreeKickGoaldata.gstatus!='OPEN'"
+                                            (click)="openBetForm(placebet,'Free Kick Goal',FreeKickGoaldata.b,'back',14,'Free Kick Goal')">
+                                            <div class="market-odd-box back ">
+                                                <span
+                                                    class="market-odd">{{FreeKickGoaldata.gstatus!='OPEN'?'':FreeKickGoaldata.b}}</span>
+                                                <span class="market-volume">{{FreeKickGoaldata.bs}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="fancy-min-max-box">
+                                            <div class="fancy-min-max">
+                                                <span class="w-100 d-block">Min: {{FreeKickGoaldata.min}}</span>
+                                                <span class="w-100 d-block">Max:
+                                                    {{FreeKickGoaldata.max|shortNumber}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <div class="fancy-market" data-title="OPEN">
+                                    <div class="market-row">
+                                        <div class="market-nation-detail">
+                                            <span class="market-nation-name pointer">{{NoGoaldata1.nat}}</span>
+                                            <span *ngIf="NoGoalBookOne.length>0"
+                                                [class.text-success]="NoGoalBookOne[1].amount>0"
+                                                [class.text-danger]="NoGoalBookOne[1].amount<0">{{NoGoalBookOne[1].amount}}</span>
+                                        </div>
+                                        <div class=" blb-box " [class.suspended-box]="NoGoaldata1.gstatus!='OPEN'"
+                                            (click)="openBetForm(placebet,'No Goal One',NoGoaldata1.b,'back',14,'No Goal One')">
+                                            <div class="market-odd-box back ">
+                                                <span
+                                                    class="market-odd">{{NoGoaldata1.gstatus!='OPEN'?'':NoGoaldata1.b}}</span>
+                                                <span class="market-volume">{{NoGoaldata1.bs}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="fancy-min-max-box">
+                                            <div class="fancy-min-max">
+                                                <span class="w-100 d-block">Min: {{NoGoaldata1.min}}</span>
+                                                <span class="w-100 d-block">Max: {{NoGoaldata1.max|shortNumber}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="casino-remark mt-1">
+                        <div class="remark-icon"><img src="/img/icons/remark.png"></div>
+                        <marquee scrollamount="3">Results are based on stream&nbsp;only</marquee>
+                    </div>
+                    <div class="casino-last-result-title"><span>Last Result</span><span><a
+                                href="/casino-results/goal">View
+                                All</a></span></div>
+                    <div class="casino-last-results">
+                        <span *ngFor="let item of results;trackBy:trackByMid">
+                            <span class="result result-b" (click)="openResult(result,item['mid'])">R</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <!-- Bettab -->
+            <div [class.d-none]="gametab">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Matched Bet</th>
+                                <th class="text-end">Odds</th>
+                                <th class="text-end">Stake</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of mybets" [ngClass]="item.betType">
+                                <td>{{item['selectionName']}}</td>
+                                <td class="text-end">{{item['rate']}}</td>
+                                <td class="text-end">{{item['stake']}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar right-sidebar casino-right-sidebar" [class.sticky]="isSticky">
+        <!-- Placebet Section Desktop -->
+        <div class="sidebar-box place-bet-container position-relative" *ngIf="showbetform">
+            <div *ngIf="placeLoader" id="loader-section">
+                <div id="load-inner">
+                    <i class="fa fa-spinner fa-spin"></i>
+                </div>
+            </div>
+            <div class="sidebar-title">
+                <h4>Place Bet</h4>
+                <!-- <span>Range: 100 to 1L</span> -->
+            </div>
+            <div class="place-bet-box" [ngClass]="betType">
+                <div class="place-bet-box-header">
+                    <div class="place-bet-for">(Bet for)</div>
+                    <div class="place-bet-odds">Odds</div>
+                    <div class="place-bet-stake">Stake</div>
+                    <div class="place-bet-profit">Profit</div>
+                </div>
+                <div class="place-bet-box-body">
+                    <div class="place-bet-for">
+                        <i class="fas fa-times text-danger me-1"></i>
+                        <span>{{betFor}}</span>
+                    </div>
+                    <div class="place-bet-odds">
+                        <input type="text" [(ngModel)]="odds" name="odds" class="form-control" disabled="">
+                    </div>
+                    <div class="place-bet-stake">
+                        <input type="number" [(ngModel)]="stake" (keyup)="calcProfit(stake)" name="stake" maxlength="10"
+                            class="form-control" value="">
+                    </div>
+                    <div class="place-bet-profit"></div>
+                </div>
+                <div class="place-bet-buttons">
+                    <button *ngFor="let button of placebetButton; trackBy:trackByFunc"
+                        (click)="placeStake(button.value)" class="btn btn-place-bet">+{{button.name}}</button>
+                </div>
+                <div class="place-bet-action-buttons">
+                    <div><button (click)="openButtons(setButton)" class="btn btn-info">Edit</button></div>
+                    <div>
+                        <button class="btn btn-danger me-1" (click)="hideBetPlace()">Reset</button>
+                        <button class="btn btn-success" [class.disabled]="!stake"
+                            (click)="submitbet()">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Mybet Desktop -->
+        <div class="sidebar-box my-bet-container">
+            <div class="sidebar-title">
+                <h4>My Bet</h4>
+            </div>
+            <div class="my-bets">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Matched Bet</th>
+                                <th class="text-end">Odds</th>
+                                <th class="text-end">Stake</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of mybets" [ngClass]="item.betType">
+                                <td>{{item['selectionName']}}</td>
+                                <td class="text-end">{{item['rate']}}</td>
+                                <td class="text-end">{{item['stake']}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Results -->
+<ng-template #result let-c="close" let-d="dismiss">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title h4">Goal Result</div><button type="button" class="btn-close" aria-label="Close"
+                (click)="d('Cross click')"></button>
+        </div>
+        <div class="casino-result-modal">
+            <div class="casino-result-round-id"><span><b>Round Id: </b> {{temprId}}</span><span>Match Time:
+                    {{mtime}}</span></div>
+            <div class="row mt-2">
+                <div class="text-center">
+                    <div class="goal-result cricket20ballresult"><img src="/img/balls/soccer-ball.png">
+                        <span>{{tempDesc1}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<!-- Rules -->
+<ng-template #rules let-c="close" let-d="dismiss">
+    <div role="document">
+        <div class="modal-header">
+            <div class="modal-title h4">Goal Rules</div>
+            <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+        </div>
+        <div>
+            <style type="text/css">
+                .rules-section .row.row5 {
+                    margin-left: -5px;
+                    margin-right: -5px;
+                }
+
+                .rules-section .pl-2 {
+                    padding-left: .5rem !important;
+                }
+
+                .rules-section .pr-2 {
+                    padding-right: .5rem !important;
+                }
+
+                .rules-section .pl-4 {
+                    padding-left: 1.5rem !important;
+                }
+
+                .rules-section .pr-4 {
+                    padding-right: 1.5rem !important;
+                }
+
+
+                .rules-section .row.row5>[class*="col-"],
+                .rules-section .row.row5>[class*="col"] {
+                    padding-left: 5px;
+                    padding-right: 5px;
+                }
+
+                .rules-section {
+                    text-align: left;
+                    margin-bottom: 10px;
+                }
+
+                .rules-section .table {
+                    color: #fff;
+                    border: 1px solid #444;
+                    background-color: #222;
+                    font-size: 12px;
+                }
+
+                .rules-section .table td,
+                .rules-section .table th {
+                    border-bottom: 1px solid #444;
+                }
+
+                .rules-section ul li,
+                .rules-section p {
+                    margin-bottom: 5px;
+                }
+
+                .rules-section::-webkit-scrollbar {
+                    width: 8px;
+                }
+
+                .rules-section::-webkit-scrollbar-track {
+                    background: #666666;
+                }
+
+                .rules-section::-webkit-scrollbar-thumb {
+                    background-color: #333333;
+                }
+
+                .rules-section .rules-highlight {
+                    color: #FDCF13;
+                    font-size: 16px;
+                }
+
+                .rules-section .rules-sub-highlight {
+                    color: #FDCF13;
+                    font-size: 14px;
+                }
+
+                .rules-section .list-style,
+                .rules-section .list-style li {
+                    list-style: disc;
+                }
+
+                .rules-section .rule-card {
+                    height: 20px;
+                    margin-left: 5px;
+                }
+
+                .rules-section .card-character {
+                    font-family: Card Characters;
+                }
+
+                .rules-section .red-card {
+                    color: red;
+                }
+
+                .rules-section .black-card {
+                    color: black;
+                }
+
+                .rules-section .cards-box {
+                    background: #fff;
+                    padding: 6px;
+                    display: inline-block;
+                    color: #000;
+                    min-width: 150px;
+                }
+
+                .rules-section img {
+                    max-width: 100%;
+                }
+            </style>
+
+            <div class="rules-section">
+                <h6 class="rules-highlight">1. Objective</h6>
+                <p>The goal of this game is to predict which player or method will result in the next goal, providing
+                    players with exciting opportunities to win big.</p>
+            </div>
+            <br>
+        </div>
+        <div>
+            <div class="rules-section">
+                <h6 class="rules-highlight">2. Betting Options</h6>
+                <ul class="pl-2 pr-2 ">
+                    <li>
+                        <h6 class="rules-sub-highlight">1.Who Will Goal Next?</h6>
+                        <ul class="pl-4 pr-4 list-style">
+                            <li><b>Description:</b> Predict which player (from the available player selection) will
+                                score the next goal.</li>
+                            <li><b>Winning Criteria:</b> If the selected player scores the next goal, the bet is won.
+                            </li>
+                            <li><b>No Goal Condition:</b> If no goal is scored by any player (i.e., the shot is missed
+                                or saved), the bet is considered a No Goal.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <h6 class="rules-sub-highlight">2. Method of the Next Goal</h6>
+                        <ul class="pl-4 pr-4 list-style">
+                            <li><b>Description:</b> Predict the method by which the next goal will be scored. The
+                                following options are available:
+                                <ul class="pl-4 pr-4 list-style">
+                                    <li><b>Header Goal:</b> The goal scorer must use their head to score. The last touch
+                                        on the ball before entering the net must be from the head.</li>
+                                    <li><b>Free-kick Goal:</b> The goal must be scored directly from a free-kick,
+                                        meaning no additional touches are allowed before the ball crosses the goal line.
+                                    </li>
+                                    <li><b>Penalty Goal:</b> The goal must be scored from a penalty, and the penalty
+                                        taker must be the one who scores.</li>
+                                    <li><b>Shot Goal:</b> This includes all other types of goals that are not covered by
+                                        the above categories, including shots from open play, volleys, or any other
+                                        direct goals.</li>
+                                </ul>
+                            </li>
+
+                            <li><b>Winning Criteria:</b> If the goal is scored by the method selected, the bet is won.
+                            </li>
+                            <li><b>No Goal Condition:</b> If the goal attempt fails or is blocked, the bet is considered
+                                a No Goal.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <br>
+        </div>
+        <div>
+            <div class="rules-section">
+                <h6 class="rules-highlight">3. General Rules</h6>
+                <p><b>No Goal Condition:</b> In all instances, if no goal is scored (due to a miss, save, or other
+                    reasons), the bet will be marked as a No Goal.</p>
+                <p><b>Goal Misses or Saved Shots:</b> If a player misses or the shot is saved, bets placed on that
+                    player or method will be settled as No Goal.</p>
+                <p><b>Broadcast Delays:</b> Please note that the video feeds used to confirm goal outcomes may come from
+                    different broadcasters, which can result in a delay in updating the scoreboard. However, the final
+                    result will be determined by our official rules and the video evidence available at the time.</p>
+            </div>
+            <br>
+        </div>
+        <div>
+            <div class="rules-section">
+                <h6 class="rules-highlight">4. Disclaimers</h6>
+                <p><b>Official Decision:</b> In case of any disputes regarding the goal, the casino’s decision based on
+                    video reviews will be final.</p>
+                <p><b>Video Evidence:</b> The casino reserves the right to use available video footage to confirm
+                    whether a goal was scored by the chosen player or method. If the footage is inconclusive, the bet
+                    may be voided and refunded.</p>
+            </div>
+            <br>
+        </div>
+        <div>
+            <div class="rules-section">
+                <h6 class="rules-highlight">5. Terms of Participation</h6>
+                <p>All players must be aware of the potential delay in goal announcements due to broadcast lag.</p>
+                <p>Players accept that the casino's decision is final in the event of any discrepancies.</p>
+                <br>
+                <p class="text-center"><b>"Best of luck! Enjoy the excitement of the casino and win BIG!"</b></p>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<!-- Placebet Section Mobile -->
+<ng-template #placebet let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">Place Bet</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="place-bet-modal casino-bet-modal" [ngClass]="betType">
+        <div *ngIf="placeLoader" id="loader-section">
+          <div id="load-inner">
+            <i class="fa fa-spinner fa-spin"></i>
+          </div>
+        </div>
+        <div class="row row5">
+          <div class="col-6"><b>{{ betFor }}</b></div>
+          <div class="col-6 text-end"><span>Profit:</span></div>
+        </div>
+        <div class="odd-stake-box">
+          <div class="row row5 mt-1">
+            <div class="col-6 text-center">Amount</div>
+            <div class="col-6 text-center">Odds</div>
+          </div>
+          <div class="row row5 mt-1">
+            <div class="col-6"><input type="number" class="stakeinput w-100" [(ngModel)]="stake"
+                (keyup)="calcProfit(stake)" name="stake" maxlength="10" value=""></div>
+            <div class="col-6">
+              <div class="float-end"><input type="text" class="stakeinput" [(ngModel)]="odds" name="odds" disabled=""
+                  value=""></div>
+            </div>
+          </div>
+        </div>
+        <div class="place-bet-buttons mt-1">
+          <button class="btn btn-place-bet" *ngFor="let button of placebetButton; trackBy: trackByFunc"
+            (click)="placeStake(button.value)">+{{ button.name }}</button>
+        </div>
+
+        <div class="mt-1 place-bet-btn-box">
+          <button class="btn btn-link" (click)="resetStake()">clear</button>
+          <button class="btn btn-info" (click)="openButtons(setButton)">Edit</button>
+          <button class="btn btn-danger" (click)="d('Cross click')">Reset</button>
+          <button class="btn btn-success" [class.disabled]="stake <= 1" (click)="submitbet()">Place Bet</button>
+        </div>
+        <div class="mt-3 d-flex justify-content-between align-items-center">
+          <b><span *ngIf="max!=0">Range: {{min}} to {{max | shortNumber}}</span></b>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Set Button Section -->
+<ng-template #setButton let-c="close" let-d="dismiss">
+    <div role="document">
+        <div class="modal-header">
+            <div class="modal-title h4">Set Button Value</div>
+            <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <div class="mt-1 nav nav-pills" role="tablist">
+                <div class="nav-item">
+                    <a role="tab" (click)="clickSetButtonTab('game')" [class.active]="setButtonTab=='game'"
+                        class="nav-link">Game
+                        Buttons
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a role="tab" (click)="clickSetButtonTab('casino')" [class.active]="setButtonTab=='casino'"
+                        class="nav-link">Casino Buttons
+                    </a>
+                </div>
+            </div>
+            <div class="mt-1 tab-content">
+                <div role="tabpanel" class="fade tab-pane show" [class.active]="setButtonTab=='game'">
+                    <form (submit)="updateButtons()">
+                        <div class="row row10">
+                            <div class="mb-1 col-6"><label class="form-label"><b>Price Label:</b></label></div>
+                            <div class="mb-1 col-6"><label class="form-label"><b>Price Value:</b></label></div>
+                        </div>
+                        <div class="row row10" *ngFor="let item of userButtons.gamebutton; let i=index;">
+                            <div class="mb-3 col-6 position-relative">
+                                <input type="text" [name]="'game'+item.name+i" class="form-control"
+                                    [(ngModel)]="item.name">
+                            </div>
+                            <div class="mb-3 col-6 position-relative">
+                                <input type="number" [name]="'game'+item.value+i" class="form-control"
+                                    [(ngModel)]="item.value">
+                            </div>
+                        </div>
+
+                        <div class="row row10">
+                            <div class="mb-3 col-md-6">
+                                <button type="submit" class="btn btn-primary btn-block">Update</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div role="tabpanel" class="fade tab-pane show" [class.active]="setButtonTab=='casino'">
+                    <form (submit)="updateButtons()">
+                        <div class="row row10">
+                            <div class="mb-1 col-6"><label class="form-label"><b>Price Label:</b></label></div>
+                            <div class="mb-1 col-6"><label class="form-label"><b>Price Value:</b></label></div>
+                        </div>
+                        <div class="row row10" *ngFor="let item of userButtons.casinobutton; let i=index;">
+                            <div class="mb-3 col-6 position-relative">
+                                <input type="text" [name]="'casino'+item.name+i" class="form-control"
+                                    [(ngModel)]="item.name">
+                            </div>
+                            <div class="mb-3 col-6 position-relative">
+                                <input type="number" [name]="'casino'+item.value+i" class="form-control"
+                                    [(ngModel)]="item.value">
+                            </div>
+                        </div>
+                        <div class="row row10">
+                            <div class="mb-3 col-md-6 ">
+                                <button type="submit" class="btn btn-primary btn-block">Update</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

@@ -1,0 +1,25 @@
+.navbar-expand .navbar-nav {
+  flex-direction: row;
+}
+
+.navbar-nav {
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style: none;
+}
+
+.withdraw-btn,
+.deposit-btn {
+  padding: 5px 10px;
+  border-radius: 5px;
+
+  margin: 0 10px;
+}
+
+.withdraw-btn a,
+.deposit-btn a {
+  text-decoration: none;
+  color: white;
+}

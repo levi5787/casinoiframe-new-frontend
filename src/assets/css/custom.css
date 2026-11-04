@@ -1,0 +1,471 @@
+.sportsbook iframe {
+  height: calc(100% - 1px);
+}
+
+.sportsbook .slot-iframe.show {
+  top: 125px;
+  height: calc(100vh - 125px);
+}
+
+.PhoneInput input:focus-visible {
+  outline: 0;
+}
+
+.PhoneInput input {
+  border: 0;
+}
+
+.login-auth-box {
+  width: 500px;
+  max-width: 90%;
+}
+
+.login-auth input {
+  padding: 10px;
+  width: 60px !important;
+  height: 60px !important;
+}
+
+.login-auth>div {
+  margin-top: 20px;
+  justify-content: space-between;
+}
+
+.live-casino-bets .game-name {
+  width: 110px;
+}
+
+.live-casino-bets .report-type {
+  width: 70px;
+}
+
+.live-casino-bets .report-amount {
+  width: 70px;
+}
+
+#floater {
+  position: absolute;
+  top: 50vh;
+  right: 0;
+  width: 50px;
+  height: auto;
+  -webkit-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+  z-index: 10001;
+  border-radius: 3px 0 0 3px;
+  padding: 0px;
+  box-shadow: rgb(255 255 255 / 98%) -5px 0px 10px -5px;
+  /* background-color: #41a6d9; */
+  /* color: white; */
+  text-align: center;
+  box-sizing: border-box;
+}
+
+#floater img {
+  width: 50px;
+  height: 50px;
+}
+
+.modal-18plus img {
+  height: 30px;
+}
+
+.login-page {
+  justify-content: flex-start;
+}
+
+.login-box {
+  margin: 2% 0;
+}
+
+.footer.footer-login {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+}
+
+.grecaptcha-badge {
+  visibility: hidden;
+}
+
+.username-text .success-form {
+  width: 100%;
+  text-align: left;
+}
+
+.phnumber-text .success-form {
+  width: 100%;
+  text-align: left;
+}
+
+.blink-message {
+  display: flex;
+  align-items: center;
+  color: var(--text-sidebar);
+  padding: 5px;
+}
+
+.blink-message>div {
+  -moz-animation: blinktext normal 1s infinite ease-in-out;
+  -webkit-animation: blinktext normal 1s infinite ease-in-out;
+  -ms-animation: blinktext normal 1s infinite ease-in-out;
+  animation: blinktext normal 1s infinite ease-in-out;
+  text-decoration: underline;
+  line-height: 1.5;
+  font-size: 18px;
+}
+
+@-moz-keyframes blinktext {
+  0% {
+    opacity: 1;
+    color: red;
+  }
+
+  50% {
+    opacity: 1;
+    color: yellow;
+  }
+
+  100% {
+    opacity: 1;
+    color: red;
+  }
+}
+
+@-webkit-keyframes blinktext {
+  0% {
+    opacity: 1;
+    color: red;
+  }
+
+  50% {
+    opacity: 1;
+    color: yellow;
+  }
+
+  100% {
+    opacity: 1;
+    color: red;
+  }
+}
+
+@-ms-keyframes blinktext {
+  0% {
+    opacity: 1;
+    color: red;
+  }
+
+  50% {
+    opacity: 1;
+    color: yellow;
+  }
+
+  100% {
+    opacity: 1;
+    color: red;
+  }
+}
+
+@keyframes blinktext {
+  0% {
+    opacity: 1;
+    color: red;
+  }
+
+  50% {
+    opacity: 1;
+    color: yellow;
+  }
+
+  100% {
+    opacity: 1;
+    color: red;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .login-auth input {
+    padding: 10px;
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .sportsbook .slot-iframe.show {
+    top: 50px;
+    height: calc(100vh - 50px);
+    left: 0;
+    width: 100%;
+  }
+
+  .login-box img {
+    max-height: 70px;
+  }
+
+  .social-icon {
+    height: 30px;
+    width: 30px;
+  }
+
+  .social-icon img {
+    height: 20px;
+  }
+}
+
+@media only screen and (min-width: 768px) and (max-width:1199px) {
+  .sportsbook .slot-iframe.show {
+    top: 60px;
+    height: calc(100vh - 60px);
+    left: 0;
+    width: 100%;
+  }
+}
+
+.table> :not(caption)>*>* {
+  background-color: transparent;
+}
+
+/* toast css */
+
+.toast-top-center {
+  top: 15px;
+}
+
+.toast-container .ngx-toastr {
+  padding: 10px 25px 10px 50px;
+  color: #4c4c4c;
+  border-radius: 10px;
+  width: fit-content !important;
+  box-shadow: 0 0 12px #4c4c4c49;
+  opacity: 0;
+  /* Start hidden */
+  transform: translateY(-20px);
+  /* Start slightly above */
+  animation: fadeSlideIn 0.5s ease forwards;
+  /* Apply animation */
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+    /* Move down from above */
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    /* Stay in place */
+  }
+}
+
+.toast-container .ngx-toastr:hover {
+  box-shadow: none !important;
+  opacity: 1;
+  cursor: pointer;
+}
+
+.toast-success {
+  background-color: #ffffff;
+  background-image: url(/img/success.png) !important;
+}
+
+.toast-error {
+  background-color: #ffffff;
+  background-image: url(/img/error.png) !important;
+}
+
+.toast-info {
+  background-color: #ffffff;
+  background-image: url(/img/info.png) !important;
+}
+
+.toast-close-button {
+  display: none !important;
+}
+
+/* toast css */
+
+/* For custom background color for back lay */
+.back1 {
+  background-color: #72bbef;
+}
+
+.back2 {
+  background-color: #72bbefbf;
+}
+
+.back3 {
+  background-color: #72bbef7f;
+}
+
+.lay1 {
+  background-color: #faa9ba;
+}
+
+.lay2 {
+  background-color: #faa9babf;
+}
+
+.lay3 {
+  background-color: #faa9ba7f;
+}
+
+.navbar {
+  padding: 0;
+}
+
+@media only screen and (min-width: 768px) {
+  .nav-pills .nav-link {
+    font-weight: 400 !important;
+  }
+}
+
+/* Flipclock */
+
+.flipdown {
+  height: 70px !important;
+  right: 20px !important;
+}
+
+.flipdown .rotor {
+  margin: 0px 10px 0px 0px;
+  font-size: 3rem;
+  width: 40px;
+  height: 60px;
+}
+
+.flipdown .rotor-leaf {
+  width: 40px;
+  height: 60px;
+}
+
+.flipdown .rotor-leaf-front, .flipdown .rotor-leaf-rear {
+  width: 40px;
+  height: 30px;
+}
+
+.flipdown .rotor-leaf-front {
+  line-height: 60px;
+}
+
+.flipdown .rotor-top {
+  line-height: 60px;
+}
+
+.flipdown .rotor-top, .flipdown .rotor-bottom {
+  width: 40px;
+  height: 30px;
+}
+
+.flipdown.flipdown__theme-dark .rotor,
+.flipdown.flipdown__theme-dark .rotor-top,
+.rotor-bottom,
+.flipdown.flipdown__theme-dark .rotor-leaf-front {
+  background-color: var(--bg-secondary65);
+  border-radius: 7px !important;
+}
+
+.flipdown.flipdown__theme-dark .rotor-bottom,
+.flipdown.flipdown__theme-dark .rotor-leaf-rear {
+  background-color: var(--bg-secondary65);
+  color: white;
+}
+
+.flipdown.flipdown__theme-dark .rotor:after {
+  border-top: none !important;
+}
+
+@media only screen and (max-width: 768px) {
+  .flipdown {
+    height: 44px !important;
+    right: 10px !important;
+  }
+  .flipdown .rotor {
+    margin: 0px 6px 0px 0px;
+    font-size: 1.8rem;
+    width: 25px;
+    height: 40px;
+  }
+  .flipdown .rotor-leaf {
+    width: 25px;
+    height: 40px;
+  }
+  
+  .flipdown .rotor-leaf-front, .flipdown .rotor-leaf-rear {
+    width: 25px;
+    height: 20px;
+  }
+  
+  .flipdown .rotor-leaf-front {
+    line-height: 40px;
+  }
+  
+  .flipdown .rotor-top {
+    line-height: 40px;
+  }
+  
+  .flipdown .rotor-top, .flipdown .rotor-bottom {
+    width: 25px;
+    height: 20px;
+  }
+}
+
+/* Flip Clock */
+
+.betting-disabled {
+  pointer-events: none !important;
+}
+
+.custom-pagination > div.disabled {
+  cursor: not-allowed;
+}
+
+/* Calendar styles */
+
+.fa-calendar:before {
+  content: "\f133";
+}
+
+.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-bottom {
+  margin-top: 15px;
+  font-family: "Helvetica Neue", helvetica, arial, sans-serif;
+  border-bottom: 1px solid #aeaeae;
+  padding: 7px;
+}
+
+.datepicker-dropdown.datepicker-orient-left:after {
+  left: 67px;
+}
+
+.datepicker-dropdown.datepicker-orient-left:before {
+  left: 66px;
+  border-bottom-color: #aeaeae;
+}
+
+.datepicker thead {
+  border-bottom: 1px solid #aeaeae;
+}
+
+.datepicker tbody {
+  font-size: 14px;
+}
+
+.datepicker tbody td {
+  padding: 4px 8px;
+}
+
+th.datepicker-switch {
+  cursor: auto !important;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+th.datepicker-switch:hover {
+  background-color: transparent !important;
+}
+
+th.dow {
+  font-size: 14px;
+  font-weight: 500;
+}

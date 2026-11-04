@@ -1,0 +1,783 @@
+<div style="display: flex; flex-wrap: wrap;">
+  <div class="center-container">
+    <div class="casino-page-container race20">
+      <div class="casino-header">
+        <span class="casino-name">Race 20<a class="ms-1">
+            <small (click)="open(rules)">Rules</small></a>
+        </span>
+        <span class="casino-rid d-none d-xl-inline-block">
+          <small>Round ID: <span>{{roundId=='0'?'0':roundId}}</span></small>
+        </span>
+      </div>
+      <!-- Mobile nav tab -->
+      <div class="casino-title-header-mobile d-xl-none">
+        <ul class="nav nav-tabs menu-tabs">
+          <li class="nav-item">
+            <div (click)="gameTabClicked()" class="nav-link" [class.active]="gametab">Game</div>
+          </li>
+          <li class="nav-item">
+            <div (click)="betTabClicked()" class="nav-link" [class.active]="bettab">Placed Bet ({{mybets.length}})</div>
+          </li>
+        </ul>
+        <div class="pe-2"><span class="casino-rid">Round ID:
+            <span>{{roundId=='0'?'0':roundId}}</span></span></div>
+      </div>
+      <!-- Game Section -->
+      <div class="" [class.d-none]="bettab">
+        <div class="casino-video">
+          <div class="video-box-container">
+            <div class="casino-video-box">
+              <iframe [src]="safeURL" width="100%" style="border: 0px;"></iframe>
+            </div>
+          </div>
+          <div class="casino-video-cards" *ngIf="cards[0]!='1'&&data">
+            <div class="race-total-point">
+              <div class="text-white">
+                <div>Cards</div>
+                <div>{{totalcard}}</div>
+              </div>
+              <div class="text-white">
+                <div>Points</div>
+                <div>{{totalpoint}}</div>
+              </div>
+            </div>
+            <div>
+              <div class="flip-card-container">
+                <div class="flip-card">
+                  <img src="/img/icons/spade.png">
+                </div>
+                <div class="flip-card" *ngFor="let item of spadecards">
+                  <div class="flip-card-inner ">
+                    <div class="flip-card-front">
+                      <img [src]="'/img/cards/'+item+'.png'">
+                    </div>
+                    <div class="flip-card-back">
+                      <img [src]="'/img/cards/'+item+'.png'">
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="spadecards.length>0" class="flip-card">
+                  <div class="flip-card-inner ">
+                    <div class="flip-card-front"><img src="/img/cards/KHH.png"></div>
+                    <div class="flip-card-back"><img src="/img/cards/KHH.png"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-1">
+              <div class="flip-card-container">
+                <div class="flip-card">
+                  <img src="/img/icons/heart.png">
+                </div>
+                <div class="flip-card" *ngFor="let item of heartcards">
+                  <div class="flip-card-inner ">
+                    <div class="flip-card-front">
+                      <img [src]="'/img/cards/'+item+'.png'">
+                    </div>
+                    <div class="flip-card-back">
+                      <img [src]="'/img/cards/'+item+'.png'">
+                    </div>
+                  </div>
+                </div>
+                <div class="flip-card" *ngIf="heartcards.length>0">
+                  <div class="flip-card-inner ">
+                    <div class="flip-card-front">
+                      <img src="/img/cards/KDD.png">
+                    </div>
+                    <div class="flip-card-back">
+                      <img src="/img/cards/KDD.png">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-1">
+              <div class="flip-card-container">
+                <div class="flip-card">
+                  <img src="/img/icons/club.png">
+                </div>
+                <div class="flip-card" *ngFor="let item of clubcards">
+                  <div class="flip-card-inner ">
+                    <div class="flip-card-front">
+                      <img [src]="'/img/cards/'+item+'.png'">
+                    </div>
+                    <div class="flip-card-back">
+                      <img [src]="'/img/cards/'+item+'.png'">
+                    </div>
+                  </div>
+                </div>
+                <div class="flip-card" *ngIf="clubcards.length>0">
+                  <div class="flip-card-inner ">
+                    <div class="flip-card-front">
+                      <img src="/img/cards/KCC.png">
+                    </div>
+                    <div class="flip-card-back">
+                      <img src="/img/cards/KCC.png">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-1">
+              <div class="flip-card-container">
+                <div class="flip-card">
+                  <img src="/img/icons/diamond.png">
+                </div>
+                <div class="flip-card" *ngFor="let item of diamondcards">
+                  <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                      <img [src]="'/img/cards/'+item+'.png'">
+                    </div>
+                    <div class="flip-card-back">
+                      <img [src]="'/img/cards/'+item+'.png'">
+                    </div>
+                  </div>
+                </div>
+                <div class="flip-card" *ngIf="diamondcards.length>0">
+                  <div class="flip-card-inner ">
+                    <div class="flip-card-front">
+                      <img src="/img/cards/KSS.png">
+                    </div>
+                    <div class="flip-card-back">
+                      <img src="/img/cards/KSS.png">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="flipdown" class="flipdown flipdown__theme-dark clock flip-clock-wrapper">
+            <div class="rotor-group">
+              <div class="rotor">
+                <div class="rotor-leaf" [class.flipped]="flipfirst">
+                  <figure class="rotor-leaf-rear">{{cfirstnum}}</figure>
+                  <figure class="rotor-leaf-front">{{cfirstnum}}</figure>
+                </div>
+                <div class="rotor-top">{{cfirstnum}}</div>
+                <div class="rotor-bottom">{{cfirstnum}}</div>
+              </div>
+              <div class="rotor">
+                <div class="rotor-leaf" [class.flipped]="flipsecond">
+                  <figure class="rotor-leaf-rear">{{clastnum}}</figure>
+                  <figure class="rotor-leaf-front">{{clastnum}}</figure>
+                </div>
+                <div class="rotor-top">{{clastnum}}</div>
+                <div class="rotor-bottom">{{clastnum}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="casino-detail">
+          <div class="casino-table" *ngIf="data">
+            <div class="casino-table-box">
+              <div class="casino-odd-box-container">
+                <div class="casino-nation-name">
+                  <img src="/img/cards/KHH.png">
+                </div>
+                <div class="casino-odds-box back" [class.suspended-box]="kSpadegstatus!='ACTIVE'"
+                  (click)="openBetForm(placebet,'Spade',kSpadeback,'back',1,'Winner',kSpademin, kSpademax)">
+                  <span class="casino-odds">{{kSpadegstatus!='ACTIVE'?'0':kSpadeback}}</span>
+                  <div class="casino-volume">{{kSpadebackSize}}</div>
+                </div>
+                <div class="casino-odds-box lay" [class.suspended-box]="kSpadegstatus!='ACTIVE'"
+                  (click)="openBetForm(placebet,'Spade',kSpadelay,'lay',1,'Winner',kSpademin, kSpademax)">
+                  <span class="casino-odds">{{kSpadegstatus!='ACTIVE'?'0':kSpadelay}}</span>
+                  <div class="casino-volume">{{kSpadelaySize}}</div>
+                </div>
+                <div class="casino-nation-book text-center w-100" *ngIf="winnerBook.length>0"
+                  [class.text-success]="winnerBook[0].amount>0" [class.text-danger]="winnerBook[0].amount<0">
+                  {{winnerBook[0].amount}}
+                </div>
+              </div>
+              <div class="casino-odd-box-container">
+                <div class="casino-nation-name">
+                  <img src="/img/cards/KDD.png">
+                </div>
+                <div class="casino-odds-box back" [class.suspended-box]="kHeartgstatus!='ACTIVE'"
+                  (click)="openBetForm(placebet,'Heart',kHeartback,'back',2,'Winner',kHeartmin,kHeartmax)">
+                  <span class="casino-odds">{{kHeartgstatus!='ACTIVE'?'0':kHeartback}}</span>
+                  <div class="casino-volume">{{kHeartbackSize}}</div>
+                </div>
+                <div class="casino-odds-box lay" [class.suspended-box]="kHeartgstatus!='ACTIVE'"
+                  (click)="openBetForm(placebet,'Heart',kHeartlay,'lay',2,'Winner',kHeartmin,kHeartmax)">
+                  <span class="casino-odds">{{kHeartgstatus!='ACTIVE'?'0':kHeartlay}}</span>
+                  <div class="casino-volume">{{kHeartlaySize}}</div>
+                </div>
+                <div class="casino-nation-book text-center w-100" *ngIf="winnerBook.length>0"
+                  [class.text-success]="winnerBook[1].amount>0" [class.text-danger]="winnerBook[1].amount<0">
+                  {{winnerBook[1].amount}}</div>
+              </div>
+              <div class="casino-odd-box-container">
+                <div class="casino-nation-name">
+                  <img src="/img/cards/KCC.png">
+                </div>
+                <div class="casino-odds-box back" [class.suspended-box]="kClubgstatus!='ACTIVE'"
+                  (click)="openBetForm(placebet,'Club',kClubback,'back',3,'Winner',kClubmin,kClubmax)">
+                  <span class="casino-odds">{{kClubgstatus!='ACTIVE'?'0':kClubback}}</span>
+                  <div class="casino-volume">{{kClubbackSize}}</div>
+                </div>
+                <div class="casino-odds-box lay" [class.suspended-box]="kClubgstatus!='ACTIVE'"
+                  (click)="openBetForm(placebet,'Club',kClublay,'lay',3,'Winner',kClubmin,kClubmax)">
+                  <span class="casino-odds">{{kClubgstatus!='ACTIVE'?'0':kClublay}}</span>
+                  <div class="casino-volume">{{kClublaySize}}</div>
+                </div>
+                <div class="casino-nation-book text-center w-100" *ngIf="winnerBook.length>0"
+                  [class.text-success]="winnerBook[2].amount>0" [class.text-danger]="winnerBook[2].amount<0">
+                  {{winnerBook[2].amount}}</div>
+              </div>
+              <div class="casino-odd-box-container">
+                <div class="casino-nation-name">
+                  <img src="/img/cards/KSS.png">
+                </div>
+                <div class="casino-odds-box back" [class.suspended-box]="kDiamondgstatus!='ACTIVE'"
+                  (click)="openBetForm(placebet,'Diamond',kDiamondback,'back',4,'Winner',kDiamondmin,kDiamondmax)">
+                  <span class="casino-odds">{{kDiamondgstatus!='ACTIVE'?'0':kDiamondback}}</span>
+                  <div class="casino-volume">{{kDiamondbackSize}}</div>
+                </div>
+                <div class="casino-odds-box lay" [class.suspended-box]="kDiamondgstatus!='ACTIVE'"
+                  (click)="openBetForm(placebet,'Diamond',kDiamondlay,'lay',4,'Winner',kDiamondmin,kDiamondmax)">
+                  <span class="casino-odds">{{kDiamondgstatus!='ACTIVE'?'0':kDiamondlay}}</span>
+                  <div class="casino-volume">{{kDiamondlaySize}}</div>
+                </div>
+                <div class="casino-nation-book text-center w-100" *ngIf="winnerBook.length>0"
+                  [class.text-success]="winnerBook[3].amount>0" [class.text-danger]="winnerBook[3].amount<0">
+                  {{winnerBook[3].amount}}</div>
+              </div>
+            </div>
+            <div class="casino-table-box mt-3">
+              <div class="casino-table-left-box">
+                <div class="casino-odd-box-container">
+                  <div class="casino-nation-name"></div>
+                  <div class="casino-nation-name">No</div>
+                  <div class="casino-nation-name">Yes</div>
+                </div>
+                <div class="casino-odd-box-container">
+                  <div class="casino-nation-name">Total points</div>
+                  <div class="casino-odds-box lay" [class.suspended-box]="totalPointgstatus!='ACTIVE'"
+                    (click)="openBetForm(placebet,'Total Point',totalPointlay,'lay',5,'TotalPoint',totalPointmin,totalPointmax)">
+                    <span class="casino-odds">{{totalPointgstatus!='ACTIVE'?'0':totalPointlay}}</span>
+                    <div class="casino-volume text-center">{{totalPointlaySize}}</div>
+                  </div>
+                  <div class="casino-odds-box back" [class.suspended-box]="totalPointgstatus!='ACTIVE'"
+                    (click)="openBetForm(placebet,'Total Point',totalPointback,'back',5,'TotalPoint',totalPointmin,totalPointmax)">
+                    <span class="casino-odds">{{totalPointgstatus!='ACTIVE'?'0':totalPointback}}</span>
+                    <div class="casino-volume text-center">{{totalPointbackSize}}</div>
+                  </div>
+                  <div class="casino-nation-book" *ngIf="totalpointBook.length>0"
+                    [class.text-success]="totalpointBook[0].amount>0" [class.text-danger]="totalpointBook[0].amount<0">
+                    {{totalpointBook[0].amount}}</div>
+                </div>
+                <div class="casino-odd-box-container">
+                  <div class="casino-nation-name"></div>
+                  <div class="casino-nation-name">No</div>
+                  <div class="casino-nation-name">Yes</div>
+                </div>
+                <div class="casino-odd-box-container">
+                  <div class="casino-nation-name">Total cards</div>
+                  <div class="casino-odds-box lay" [class.suspended-box]="totalCardgstatus!='ACTIVE'"
+                    (click)="openBetForm(placebet,'Total Card',totalCardlay,'lay',6,'TotalCard',totalCardmin,totalCardmax)">
+                    <span class="casino-odds">{{totalCardgstatus!='ACTIVE'?'0':totalCardlay}}</span>
+                    <div class="casino-volume text-center">{{totalCardlaySize}}</div>
+                  </div>
+                  <div class="casino-odds-box back" [class.suspended-box]="totalCardgstatus!='ACTIVE'"
+                    (click)="openBetForm(placebet,'Total Card',totalCardback,'back',6,'TotalCard',totalCardmin,totalCardmax)">
+                    <span class="casino-odds">{{totalCardgstatus!='ACTIVE'?'0':totalCardback}}</span>
+                    <div class="casino-volume text-center">{{totalCardbackSize}}</div>
+                  </div>
+                  <div class="casino-nation-book" *ngIf="totalcardBook.length>0"
+                    [class.text-success]="totalcardBook[0].amount>0" [class.text-danger]="totalcardBook[0].amount<0">
+                    {{totalcardBook[0].amount}}</div>
+                </div>
+              </div>
+              <div class="casino-table-right-box">
+                <div class="casino-odd-box-container">
+                  <div class="casino-nation-name">Win with 5</div>
+                  <div class="casino-odds-box back" [class.suspended-box]="winWith5gstatus!='ACTIVE'"
+                    (click)="openBetForm(placebet,'Win with 5',winWith5,'back',7,'WinWith',winWith5min,winWith5max)">
+                    <span class="casino-odds">{{winWith5gstatus!='ACTIVE'?'':winWith5}}</span>
+                  </div>
+                  <div class="casino-nation-book text-center w-100" *ngIf="winwithBook.length>0"
+                    [class.text-success]="winwithBook[0].amount>0" [class.text-danger]="winwithBook[0].amount<0">
+                    {{winwithBook[0].amount}}
+                  </div>
+                </div>
+                <div class="casino-odd-box-container">
+                  <div class="casino-nation-name">Win with 6</div>
+                  <div class="casino-odds-box back" [class.suspended-box]="winWith6gstatus!='ACTIVE'"
+                    (click)="openBetForm(placebet,'Win with 6',winWith6,'back',8,'WinWith',winWith6min,winWith6max)">
+                    <span class="casino-odds">{{winWith6gstatus!='ACTIVE'?'':winWith6}}</span>
+                  </div>
+                  <div class="casino-nation-book text-center w-100" *ngIf="winwithBook.length>0"
+                    [class.text-success]="winwithBook[1].amount>0" [class.text-danger]="winwithBook[1].amount<0">
+                    {{winwithBook[1].amount}}
+                  </div>
+                </div>
+                <div class="casino-odd-box-container">
+                  <div class="casino-nation-name">Win with 7</div>
+                  <div class="casino-odds-box back" [class.suspended-box]="winWith7gstatus!='ACTIVE'"
+                    (click)="openBetForm(placebet,'Win with 7',winWith7,'back',9,'WinWith',winWith7min,winWith7max)">
+                    <span class="casino-odds">{{winWith7gstatus!='ACTIVE'?'':winWith7}}</span>
+                  </div>
+                  <div class="casino-nation-book text-center w-100" *ngIf="winwithBook.length>0"
+                    [class.text-success]="winwithBook[2].amount>0" [class.text-danger]="winwithBook[2].amount<0">
+                    {{winwithBook[2].amount}}
+                  </div>
+                </div>
+                <div class="casino-odd-box-container">
+                  <div class="casino-nation-name">Win with 15</div>
+                  <div class="casino-odds-box back" [class.suspended-box]="winWith15gstatus!='ACTIVE'"
+                    (click)="openBetForm(placebet,'Win with 15',winWith15,'back',10,'WinWith',winWith15min,winWith15max)">
+                    <span class="casino-odds">{{winWith15gstatus!='ACTIVE'?'':winWith15}}</span>
+                  </div>
+                  <div class="casino-nation-book text-center w-100" *ngIf="winwithBook.length>0"
+                    [class.text-success]="winwithBook[3].amount>0" [class.text-danger]="winwithBook[3].amount<0">
+                    {{winwithBook[3].amount}}
+                  </div>
+                </div>
+                <div class="casino-odd-box-container">
+                  <div class="casino-nation-name">Win with 16</div>
+                  <div class="casino-odds-box back" [class.suspended-box]="winWith16gstatus!='ACTIVE'"
+                    (click)="openBetForm(placebet,'Win with 16',winWith16,'back',11,'WinWith',winWith16min,winWith16max)">
+                    <span class="casino-odds">{{winWith16gstatus!='ACTIVE'?'':winWith16}}</span>
+                  </div>
+                  <div class="casino-nation-book text-center w-100" *ngIf="winwithBook.length>0"
+                    [class.text-success]="winwithBook[4].amount>0" [class.text-danger]="winwithBook[4].amount<0">
+                    {{winwithBook[4].amount}}
+                  </div>
+                </div>
+                <div class="casino-odd-box-container">
+                  <div class="casino-nation-name">Win with 17</div>
+                  <div class="casino-odds-box back" [class.suspended-box]="winWith17gstatus!='ACTIVE'"
+                    (click)="openBetForm(placebet,'Win with 17',winWith17,'back',12,'WinWith',winWith17min,winWith17max)">
+                    <span class="casino-odds">{{winWith17gstatus!='ACTIVE'?'':winWith17}}</span>
+                  </div>
+                  <div class="casino-nation-book text-center w-100" *ngIf="winwithBook.length>0"
+                    [class.text-success]="winwithBook[5].amount>0" [class.text-danger]="winwithBook[5].amount<0">
+                    {{winwithBook[5].amount}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="casino-last-result-title">
+            <span>Last Result</span>
+            <span><a href="/casino-results/race20">View All</a></span>
+          </div>
+          <div class="casino-last-results">
+            <p id="last-result" class="text-right" *ngFor="let item of results;trackBy:trackByMid">
+              <span *ngIf="item['result']=='1'" (click)="openResult(result,item['mid'])" class="result">
+                <img src="/img/cards/spade.png">
+              </span>
+              <span *ngIf="item['result']=='2'" (click)="openResult(result,item['mid'])" class="result">
+                <img src="/img/cards/heart.png">
+              </span>
+              <span *ngIf="item['result']=='3'" (click)="openResult(result,item['mid'])" class="result">
+                <img src="/img/cards/club.png">
+              </span>
+              <span *ngIf="item['result']=='4'" (click)="openResult(result,item['mid'])" class="result">
+                <img src="/img/cards/diamond.png" class="diamond">
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <!-- Bet Section -->
+      <div [class.d-none]="gametab">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Matched Bet</th>
+                <th class="text-end">Odds</th>
+                <th class="text-end">Stake</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of mybets" [ngClass]="item.betType">
+                <td>{{item['selectionName']}}</td>
+                <td class="text-end">{{item['rate']}}</td>
+                <td class="text-end">{{item['stake']}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sidebar right-sidebar casino-right-sidebar" [class.sticky]="isSticky">
+    <!-- Placebet Section Desktop -->
+    <div class="sidebar-box place-bet-container position-relative" *ngIf="showbetform">
+      <div *ngIf="placeLoader" id="loader-section">
+        <div id="load-inner">
+          <i class="fa fa-spinner fa-spin"></i>
+        </div>
+      </div>
+      <div class="sidebar-title">
+        <h4>Place Bet</h4>
+        <span *ngIf="max!=0">Range: {{min}} to {{max | shortNumber}}</span>
+      </div>
+      <div class="place-bet-box" [ngClass]="betType">
+        <div class="place-bet-box-header">
+          <div class="place-bet-for">(Bet for)</div>
+          <div class="place-bet-odds">Odds</div>
+          <div class="place-bet-stake">Stake</div>
+          <div class="place-bet-profit">Profit</div>
+        </div>
+        <div class="place-bet-box-body">
+          <div class="place-bet-for">
+            <i class="fas fa-times text-danger me-1"></i>
+            <span>{{betFor}}</span>
+          </div>
+          <div class="place-bet-odds">
+            <input type="text" [(ngModel)]="odds" name="odds" class="form-control" disabled="">
+          </div>
+          <div class="place-bet-stake">
+            <input type="number" [(ngModel)]="stake" (keyup)="calcProfit(stake)" name="stake" maxlength="10"
+              class="form-control" value="">
+          </div>
+          <div class="place-bet-profit"></div>
+        </div>
+        <div class="place-bet-buttons">
+          <button *ngFor="let button of placebetButton; trackBy:trackByFunc" (click)="placeStake(button.value)"
+            class="btn btn-place-bet">+{{button.name}}</button>
+        </div>
+        <div class="place-bet-action-buttons">
+          <div><button (click)="openButtons(setButton)" class="btn btn-info">Edit</button></div>
+          <div>
+            <button class="btn btn-danger me-1" (click)="hideBetPlace()">Reset</button>
+            <button class="btn btn-success" [class.disabled]="!stake" (click)="submitbet()">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- My Bet Section Desktop -->
+    <div class="sidebar-box my-bet-container">
+      <div class="sidebar-title">
+        <h4>My Bet</h4>
+      </div>
+      <div class="my-bets">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Matched Bet</th>
+                <th class="text-end">Odds</th>
+                <th class="text-end">Stake</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of mybets" [ngClass]="item.betType">
+                <td>{{item['selectionName']}}</td>
+                <td class="text-end">{{item['rate']}}</td>
+                <td class="text-end">{{item['stake']}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Rules -->
+<ng-template #rules let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">Race 20 Rules</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <style type="text/css">
+          .rules-section .row.row5 {
+            margin-left: -5px;
+            margin-right: -5px;
+          }
+
+          .rules-section .pl-2 {
+            padding-left: .5rem !important;
+          }
+
+          .rules-section .pr-2 {
+            padding-right: .5rem !important;
+          }
+
+          .rules-section .row.row5>[class*="col-"],
+          .rules-section .row.row5>[class*="col"] {
+            padding-left: 5px;
+            padding-right: 5px;
+          }
+
+          .rules-section {
+            text-align: left;
+            margin-bottom: 10px;
+          }
+
+          .rules-section .table {
+            color: #fff;
+            border: 1px solid #444;
+            background-color: #222;
+            font-size: 12px;
+          }
+
+          .rules-section .table td,
+          .rules-section .table th {
+            border-bottom: 1px solid #444;
+          }
+
+          .rules-section ul li,
+          .rules-section p {
+            margin-bottom: 5px;
+          }
+
+          .rules-section::-webkit-scrollbar {
+            width: 8px;
+          }
+
+          .rules-section::-webkit-scrollbar-track {
+            background: #666666;
+          }
+
+          .rules-section::-webkit-scrollbar-thumb {
+            background-color: #333333;
+          }
+
+          .rules-section .rules-highlight {
+            color: #FDCF13;
+            font-size: 16px;
+          }
+
+          .rules-section .rules-sub-highlight {
+            color: #FDCF13;
+            font-size: 14px;
+          }
+
+          .rules-section .list-style,
+          .rules-section .list-style li {
+            list-style: disc;
+          }
+
+          .rules-section .rule-card {
+            height: 20px;
+            margin-left: 5px;
+          }
+
+          .rules-section .card-character {
+            font-family: Card Characters;
+          }
+
+          .rules-section .red-card {
+            color: red;
+          }
+
+          .rules-section .black-card {
+            color: black;
+          }
+
+          .rules-section .cards-box {
+            background: #fff;
+            padding: 6px;
+            display: inline-block;
+            color: #000;
+            min-width: 150px;
+          }
+        </style>
+        <div class="rules-section">
+          <div>
+            <img src="/img/casino-rules/race20.jpg" class="img-fluid">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Results -->
+<ng-template #result let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">Race 20 Result</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="casino-result-modal">
+        <div class="casino-result-round-id">
+          <span><b>Round Id: </b> {{temprId}}</span>
+          <!-- <span><b>Match Time: </b>10/12/2024 12:53:01</span> -->
+        </div>
+        <div class="race-result-box">
+          <div class="casino-result-cards">
+            <img src="/img/icons/spade.png">
+            <img *ngFor="let item of tempSpadecards" [src]="'/img/cards/'+item+'.png'">
+            <img src="/img/cards/KHH.png" class="" [class.k-image]="tempWinner=='1'">
+            <div *ngIf="tempWinner=='1'" class="casino-winner-icon"><i class="fas fa-trophy "></i></div>
+          </div>
+          <div class="casino-result-cards">
+            <img src="/img/icons/heart.png">
+            <img *ngFor="let item of tempHeartcards" [src]="'/img/cards/'+item+'.png'">
+            <img src="/img/cards/KDD.png" class="" [class.k-image]="tempWinner=='2'">
+            <div *ngIf="tempWinner=='2'" class="casino-winner-icon"><i class="fas fa-trophy "></i></div>
+          </div>
+          <div class="casino-result-cards">
+            <img src="/img/icons/club.png">
+            <img *ngFor="let item of tempClubcards" [src]="'/img/cards/'+item+'.png'">
+            <img src="/img/cards/KCC.png" class="" [class.k-image]="tempWinner=='3'">
+            <div *ngIf="tempWinner=='3'" class="casino-winner-icon"><i class="fas fa-trophy "></i></div>
+          </div>
+          <div class="casino-result-cards">
+            <img src="/img/icons/diamond.png">
+            <img *ngFor="let item of tempDiamondcards" [src]="'/img/cards/'+item+'.png'">
+            <img src="/img/cards/KSS.png" class="" [class.k-image]="tempWinner=='4'">
+            <div *ngIf="tempWinner=='4'" class="casino-winner-icon"><i class="fas fa-trophy "></i></div>
+          </div>
+          <div class="video-winner-text">
+            <div>W</div>
+            <div>I</div>
+            <div>N</div>
+            <div>N</div>
+            <div>E</div>
+            <div>R</div>
+          </div>
+        </div>
+        <div class="row mt-2 justify-content-center">
+          <div class="col-md-6">
+            <div class="casino-result-desc">
+              <div class="casino-result-desc-item">
+                <div>Winner: </div>
+                <div>{{tempDesc[0]}}</div>
+              </div>
+              <div class="casino-result-desc-item">
+                <div>{{tempDesc[1]}}</div>
+
+              </div>
+              <div class="casino-result-desc-item">
+                <div>{{tempDesc[2]}}</div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Placebet Section Mobile -->
+<ng-template #placebet let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">Place Bet</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="place-bet-modal casino-bet-modal" [ngClass]="betType">
+        <div *ngIf="placeLoader" id="loader-section">
+          <div id="load-inner">
+            <i class="fa fa-spinner fa-spin"></i>
+          </div>
+        </div>
+        <div class="row row5">
+          <div class="col-6"><b>{{ betFor }}</b></div>
+          <div class="col-6 text-end"><span>Profit:</span></div>
+        </div>
+        <div class="odd-stake-box">
+          <div class="row row5 mt-1">
+            <div class="col-6 text-center">Amount</div>
+            <div class="col-6 text-center">Odds</div>
+          </div>
+          <div class="row row5 mt-1">
+            <div class="col-6"><input type="number" class="stakeinput w-100" [(ngModel)]="stake"
+                (keyup)="calcProfit(stake)" name="stake" maxlength="10" value=""></div>
+            <div class="col-6">
+              <div class="float-end"><input type="text" class="stakeinput" [(ngModel)]="odds" name="odds" disabled=""
+                  value=""></div>
+            </div>
+          </div>
+        </div>
+        <div class="place-bet-buttons mt-1">
+          <button class="btn btn-place-bet" *ngFor="let button of placebetButton; trackBy: trackByFunc"
+            (click)="placeStake(button.value)">+{{ button.name }}</button>
+        </div>
+
+        <div class="mt-1 place-bet-btn-box">
+          <button class="btn btn-link" (click)="resetStake()">clear</button>
+          <button class="btn btn-info" (click)="openButtons(setButton)">Edit</button>
+          <button class="btn btn-danger" (click)="d('Cross click')">Reset</button>
+          <button class="btn btn-success" [class.disabled]="stake <= 1" (click)="submitbet()">Place Bet</button>
+        </div>
+        <div class="mt-3 d-flex justify-content-between align-items-center">
+          <b><span *ngIf="max!=0">Range: {{min}} to {{max | shortNumber}}</span></b>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Set Button Section -->
+<ng-template #setButton let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">Set Button Value</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="mt-1 nav nav-pills" role="tablist">
+        <div class="nav-item">
+          <a role="tab" (click)="clickSetButtonTab('game')" [class.active]="setButtonTab=='game'" class="nav-link">Game
+            Buttons
+          </a>
+        </div>
+        <div class="nav-item">
+          <a role="tab" (click)="clickSetButtonTab('casino')" [class.active]="setButtonTab=='casino'"
+            class="nav-link">Casino Buttons
+          </a>
+        </div>
+      </div>
+      <div class="mt-1 tab-content">
+        <div role="tabpanel" class="fade tab-pane show" [class.active]="setButtonTab=='game'">
+          <form (submit)="updateButtons()">
+            <div class="row row10">
+              <div class="mb-1 col-6"><label class="form-label"><b>Price Label:</b></label></div>
+              <div class="mb-1 col-6"><label class="form-label"><b>Price Value:</b></label></div>
+            </div>
+            <div class="row row10" *ngFor="let item of userButtons.gamebutton; let i=index;">
+              <div class="mb-3 col-6 position-relative">
+                <input type="text" [name]="'game'+item.name+i" class="form-control" [(ngModel)]="item.name">
+              </div>
+              <div class="mb-3 col-6 position-relative">
+                <input type="number" [name]="'game'+item.value+i" class="form-control" [(ngModel)]="item.value">
+              </div>
+            </div>
+
+            <div class="row row10">
+              <div class="mb-3 col-md-6">
+                <button type="submit" class="btn btn-primary btn-block">Update</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div role="tabpanel" class="fade tab-pane show" [class.active]="setButtonTab=='casino'">
+          <form (submit)="updateButtons()">
+            <div class="row row10">
+              <div class="mb-1 col-6"><label class="form-label"><b>Price Label:</b></label></div>
+              <div class="mb-1 col-6"><label class="form-label"><b>Price Value:</b></label></div>
+            </div>
+            <div class="row row10" *ngFor="let item of userButtons.casinobutton; let i=index;">
+              <div class="mb-3 col-6 position-relative">
+                <input type="text" [name]="'casino'+item.name+i" class="form-control" [(ngModel)]="item.name">
+              </div>
+              <div class="mb-3 col-6 position-relative">
+                <input type="number" [name]="'casino'+item.value+i" class="form-control" [(ngModel)]="item.value">
+              </div>
+            </div>
+            <div class="row row10">
+              <div class="mb-3 col-md-6 ">
+                <button type="submit" class="btn btn-primary btn-block">Update</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

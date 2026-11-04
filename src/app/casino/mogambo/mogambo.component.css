@@ -1,0 +1,10 @@
+.mogambo .mogambo-total {
+    background-color: var(--text-fancy);
+    padding: 4px;
+    color: #000;
+}
+
+.mogambo .three-card-total {
+    justify-content: center;
+    margin-top: 5px;
+}

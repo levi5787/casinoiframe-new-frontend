@@ -1,0 +1,115 @@
+<div id="root">
+  <div style="position: fixed; z-index: 9999; inset: 16px; pointer-events: none;"></div>
+  <div class="wrapper">
+    <app-header></app-header>
+    <div class="main-container">
+      <div class="sidebar left-sidebar">
+        <app-sidebar></app-sidebar>
+      </div>
+      <div class="center-main-container report-page">
+        <div class="center-container">
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-title">Activity Log</h4>
+            </div>
+            <div class="card-body">
+              <div class="report-form">
+                <form class="row row10" #activityForm="ngForm" (ngSubmit)="getActivityLog()" ngNativeValidate>
+                  <div class="col-lg-2 col-md-3">
+                    <div class="react-datepicker-wrapper">
+                      <div class="react-datepicker__input-container">
+                        <div class="mb-2 custom-datepicker">
+                          <input type="text" id="from_date" name="from_date" class="form-control datepicker"
+                            [(ngModel)]="from_date" required>
+                          <i class="far fa-calendar"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-md-3">
+                    <div class="react-datepicker-wrapper">
+                      <div class="react-datepicker__input-container">
+                        <div class="mb-2 custom-datepicker">
+                          <input type="text" id="to_date" name="to_date" class="form-control datepicker"
+                            [(ngModel)]="to_date" required>
+                          <i class="far fa-calendar"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-md-3">
+                    <div class="mb-2 input-group position-relative">
+                      <select class="form-select" (change)="typeChanged()" name="type" [(ngModel)]="selectedItem">
+                        <option value="" disabled="">Select Log Type</option>
+                        <option value="login">Login</option>
+                        <option value="password">Change Password</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-md-2 d-grid">
+                    <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                  </div>
+                </form>
+                <div class="row row10 mt-2 justify-content-between">
+                  <div class="col-lg-2 col-6">
+                    <div class="mb-2 input-group position-relative">
+                      <span class="me-2">Show</span>
+                      <select (change)="this.offsetChange()" name="offset" class="form-select" [(ngModel)]="offset">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                        <option value="50">50</option>
+                      </select><span class="ms-2">Entries</span>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-6">
+                    <div class="mb-2 input-group position-relative">
+                      <span class="me-2">Search:</span>
+                      <input type="search" class="form-control" [placeholder]="totalLogs+' records...'"
+                        [(ngModel)]="searchString">
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-2 table-responsive" [class.position-relative]="loader">
+                  <div *ngIf="loader" id="loader-section">
+                    <div id="load-inner">
+                      <i class="fa fa-spinner fa-spin"></i>
+                    </div>
+                  </div>
+                  <table role="table" class="table table-bordered table-striped">
+                    <thead>
+                      <tr role="row">
+                        <th colspan="1" role="columnheader">Username</th>
+                        <th colspan="1" role="columnheader">Date</th>
+                        <th colspan="1" role="columnheader">Ip Address</th>
+                      </tr>
+                    </thead>
+                    <tbody role="rowgroup">
+                      <tr role="row" *ngFor="let item of logs;let i = index">
+                        <td role="cell">{{item.username}}</td>
+                        <td role="cell">{{item.createdAt | date:'yyyy-MM-dd HH:mm'}}</td>
+                        <td role="cell">{{item.ip}}</td>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="custom-pagination mt-2" *ngIf="logs.length">
+                  <div (click)="pageChange('first')" [class.disabled]="page<=1">First</div>
+                  <div (click)="pageChange('previous')" [class.disabled]="page<=1">Previous</div>
+                  <div (click)="pageChange('next')" [class.disabled]="page>=totalPage">Next</div>
+                  <div (click)="pageChange('last')" [class.disabled]="page>=totalPage">Last</div>
+                  <div>
+                    <span class="me-2">Page <b>{{page}} of {{totalPage}}</b></span>
+                    <span class="me-2">| Go to Page</span>
+                    <input (input)="goToPage()" class="form-control" type="number" name="gopage" [(ngModel)]="goPage">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <app-footer></app-footer>
+  </div>
+</div>

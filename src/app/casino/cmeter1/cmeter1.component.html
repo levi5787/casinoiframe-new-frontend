@@ -1,0 +1,531 @@
+<div style="display: flex; flex-wrap: wrap;">
+  <div class="center-container">
+    <div class="casino-page-container one-card-meter">
+
+      <!-- Header -->
+      <div class="casino-header">
+        <span class="casino-name">1 Card Meter<a class="ms-1">
+            <small (click)="open(rules)">Rules</small></a>
+        </span>
+        <span class="casino-rid d-none d-xl-inline-block">
+          <small>Round ID: <span>{{ roundId }}</span></small>
+        </span>
+      </div>
+
+      <!-- Mobile Game / Placed Bet tabs -->
+      <div class="casino-title-header-mobile d-xl-none">
+        <ul class="nav nav-tabs menu-tabs">
+          <li class="nav-item">
+            <div (click)="gameTabClicked()" class="nav-link" [class.active]="gametab">Game</div>
+          </li>
+          <li class="nav-item">
+            <div (click)="betTabClicked()" class="nav-link" [class.active]="bettab">Placed Bet ({{ mybets.length }})
+            </div>
+          </li>
+        </ul>
+        <div class="pe-2">
+          <span class="casino-rid">Round ID: <span>{{ roundId }}</span></span>
+        </div>
+      </div>
+
+      <!-- ============ GAME TAB ============ -->
+      <div [class.d-none]="bettab">
+        <div class="casino-video">
+          <div class="video-box-container">
+            <div class="casino-video-box">
+              <iframe [src]="safeURL"></iframe>
+            </div>
+          </div>
+
+          <div class="casino-video-cards" *ngIf="data">
+            <div class="d-flex flex-wrap justify-content-between">
+              <div>
+                <div class="flip-card-container">
+                  <div class="flip-card">
+                    <div class="flip-card-inner ">
+                      <div class="flip-card-front"><img [src]="cardA"></div>
+                      <div class="flip-card-back"><img [src]="cardA"></div>
+                    </div>
+                  </div>
+                  <div class="flip-card">
+                    <div class="flip-card-inner ">
+                      <div class="flip-card-front"><img [src]="cardB"></div>
+                      <div class="flip-card-back"><img [src]="cardB"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Flip clock -->
+          <div id="flipdown" class="flipdown flipdown__theme-dark clock flip-clock-wrapper">
+            <div class="rotor-group">
+              <div class="rotor">
+                <div class="rotor-leaf" [class.flipped]="flipfirst">
+                  <figure class="rotor-leaf-rear">{{ cfirstnum }}</figure>
+                  <figure class="rotor-leaf-front">{{ cfirstnum }}</figure>
+                </div>
+                <div class="rotor-top">{{ cfirstnum }}</div>
+                <div class="rotor-bottom">{{ cfirstnum }}</div>
+              </div>
+              <div class="rotor">
+                <div class="rotor-leaf" [class.flipped]="flipsecond">
+                  <figure class="rotor-leaf-rear">{{ clastnum }}</figure>
+                  <figure class="rotor-leaf-front">{{ clastnum }}</figure>
+                </div>
+                <div class="rotor-top">{{ clastnum }}</div>
+                <div class="rotor-bottom">{{ clastnum }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Board -->
+        <div class="casino-detail">
+          <div class="casino-table" *ngIf="data">
+            <div class="casino-table-full-box">
+              <div class="meter-btns">
+                <div class="meter-btn" [class.suspended-box]="isSuspended(fighterA)">
+                  <div class="meter-btn-box"><button class="btn btn-fighter-1 back" (click)="betFighter(placebet, 'A')">Fighter A<img
+                        src="https://versionobj.ecoassetsservice.com/v106/static/front/img/fight.png"
+                        alt="Fight"></button></div>
+                  <div class="text-center" [class.book-green]="!bookMap['FighterA']"><b class="text-danger"
+                      *ngIf="bookMap['FighterA']">{{ -bookMap['FighterA'] }}</b></div>
+                </div>
+                <div class="meter-btn" [class.suspended-box]="isSuspended(fighterB)">
+                  <div class="meter-btn-box"><button class="btn btn-fighter-2 back" (click)="betFighter(placebet, 'B')"><img
+                        src="https://versionobj.ecoassetsservice.com/v106/static/front/img/fight.png"
+                        alt="Fight">Fighter B</button></div>
+                  <div class="text-center" [class.book-green]="!bookMap['FighterB']"><b class="text-danger"
+                      *ngIf="bookMap['FighterB']">{{ -bookMap['FighterB'] }}</b></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Last result -->
+          <div class="casino-last-result-title">
+            <span>Last Result</span>
+            <span><a href="/casino-results/cmeter1">View All</a></span>
+          </div>
+          <div class="casino-last-results">
+            <p *ngFor="let item of results; trackBy: trackByMid">
+              <span (click)="openResult(result, item['mid'])" class="result" [class.result-a]="item.result === 'A'"
+                [class.result-b]="item.result === 'B'">
+                {{ item.result || 'R' }}
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ BET TAB (mobile) ============ -->
+      <div [class.d-none]="gametab">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Matched Bet</th>
+                <th class="text-end">Odds</th>
+                <th class="text-end">Stake</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of mybets" [ngClass]="item.betType">
+                <td>{{ item['selectionName'] }}</td>
+                <td class="text-end">{{ item['rate'] }}</td>
+                <td class="text-end">{{ item['stake'] }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ RIGHT SIDEBAR ============ -->
+  <div class="sidebar right-sidebar casino-right-sidebar" [class.sticky]="isSticky">
+    <!-- Desktop place bet -->
+    <div class="sidebar-box place-bet-container position-relative" *ngIf="showbetform">
+      <div *ngIf="placeLoader" id="loader-section">
+        <div id="load-inner"><i class="fa fa-spinner fa-spin"></i></div>
+      </div>
+      <div class="sidebar-title">
+        <h4>Place Bet</h4>
+        <span *ngIf="max != 0">Range: {{ min }} to {{ max | shortNumber }}</span>
+      </div>
+      <div class="place-bet-box" [ngClass]="betType">
+        <div class="place-bet-box-header">
+          <div class="place-bet-for">(Bet for)</div>
+          <div class="place-bet-odds">Odds</div>
+          <div class="place-bet-stake">Stake</div>
+          <div class="place-bet-profit">Profit</div>
+        </div>
+        <div class="place-bet-box-body">
+          <div class="place-bet-for"><i class="fas fa-times text-danger me-1"></i><span>{{ betFor }}</span></div>
+          <div class="place-bet-odds"><input type="text" [(ngModel)]="odds" name="odds" class="form-control" disabled>
+          </div>
+          <div class="place-bet-stake">
+            <input type="number" [(ngModel)]="stake" (keyup)="calcProfit()" name="stake" maxlength="10"
+              class="form-control">
+          </div>
+          <div class="place-bet-profit">{{ twoDecimal(profit) }}</div>
+        </div>
+        <div class="place-bet-buttons">
+          <button *ngFor="let button of placebetButton; trackBy: trackByFunc" (click)="placeStake(button.value)"
+            class="btn btn-place-bet">+{{ button.name }}</button>
+        </div>
+        <div class="place-bet-action-buttons">
+          <div><button (click)="openButtons(setButton)" class="btn btn-info">Edit</button></div>
+          <div>
+            <button class="btn btn-danger me-1" (click)="hideBetPlace()">Reset</button>
+            <button class="btn btn-success" [class.disabled]="!stake" (click)="submitbet()">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- My Bet -->
+    <div class="sidebar-box my-bet-container">
+      <div class="sidebar-title">
+        <h4>My Bet</h4>
+      </div>
+      <div class="my-bets">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Matched Bet</th>
+                <th class="text-end">Odds</th>
+                <th class="text-end">Stake</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of mybets" [ngClass]="item.betType">
+                <td>{{ item['selectionName'] }}</td>
+                <td class="text-end">{{ item['rate'] }}</td>
+                <td class="text-end">{{ item['stake'] }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Result modal ============ -->
+<ng-template #result let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">1 Card Meter Result</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-body">
+        <div class="casino-result-modal">
+          <div class="casino-result-round-id">
+            <span><b>Round Id: </b> {{ temprId }}</span>
+            <span *ngIf="tempMatchTime"><b>Match Time: </b>{{ tempMatchTime }}</span>
+          </div>
+          <div class="row mt-2">
+            <div class="col-md-6 text-center">
+              <h4 class="result-title">Fighter A</h4>
+              <div class="casino-result-cards">
+                <img [src]="'/img/cards-new/' + (tempCards[0] || '1') + '.png'">
+                <div class="casino-winner-icon" *ngIf="tempWinner === 'Fighter A'"><i class="fas fa-trophy "></i></div>
+              </div>
+            </div>
+            <div class="col-md-6 text-center">
+              <h4 class="result-title">Fighter B</h4>
+              <div class="casino-result-cards">
+                <img [src]="'/img/cards-new/' + (tempCards[1] || '1') + '.png'">
+                <div class="casino-winner-icon" *ngIf="tempWinner === 'Fighter B'"><i class="fas fa-trophy "></i></div>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-2 justify-content-center">
+            <div class="col-md-6">
+              <div class="casino-result-desc">
+                <div class="casino-result-desc-item">
+                  <div>Winner</div>
+                  <div>{{ tempWinner }}</div>
+                </div>
+                <div class="casino-result-desc-item">
+                  <div>Points</div>
+                  <div>{{ resultPoints }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- ============ Place bet modal (mobile) ============ -->
+<ng-template #placebet let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">Place Bet</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="place-bet-modal casino-bet-modal" [ngClass]="betType">
+        <div *ngIf="placeLoader" id="loader-section">
+          <div id="load-inner"><i class="fa fa-spinner fa-spin"></i></div>
+        </div>
+        <div class="row row5">
+          <div class="col-6"><b>{{ betFor }}</b></div>
+          <div class="col-6 text-end"><span>Profit: {{ twoDecimal(profit) }}</span></div>
+        </div>
+        <div class="odd-stake-box">
+          <div class="row row5 mt-1">
+            <div class="col-6 text-center">Amount</div>
+            <div class="col-6 text-center">Odds</div>
+          </div>
+          <div class="row row5 mt-1">
+            <div class="col-6"><input type="number" class="stakeinput w-100" [(ngModel)]="stake" (keyup)="calcProfit()"
+                name="stake" maxlength="10"></div>
+            <div class="col-6">
+              <div class="float-end"><input type="text" class="stakeinput" [(ngModel)]="odds" name="odds" disabled>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="place-bet-buttons mt-1">
+          <button class="btn btn-place-bet" *ngFor="let button of placebetButton; trackBy: trackByFunc"
+            (click)="placeStake(button.value)">+{{ button.name }}</button>
+        </div>
+        <div class="mt-1 place-bet-btn-box">
+          <button class="btn btn-link" (click)="resetStake()">clear</button>
+          <button class="btn btn-info" (click)="openButtons(setButton)">Edit</button>
+          <button class="btn btn-danger" (click)="d('Cross click')">Reset</button>
+          <button class="btn btn-success" [class.disabled]="!stake" (click)="submitbet()">Place Bet</button>
+        </div>
+        <div class="mt-3 d-flex justify-content-between align-items-center">
+          <b><span *ngIf="max != 0">Range: {{ min }} to {{ max | shortNumber }}</span></b>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- ============ Stake button editor ============ -->
+<ng-template #setButton let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">Set Button Value</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="mt-1 nav nav-pills" role="tablist">
+        <div class="nav-item">
+          <a role="tab" (click)="clickSetButtonTab('game')" [class.active]="setButtonTab == 'game'"
+            class="nav-link">Game Buttons</a>
+        </div>
+        <div class="nav-item">
+          <a role="tab" (click)="clickSetButtonTab('casino')" [class.active]="setButtonTab == 'casino'"
+            class="nav-link">Casino Buttons</a>
+        </div>
+      </div>
+      <div class="mt-1 tab-content">
+        <div role="tabpanel" class="fade tab-pane show" [class.active]="setButtonTab == 'game'">
+          <form (submit)="updateButtons()">
+            <div class="row row10">
+              <div class="mb-1 col-6"><label class="form-label"><b>Price Label:</b></label></div>
+              <div class="mb-1 col-6"><label class="form-label"><b>Price Value:</b></label></div>
+            </div>
+            <div class="row row10" *ngFor="let item of userButtons.gamebutton; let i = index;">
+              <div class="mb-3 col-6"><input type="text" [name]="'game' + item.name + i" class="form-control"
+                  [(ngModel)]="item.name"></div>
+              <div class="mb-3 col-6"><input type="number" [name]="'gameval' + i" class="form-control"
+                  [(ngModel)]="item.value"></div>
+            </div>
+            <div class="row row10">
+              <div class="mb-3 col-md-6"><button type="submit" class="btn btn-primary btn-block">Update</button></div>
+            </div>
+          </form>
+        </div>
+        <div role="tabpanel" class="fade tab-pane show" [class.active]="setButtonTab == 'casino'">
+          <form (submit)="updateButtons()">
+            <div class="row row10">
+              <div class="mb-1 col-6"><label class="form-label"><b>Price Label:</b></label></div>
+              <div class="mb-1 col-6"><label class="form-label"><b>Price Value:</b></label></div>
+            </div>
+            <div class="row row10" *ngFor="let item of userButtons.casinobutton; let i = index;">
+              <div class="mb-3 col-6"><input type="text" [name]="'casino' + item.name + i" class="form-control"
+                  [(ngModel)]="item.name"></div>
+              <div class="mb-3 col-6"><input type="number" [name]="'casinoval' + i" class="form-control"
+                  [(ngModel)]="item.value"></div>
+            </div>
+            <div class="row row10">
+              <div class="mb-3 col-md-6"><button type="submit" class="btn btn-primary btn-block">Update</button></div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Rules -->
+<ng-template #rules let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">1 Card Meter Rules</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <style type="text/css">
+          .rules-section .row.row5 {
+            margin-left: -5px;
+            margin-right: -5px;
+          }
+
+          .rules-section .pl-2 {
+            padding-left: .5rem !important;
+          }
+
+          .rules-section .pr-2 {
+            padding-right: .5rem !important;
+          }
+
+          .rules-section .row.row5>[class*="col-"],
+          .rules-section .row.row5>[class*="col"] {
+            padding-left: 5px;
+            padding-right: 5px;
+          }
+
+          .rules-section {
+            text-align: left;
+            margin-bottom: 10px;
+          }
+
+          .rules-section .table {
+            color: #fff;
+            border: 1px solid #444;
+            background-color: #222;
+            font-size: 12px;
+          }
+
+          .rules-section .table td,
+          .rules-section .table th {
+            border-bottom: 1px solid #444;
+          }
+
+          .rules-section ul li,
+          .rules-section p {
+            margin-bottom: 5px;
+          }
+
+          .rules-section::-webkit-scrollbar {
+            width: 8px;
+          }
+
+          .rules-section::-webkit-scrollbar-track {
+            background: #666666;
+          }
+
+          .rules-section::-webkit-scrollbar-thumb {
+            background-color: #333333;
+          }
+
+          .rules-section .rules-highlight {
+            color: #FDCF13;
+            font-size: 16px;
+          }
+
+          .rules-section .rules-sub-highlight {
+            color: #FDCF13;
+            font-size: 14px;
+          }
+
+          .rules-section .list-style,
+          .rules-section .list-style li {
+            list-style: disc;
+          }
+
+          .rules-section .rule-card {
+            height: 20px;
+            margin-left: 5px;
+          }
+
+          .rules-section .card-character {
+            font-family: Card Characters;
+          }
+
+          .rules-section .red-card {
+            color: red;
+          }
+
+          .rules-section .black-card {
+            color: black;
+          }
+
+          .rules-section .cards-box {
+            background: #fff;
+            padding: 6px;
+            display: inline-block;
+            color: #000;
+            min-width: 150px;
+          }
+        </style>
+
+
+        <div class="rules-section">
+          <ul class="pl-4 pr-4 list-style">
+            <li>1 Card meter will be played with 8 deck of cards.</li>
+            <li>In this game the value of the cards will be as follow
+              <p>ACE =1, 2=2, 3=3, ……, Jack =11, Queen=12, King=13.</p>
+            </li>
+            <li>In this game there will be two players which will be named as Fighter A &amp; Fighter B.</li>
+            <li>1 card each will be dealt to both the fighters.</li>
+            <li>In this game the winner will be the fighter who will have the higher value card and also his point
+              difference will be calculated.</li>
+          </ul>
+          <p>For example,</p>
+          <p>Fighter A has 7.</p>
+          <p>Fighter B has King (K).</p>
+          <p>So fighter B will be the winner with 6 points (13-7 = 6).</p>
+          <p>here the winning amount will be calculated on the point differences.</p>
+          <p>Like,</p>
+          <p>1 point 1 time bet amount.</p>
+          <p>2 points 2 times bet amount.</p>
+          <p>3 points 3 times bet amount.</p>
+          <p>4 points 4 times bet amount.</p>
+          <p>5 points 5 times bet amount.</p>
+          <p>6 points 6 times bet amount.</p>
+          <p>7 points 7 times bet amount.</p>
+          <p>8 points 8 times bet amount.</p>
+          <p>9 points 9 times bet amount.</p>
+          <p>10 points 10 times bet amount.</p>
+          <p>11 points 11 times bet amount.</p>
+          <p>12 points 12 times bet amount.</p>
+          <p>(12 times bet amount will be the highest)</p>
+          <p>So in this case the difference is 6 points thus the winning amount for Fighter B will be 6 times of the bet
+            amount and similarly For Fighter A the losing amount will be 6 times of the bet amount.</p>
+          <ul class="pl-4 pr-4 list-style">
+            <li>In this game If punter place bet of 100 amount &amp; If he loses by 12 points then he will lose 1200
+              amount.
+              <p>In short in this game punter can win or lose up to 12 times of his betting amount. </p>
+            </li>
+            <li>If both the fighters have same value cards but of different suits then the winner will be decided by the
+              ranking of the suits
+              <p>Ie. Spades hearts clubs diamonds</p>
+              <p>And in this case the winning amount will be 1 time of the bet amount.
+              </p>
+              <p>If both the fighters have the same value cards and of the same suits then in this case it will be a
+                tieand the bet amount will be pushed( Returned)</p>
+            </li>
+            <li>2% will be charged on winning amount only.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

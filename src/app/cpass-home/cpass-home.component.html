@@ -1,0 +1,74 @@
+<div id="root">
+  <div style="position: fixed; z-index: 9999; inset: 16px; pointer-events: none;"></div>
+  <div class="wrapper">
+    <app-header></app-header>
+    <div class="main-container">
+      <div class="sidebar left-sidebar">
+        <app-sidebar></app-sidebar>
+      </div>
+      <div class="center-main-container report-page">
+        <div class="center-container">
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-title">Change Password</h4>
+            </div>
+            <div class="card-body">
+              <div class="report-form">
+                <form #changepassform="ngForm" (ngSubmit)="changepass(changepassform.value)" class="">
+                  <div class="row row10">
+                    <div class="mb-3 position-relative col-md-6"><label class="form-label">Current Password:</label>
+                      <input (keyup)="clearErr('current_password')" name="current_password" type="password" class="form-control"
+                        placeholder="Enter Current password" ngModel>
+                      <!-- <p *ngIf="this.requirederr.current_password && !values.current_password" class="error-form">
+                        Current password is required.
+                      </p>
+                      <p *ngIf="values.current_password?.length < 3" class="error-form">
+                        Current password must be at least 3 characters long.
+                      </p> -->
+                      <div *ngIf="requirederr.current_password?.length > 0">
+                        <p *ngFor="let error of requirederr.current_password" class="error-form">
+                          {{ error }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row row10">
+                    <div class="mb-3 position-relative col-md-6"><label class="form-label">New Password:</label>
+                      <input (keyup)="clearErr('new_password')" name="new_password" type="password" class="form-control" placeholder="Enter New Password"
+                        ngModel  >
+                        <div *ngIf="requirederr.new_password?.length > 0">
+                          <p *ngFor="let error of requirederr.new_password" class="error-form">
+                            {{ error }}
+                          </p>
+                        </div>
+                    </div>
+
+                  </div>
+                  <div class="row row10">
+                    <div class="mb-4 position-relative col-md-6"><label class="form-label">Confirm
+                        Password:</label>
+                      <input (keyup)="clearErr('confirm_password')" name="confirm_password" type="password" class="form-control"
+                        placeholder="Confirm New Password" ngModel >
+                        <div *ngIf="requirederr.confirm_password">
+                          <p *ngFor="let error of requirederr.confirm_password" class="error-form">
+                            {{ error }}
+                          </p>
+                        </div>
+                    </div>
+                    <!-- <span id="password-error" [class.text-danger]="err!=''">{{err}}</span> -->
+                  </div>
+                  <div class="row row10">
+                    <div class="mb-3 col-md-6">
+                      <button type="submit" class="btn btn-primary btn-block">Change Password</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <app-footer></app-footer>
+  </div>
+</div>

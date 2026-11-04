@@ -1,0 +1,752 @@
+<div style="display: flex; flex-wrap: wrap;">
+  <div class="center-container">
+    <div class="casino-page-container cricket20">
+      <div class="casino-header">
+        <span class="casino-name">Cricket Match 20-20<a class="ms-1">
+            <small (click)="open(rules)">Rules</small></a>
+        </span>
+        <span class="casino-rid d-none d-xl-inline-block">
+          <small>Round ID: <span>{{roundId}}</span></small>
+        </span>
+      </div>
+      <!-- Nav Section Mobile -->
+      <div class="casino-title-header-mobile d-xl-none">
+        <ul class="nav nav-tabs menu-tabs">
+          <li class="nav-item">
+            <div (click)="gameTabClicked()" class="nav-link" [class.active]="gametab">Game</div>
+          </li>
+          <li class="nav-item">
+            <div (click)="betTabClicked()" class="nav-link" [class.active]="bettab">Placed Bet ({{mybets.length}})</div>
+          </li>
+        </ul>
+        <div class="pe-2">
+          <span class="casino-rid">Round ID: <span>{{roundId}}</span></span>
+        </div>
+      </div>
+      <!-- Game Tab section -->
+      <div [class.d-none]="bettab">
+        <div class="casino-video">
+          <div class="video-box-container">
+            <div class="casino-video-box">
+              <iframe [src]="safeURL" width="100%" height="400" style="border: 0px;"></iframe>
+            </div>
+          </div>
+          <div *ngIf="bounceEnter" class="cricket20ballpopup">
+            <img src="/img/cricket20/ball0.png">
+          </div>
+          <div *ngIf="bannerShow" class="cricket20videobannerbox">
+            <img src="/img/cricket20/cricket20bg.jpg" class="img-fluid">
+            <div class="cricket20videobanner">
+              <div>Team A <br> {{teamArun+'/'+teamAwicket}}<br>{{teamAover+' over'}}</div>
+              <div>Team A <br> {{teamBrun+'/'+teamBwicket}}<br>{{teamBover+' over'}}</div>
+              <div class="w-100">Team B Need 12 Runs to WIN Match. If The Score is Tie Team B will WIN. </div>
+              <div class="cricket20bannertitle">Cricket Match 20-20</div>
+            </div>
+          </div>
+          <div class="cricket20books" *ngIf="runBook.length>0">
+            <div *ngFor="let item of runBook">
+              {{item.selectionName.split(' ')[1]}} -&gt;<span
+                [ngClass]="item.amount>=0?'text-success':'text-danger'">-{{item.amount}}</span>
+            </div>
+          </div>
+          <div class="casino-video-cards">
+            <div>
+              <div class="flip-card-container">
+                <div class="flip-card">
+                  <div class="flip-card-inner ">
+                    <div class="flip-card-front">
+                      <img [src]="'/img/cards/'+c1+'.png'">
+                    </div>
+                    <div class="flip-card-back">
+                      <img [src]="'/img/cards/'+c1+'.png'">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Flip Clock -->
+          <div id="flipdown" class="flipdown flipdown__theme-dark clock flip-clock-wrapper">
+            <div class="rotor-group">
+              <div class="rotor">
+                <div class="rotor-leaf" [class.flipped]="flipfirst">
+                  <figure class="rotor-leaf-rear">{{ cfirstnum }}</figure>
+                  <figure class="rotor-leaf-front">{{ cfirstnum }}</figure>
+                </div>
+                <div class="rotor-top">{{ cfirstnum }}</div>
+                <div class="rotor-bottom">{{ cfirstnum }}</div>
+              </div>
+              <div class="rotor">
+                <div class="rotor-leaf" [class.flipped]="flipsecond">
+                  <figure class="rotor-leaf-rear">{{ clastnum }}</figure>
+                  <figure class="rotor-leaf-front">{{ clastnum }}</figure>
+                </div>
+                <div class="rotor-top">{{ clastnum }}</div>
+                <div class="rotor-bottom">{{ clastnum }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="casino-detail">
+          <div class="casino-table" *ngIf="data">
+            <div class="cricket20-container">
+              <div class="cricket20-left">
+                <div class="score-box">
+                  <div class="team-score">
+                    <div>
+                      <div class="text-center"><b>Team A</b></div>
+                      <div class="text-center">
+                        <span class="ml-1">{{teamArun+'/'+teamAwicket}} </span>
+                        <span class="ml-2">{{teamAover+' over'}}</span>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="text-center"><b>Team B</b></div>
+                      <div class="text-center">
+                        <span class="ml-1">{{teamBrun+'/'+teamBwicket}} </span>
+                        <span class="ml-1">{{teamBover+' Over'}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="ball-icon"><img src="/img/cricket20/ball2.png"></div>
+                  <div class="blbox">
+                    <div class="casino-odds-box back" [class.suspended-box]="run2.gstatus!='ACTIVE'">
+                      <span class="casino-odds"
+                        (click)="openBetForm(placebet,'Run 2',run2.b1,'back',1,'Run', runsmin, runsmax)">{{run2.gstatus!='ACTIVE'?'':removeDecimal(run2.b1)}}</span>
+                    </div>
+                    <div class="casino-odds-box lay" [class.suspended-box]="run2.gstatus!='ACTIVE'">
+                      <span class="casino-odds"
+                        (click)="openBetForm(placebet,'Run 2',run2.l1,'lay',1,'Run', runsmin, runsmax)">{{run2.gstatus!='ACTIVE'?'':removeDecimal(run2.l1)}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="score-box">
+                  <div class="team-score">
+                    <div>
+                      <div class="text-center"><b>Team A</b></div>
+                      <div class="text-center"><span class="ml-1">{{teamArun+'/'+teamAwicket}}</span><span
+                          class="ml-2">{{teamAover+' Over'}}</span></div>
+                    </div>
+                    <div>
+                      <div class="text-center"><b>Team B</b></div>
+                      <div class="text-center"><span class="ml-1">{{teamBrun+'/'+teamBwicket}}</span><span
+                          class="ml-1">{{teamBover+' Over'}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="ball-icon"><img src="/img/cricket20/ball3.png"></div>
+                  <div class="blbox">
+                    <div class="casino-odds-box back" [class.suspended-box]="run3.gstatus!='ACTIVE'"
+                      (click)="openBetForm(placebet,'Run 3',run3.b1,'back',2,'Run', runsmin, runsmax)">
+                      <span class="casino-odds">{{run3.gstatus!='ACTIVE'?'':removeDecimal(run3.b1)}}</span>
+                    </div>
+                    <div class="casino-odds-box lay" [class.suspended-box]="run3.gstatus!='ACTIVE'"
+                      (click)="openBetForm(placebet,'Run 3',run3.l1,'lay',2,'Run', runsmin, runsmax)">
+                      <span class="casino-odds">{{run3.gstatus!='ACTIVE'?'':removeDecimal(run3.l1)}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="score-box">
+                  <div class="team-score">
+                    <div>
+                      <div class="text-center"><b>Team A</b></div>
+                      <div class="text-center"><span class="ml-1">{{teamArun+'/'+teamAwicket}} </span><span
+                          class="ml-2">{{teamAover+' Over'}}</span></div>
+                    </div>
+                    <div>
+                      <div class="text-center"><b>Team B</b></div>
+                      <div class="text-center"><span class="ml-1">{{teamBrun+'/'+teamBwicket}} </span><span
+                          class="ml-1">{{teamBover+' Over'}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="ball-icon"><img src="/img/cricket20/ball4.png"></div>
+                  <div class="blbox">
+                    <div class="casino-odds-box back" [class.suspended-box]="run4.gstatus!='ACTIVE'"
+                      (click)="openBetForm(placebet,'Run 4',run4.b1,'back',3,'Run', runsmin, runsmax)">
+                      <span class="casino-odds">{{run4.gstatus!='ACTIVE'?'':removeDecimal(run4.b1)}}</span>
+                    </div>
+                    <div class="casino-odds-box lay" [class.suspended-box]="run4.gstatus!='ACTIVE'"
+                      (click)="openBetForm(placebet,'Run 4',run4.l1,'lay',3,'Run', runsmin, runsmax)">
+                      <span class="casino-odds">{{run4.gstatus!='ACTIVE'?'':removeDecimal(run4.l1)}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="score-box">
+                  <div class="team-score">
+                    <div>
+                      <div class="text-center"><b>Team A</b></div>
+                      <div class="text-center"><span class="ml-1">{{teamArun+'/'+teamAwicket}}</span><span
+                          class="ml-2">{{teamAover+' Over'}}</span></div>
+                    </div>
+                    <div>
+                      <div class="text-center"><b>Team B</b></div>
+                      <div class="text-center"><span class="ml-1">{{teamBrun+'/'+teamBwicket}} </span><span
+                          class="ml-1">{{teamBover+' Over'}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="ball-icon"><img src="/img/cricket20/ball5.png"></div>
+                  <div class="blbox">
+                    <div class="casino-odds-box back" [class.suspended-box]="run5.gstatus!='ACTIVE'"
+                      (click)="openBetForm(placebet,'Run 5',run5.b1,'back',4,'Run', runsmin, runsmax)">
+                      <span class="casino-odds">{{run5.gstatus!='ACTIVE'?'':removeDecimal(run5.b1)}}</span>
+                    </div>
+                    <div class="casino-odds-box lay" [class.suspended-box]="run5.gstatus!='ACTIVE'"
+                      (click)="openBetForm(placebet,'Run 5',run5.l1,'lay',4,'Run', runsmin, runsmax)">
+                      <span class="casino-odds">{{run5.gstatus!='ACTIVE'?'':removeDecimal(run5.l1)}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="score-box">
+                  <div class="team-score">
+                    <div>
+                      <div class="text-center"><b>Team A</b></div>
+                      <div class="text-center">
+                        <span class="ml-1">{{teamArun+'/'+teamAwicket}} </span>
+                        <span class="ml-2">{{teamAover+' Over'}}</span>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="text-center"><b>Team B</b></div>
+                      <div class="text-center">
+                        <span class="ml-1">{{teamBrun+'/'+teamBwicket}} </span>
+                        <span class="ml-1">{{teamBover+' Over'}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="ball-icon"><img src="/img/cricket20/ball6.png"></div>
+                  <div class="blbox">
+                    <div class="casino-odds-box back" [class.suspended-box]="run6.gstatus!='ACTIVE'"
+                      (click)="openBetForm(placebet,'Run 6',run6.b1,'back',5,'Run', runsmin, runsmax)">
+                      <span class="casino-odds">{{run6.gstatus!='ACTIVE'?'':removeDecimal(run6.b1)}}</span>
+                    </div>
+                    <div class="casino-odds-box lay" [class.suspended-box]="run6.gstatus!='ACTIVE'"
+                      (click)="openBetForm(placebet,'Run 6',run6.l1,'lay',5,'Run', runsmin, runsmax)">
+                      <span class="casino-odds">{{run6.gstatus!='ACTIVE'?'':removeDecimal(run6.l1)}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="cricket20-right">
+                <div class="score-box">
+                  <div class="team-score">
+                    <div>
+                      <div class="text-center"><b>Team A</b></div>
+                      <div class="text-center">
+                        <span class="ml-1">{{teamArun+'/'+teamAwicket}}</span>
+                        <span class="ml-1">{{teamAover+' Over'}}</span>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="text-center"><b>Team B</b></div>
+                      <div class="text-center"><span class="ml-1">{{teamBrun+'/'+teamBwicket}} </span><span
+                          class="ml-1">{{teamBover+' Over'}}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="ball-icon"><img src="/img/cricket20/ball7.png"></div>
+                  <div class="blbox">
+                    <div class="casino-odds-box back" [class.suspended-box]="run7.gstatus!='ACTIVE'"
+                      (click)="openBetForm(placebet,'Run 7',run7.b1,'back',6,'Run', runsmin, runsmax)">
+                      <span class="casino-odds">{{run7.gstatus!='ACTIVE'?'':removeDecimal(run7.b1)}}</span>
+                    </div>
+                    <div class="casino-odds-box lay" [class.suspended-box]="run7.gstatus!='ACTIVE'"
+                      (click)="openBetForm(placebet,'Run 7',run7.l1,'lay',6,'Run', runsmin, runsmax)">
+                      <span class="casino-odds">{{run7.gstatus!='ACTIVE'?'':removeDecimal(run7.l1)}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="score-box">
+                  <div class="team-score">
+                    <div>
+                      <div class="text-center"><b>Team A</b></div>
+                      <div class="text-center"><span class="ml-1">{{teamArun+'/'+teamAwicket}} </span><span
+                          class="ml-1">{{teamAover+' Over'}}</span></div>
+                    </div>
+                    <div>
+                      <div class="text-center"><b>Team B</b></div>
+                      <div class="text-center"><span class="ml-1">{{teamBrun+'/'+teamBwicket}}</span><span
+                          class="ml-1">{{teamBover+' Over'}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="ball-icon"><img src="/img/cricket20/ball8.png"></div>
+                  <div class="blbox">
+                    <div class="casino-odds-box back" [class.suspended-box]="run8.gstatus!='ACTIVE'"
+                      (click)="openBetForm(placebet,'Run 8',run8.b1,'back',7,'Run', runsmin, runsmax)">
+                      <span class="casino-odds">{{run8.gstatus!='ACTIVE'?'':removeDecimal(run8.b1)}}</span>
+                    </div>
+                    <div class="casino-odds-box lay" [class.suspended-box]="run8.gstatus!='ACTIVE'"
+                      (click)="openBetForm(placebet,'Run 8',run8.l1,'lay',7,'Run', runsmin, runsmax)">
+                      <span class="casino-odds">{{run8.gstatus!='ACTIVE'?'':removeDecimal(run8.l1)}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="score-box">
+                  <div class="team-score">
+                    <div>
+                      <div class="text-center"><b>Team A</b></div>
+                      <div class="text-center"><span class="ml-1">{{teamArun+'/'+teamAwicket}} </span><span
+                          class="ml-1">{{teamAover+' Over'}}</span></div>
+                    </div>
+                    <div>
+                      <div class="text-center"><b>Team B</b></div>
+                      <div class="text-center"><span class="ml-1">{{teamBrun+'/'+teamBwicket}}</span><span
+                          class="ml-1">{{teamBover+' Over'}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="ball-icon"><img src="/img/cricket20/ball9.png"></div>
+                  <div class="blbox">
+                    <div class="casino-odds-box back" [class.suspended-box]="run9.gstatus!='ACTIVE'"
+                      (click)="openBetForm(placebet,'Run 9',run9.b1,'back',8,'Run', runsmin, runsmax)">
+                      <span class="casino-odds">{{run9.gstatus!='ACTIVE'?'':removeDecimal(run9.b1)}}</span>
+                    </div>
+                    <div class="casino-odds-box lay" [class.suspended-box]="run9.gstatus!='ACTIVE'"
+                      (click)="openBetForm(placebet,'Run 9',run9.l1,'lay',8,'Run', runsmin, runsmax)">
+                      <span class="casino-odds">{{run9.gstatus!='ACTIVE'?'':removeDecimal(run9.l1)}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="score-box">
+                  <div class="team-score">
+                    <div>
+                      <div class="text-center"><b>Team A</b></div>
+                      <div class="text-center"><span class="ml-1">{{teamArun+'/'+teamAwicket}} </span><span
+                          class="ml-1">{{teamAover+' Over'}}</span></div>
+                    </div>
+                    <div>
+                      <div class="text-center"><b>Team B</b></div>
+                      <div class="text-center"><span class="ml-1">{{teamBrun+'/'+teamBwicket}}</span><span
+                          class="ml-1">{{teamBover+' Over'}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="ball-icon"><img src="/img/cricket20/ball10.png"></div>
+                  <div class="blbox">
+                    <div class="casino-odds-box back" [class.suspended-box]="run10.gstatus!='ACTIVE'"
+                      (click)="openBetForm(placebet,'Run 10',run10.b1,'back',9,'Run', runsmin, runsmax)">
+                      <span class="casino-odds">{{run10.gstatus!='ACTIVE'?'':removeDecimal(run10.b1)}}</span>
+                    </div>
+                    <div class="casino-odds-box lay" [class.suspended-box]="run10.gstatus!='ACTIVE'"
+                      (click)="openBetForm(placebet,'Run 10',run10.l1,'lay',9,'Run', runsmin, runsmax)">
+                      <span class="casino-odds">{{run10.gstatus!='ACTIVE'?'':removeDecimal(run10.l1)}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="casino-remark mt-1">
+              <marquee scrollamount="3">Team B Need 12 Runs to WIN Match. If The Score is Tie Team B will WIN.
+              </marquee>
+            </div>
+          </div>
+          <div class="casino-last-result-title">
+            <span>Last Result</span>
+            <span><a href="/casino-results/cmatch20">View All</a></span>
+          </div>
+          <div class="casino-last-results">
+            <p *ngFor="let item of results;trackBy:trackByMid">
+              <span class="result" (click)="openResult(result,item['mid'])">
+                <img [src]="'/img/cricket20/ball'+item.result+'.png'" class="balls">
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <!-- Bet Tab Section -->
+      <div [class.d-none]="gametab">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Matched Bet</th>
+                <th class="text-end">Odds</th>
+                <th class="text-end">Stake</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of mybets" [ngClass]="item.betType">
+                <td>{{item['selectionName']}}</td>
+                <td class="text-end">{{item['rate']}}</td>
+                <td class="text-end">{{item['stake']}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar right-sidebar casino-right-sidebar" [class.sticky]="isSticky">
+    <!-- Placebet Section Desktop -->
+    <div class="sidebar-box place-bet-container position-relative" *ngIf="showbetform">
+      <div *ngIf="placeLoader" id="loader-section">
+        <div id="load-inner">
+          <i class="fa fa-spinner fa-spin"></i>
+        </div>
+      </div>
+      <div class="sidebar-title">
+        <h4>Place Bet</h4>
+        <span *ngIf="max!=0">Range: {{min}} to {{max | shortNumber}}</span>
+      </div>
+      <div class="place-bet-box" [ngClass]="betType">
+        <div class="place-bet-box-header">
+          <div class="place-bet-for">(Bet for)</div>
+          <div class="place-bet-odds">Odds</div>
+          <div class="place-bet-stake">Stake</div>
+          <div class="place-bet-profit">Profit</div>
+        </div>
+        <div class="place-bet-box-body">
+          <div class="place-bet-for">
+            <i class="fas fa-times text-danger me-1"></i>
+            <span>{{betFor}}</span>
+          </div>
+          <div class="place-bet-odds">
+            <input type="text" [(ngModel)]="odds" name="odds" class="form-control" disabled="">
+          </div>
+          <div class="place-bet-stake">
+            <input type="number" [(ngModel)]="stake" (keyup)="calcProfit(stake)" name="stake" maxlength="10"
+              class="form-control" value="">
+          </div>
+          <div class="place-bet-profit"></div>
+        </div>
+        <div class="place-bet-buttons">
+          <button *ngFor="let button of placebetButton; trackBy:trackByFunc" (click)="placeStake(button.value)"
+            class="btn btn-place-bet">+{{button.name}}</button>
+        </div>
+        <div class="place-bet-action-buttons">
+          <div><button (click)="openButtons(setButton)" class="btn btn-info">Edit</button></div>
+          <div>
+            <button class="btn btn-danger me-1" (click)="hideBetPlace()">Reset</button>
+            <button class="btn btn-success" [class.disabled]="!stake" (click)="submitbet()">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- My Bet Section Desktop -->
+    <div class="sidebar-box my-bet-container">
+      <div class="sidebar-title">
+        <h4>My Bet</h4>
+      </div>
+      <div class="my-bets">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Matched Bet</th>
+                <th class="text-end">Odds</th>
+                <th class="text-end">Stake</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of mybets" [ngClass]="item.betType">
+                <td>{{item['selectionName']}}</td>
+                <td class="text-end">{{item['rate']}}</td>
+                <td class="text-end">{{item['stake']}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Game Rulse -->
+<ng-template #rules let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">Cricket Match 20-20 Rules</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body" bis_skin_checked="1">
+      <div bis_skin_checked="1">
+        <style type="text/css">
+          .rules-section .row.row5 {
+            margin-left: -5px;
+            margin-right: -5px;
+          }
+
+          .rules-section .pl-2 {
+            padding-left: .5rem !important;
+          }
+
+          .rules-section .pr-2 {
+            padding-right: .5rem !important;
+          }
+
+          .rules-section .row.row5>[class*="col-"],
+          .rules-section .row.row5>[class*="col"] {
+            padding-left: 5px;
+            padding-right: 5px;
+          }
+
+          .rules-section {
+            text-align: left;
+            margin-bottom: 10px;
+          }
+
+          .rules-section .table {
+            color: #fff;
+            border: 1px solid #444;
+            background-color: #222;
+            font-size: 12px;
+          }
+
+          .rules-section .table td,
+          .rules-section .table th {
+            border-bottom: 1px solid #444;
+            border-right: 1px solid #444;
+            vertical-align: middle;
+            text-align: center;
+          }
+
+          .rules-section ul li,
+          .rules-section p {
+            margin-bottom: 5px;
+          }
+
+          .rules-section::-webkit-scrollbar {
+            width: 8px;
+          }
+
+          .rules-section::-webkit-scrollbar-track {
+            background: #666666;
+          }
+
+          .rules-section::-webkit-scrollbar-thumb {
+            background-color: #333333;
+          }
+
+          .rules-section .rules-highlight {
+            color: #FDCF13;
+            font-size: 16px;
+          }
+
+          .rules-section .rules-sub-highlight {
+            color: #FDCF13;
+            font-size: 14px;
+          }
+
+          .rules-section .list-style,
+          .rules-section .list-style li {
+            list-style: disc;
+          }
+
+          .rules-section .rule-card {
+            height: 20px;
+            margin-left: 5px;
+          }
+
+          .rules-section .card-character {
+            font-family: Card Characters;
+          }
+
+          .rules-section .red-card {
+            color: red;
+          }
+
+          .rules-section .black-card {
+            color: black;
+          }
+
+          .rules-section .cards-box {
+            background: #fff;
+            padding: 6px;
+            display: inline-block;
+            color: #000;
+            min-width: 150px;
+          }
+
+          .rules-section .casino-tabs {
+            background-color: #222 !important;
+            border-radius: 0;
+          }
+
+          .rules-section .casino-tabs .nav-tabs .nav-link {
+            color: #fff !important;
+          }
+
+          .rules-section .casino-tabs .nav-tabs .nav-link.active {
+            color: #FDCF13 !important;
+            border-bottom: 3px solid #FDCF13 !important;
+          }
+        </style>
+
+        <div class="rules-section" bis_skin_checked="1">
+          <ul class="pl-2 pr-2 list-style">
+            <li>This is a game of twenty-20 cricket. We will alreadty have score of first batting team, &amp; score of
+              second batting team up to 19.4 overs. At this stage second batting team will be always 12 run short of
+              first batting team(IF THE SCORE IS TIED, SECOND BAT WILL WIN). This 12 run has to be scored by 2 scoring
+              shots or (two steps).</li>
+            <li>1st step is to be select a scoring shot from 2 , 3 , 4 , 5 , 6 ,7 , 8 , 9 , 10. The one who bet will get
+              rate according to the scoring shot he select from 2 to 10, &amp; that will be considered as ball number
+              19.5.</li>
+            <li>2nd step is to open a card from 40 card deck of 1 to 10 of all suites. This will be considered last ball
+              of the match. This twenty-20 game consist of scoring shots of 1 run to 10 runs.</li>
+            <li class="text-danger"><b>IF THE SCORE IS TIED SECOND BAT WILL WIN</b></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Game Result -->
+<ng-template #result let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">Cricket Match 20-20 Result</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="casino-result-modal">
+        <div class="casino-result-round-id">
+          <span><b>Round Id: </b>{{temprId}}</span>
+          <!-- <span><b>Match Time: </b>12/12/2024 19:27:22</span> -->
+        </div>
+        <div class="row mt-2">
+          <div class="col-md-12 text-center">
+            <div class="casino-result-cards">
+              <img [src]="'/img/cards/'+tempCard+'.png'">
+            </div>
+          </div>
+        </div>
+        <div class="row mt-2 justify-content-center">
+          <div class="col-md-6">
+            <div class="casino-result-desc">
+              <div class="casino-result-desc-item">
+                <div>Run</div>
+                <div>{{tempCard.substring(0, tempCard.length - 2)}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Placebet Section Mobile -->
+<ng-template #placebet let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">Place Bet</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="place-bet-modal casino-bet-modal" [ngClass]="betType">
+        <div *ngIf="placeLoader" id="loader-section">
+          <div id="load-inner">
+            <i class="fa fa-spinner fa-spin"></i>
+          </div>
+        </div>
+        <div class="row row5">
+          <div class="col-6"><b>{{ betFor }}</b></div>
+          <div class="col-6 text-end"><span>Profit:</span></div>
+        </div>
+        <div class="odd-stake-box">
+          <div class="row row5 mt-1">
+            <div class="col-6 text-center">Amount</div>
+            <div class="col-6 text-center">Odds</div>
+          </div>
+          <div class="row row5 mt-1">
+            <div class="col-6"><input type="number" class="stakeinput w-100" [(ngModel)]="stake"
+                (keyup)="calcProfit(stake)" name="stake" maxlength="10" value=""></div>
+            <div class="col-6">
+              <div class="float-end"><input type="text" class="stakeinput" [(ngModel)]="odds" name="odds" disabled=""
+                  value=""></div>
+            </div>
+          </div>
+        </div>
+        <div class="place-bet-buttons mt-1">
+          <button class="btn btn-place-bet" *ngFor="let button of placebetButton; trackBy: trackByFunc"
+            (click)="placeStake(button.value)">+{{ button.name }}</button>
+        </div>
+
+        <div class="mt-1 place-bet-btn-box">
+          <button class="btn btn-link" (click)="resetStake()">clear</button>
+          <button class="btn btn-info" (click)="openButtons(setButton)">Edit</button>
+          <button class="btn btn-danger" (click)="d('Cross click')">Reset</button>
+          <button class="btn btn-success" [class.disabled]="stake <= 1" (click)="submitbet()">Place Bet</button>
+        </div>
+        <div class="mt-3 d-flex justify-content-between align-items-center">
+          <b><span *ngIf="max!=0">Range: {{min}} to {{max | shortNumber}}</span></b>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Set Button Section -->
+<ng-template #setButton let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">Set Button Value</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="mt-1 nav nav-pills" role="tablist">
+        <div class="nav-item">
+          <a role="tab" (click)="clickSetButtonTab('game')" [class.active]="setButtonTab=='game'" class="nav-link">Game
+            Buttons
+          </a>
+        </div>
+        <div class="nav-item">
+          <a role="tab" (click)="clickSetButtonTab('casino')" [class.active]="setButtonTab=='casino'"
+            class="nav-link">Casino Buttons
+          </a>
+        </div>
+      </div>
+      <div class="mt-1 tab-content">
+        <div role="tabpanel" class="fade tab-pane show" [class.active]="setButtonTab=='game'">
+          <form (submit)="updateButtons()">
+            <div class="row row10">
+              <div class="mb-1 col-6"><label class="form-label"><b>Price Label:</b></label></div>
+              <div class="mb-1 col-6"><label class="form-label"><b>Price Value:</b></label></div>
+            </div>
+            <div class="row row10" *ngFor="let item of userButtons.gamebutton; let i=index;">
+              <div class="mb-3 col-6 position-relative">
+                <input type="text" [name]="'game'+item.name+i" class="form-control" [(ngModel)]="item.name">
+              </div>
+              <div class="mb-3 col-6 position-relative">
+                <input type="number" [name]="'game'+item.value+i" class="form-control" [(ngModel)]="item.value">
+              </div>
+            </div>
+
+            <div class="row row10">
+              <div class="mb-3 col-md-6">
+                <button type="submit" class="btn btn-primary btn-block">Update</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div role="tabpanel" class="fade tab-pane show" [class.active]="setButtonTab=='casino'">
+          <form (submit)="updateButtons()">
+            <div class="row row10">
+              <div class="mb-1 col-6"><label class="form-label"><b>Price Label:</b></label></div>
+              <div class="mb-1 col-6"><label class="form-label"><b>Price Value:</b></label></div>
+            </div>
+            <div class="row row10" *ngFor="let item of userButtons.casinobutton; let i=index;">
+              <div class="mb-3 col-6 position-relative">
+                <input type="text" [name]="'casino'+item.name+i" class="form-control" [(ngModel)]="item.name">
+              </div>
+              <div class="mb-3 col-6 position-relative">
+                <input type="number" [name]="'casino'+item.value+i" class="form-control" [(ngModel)]="item.value">
+              </div>
+            </div>
+            <div class="row row10">
+              <div class="mb-3 col-md-6 ">
+                <button type="submit" class="btn btn-primary btn-block">Update</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

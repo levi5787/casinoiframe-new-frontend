@@ -1,0 +1,118 @@
+<div id="root">
+  <div style="position: fixed; z-index: 9999; inset: 16px; pointer-events: none;"></div>
+  <div class="wrapper">
+    <app-header></app-header>
+    <div class="main-container">
+      <div class="sidebar left-sidebar">
+        <app-sidebar></app-sidebar>
+      </div>
+      <div class="center-main-container report-page">
+        <div class="center-container">
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-title">Live Casino Bets</h4>
+            </div>
+            <div class="card-body">
+              <div class="report-form">
+                <form class="row row10">
+                  <div class="col-lg-2 col-md-3">
+                    <div class="mb-2 input-group position-relative">
+                      <select class="form-select" name="reportType">
+                        <option value="" disabled="">Select Report Type</option>
+                        <option value="sattled">Settled</option>
+                        <option value="un-sattled">Un-Settled</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-md-3">
+                    <div class="react-datepicker-wrapper">
+                      <div class="react-datepicker__input-container">
+                        <div class="mb-2 custom-datepicker">
+                          <input type="text" id="from_date" name="from_date" class="form-control datepicker"
+                            [(ngModel)]="from_date" required>
+                          <i class="far fa-calendar"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-md-3">
+                    <div class="mb-2 input-group position-relative">
+                      <select class="form-select" name="type">
+                        <option value="" disabled="">Select Casino Type</option>
+                        <option value="ezugi">Ezugi</option>
+                        <option value="ss">Super Spade</option>
+                        <option value="qt">Slot 3</option>
+                        <option value="evo">Evolution</option>
+                        <option value="cockfight">CockFight</option>
+                        <option value="ludo">Ludo Classic</option>
+                        <option value="pop-the-ball">PopTheBall</option>
+                        <option value="binary">Binary</option>
+                        <option value="tgs">Slot 2</option>
+                        <option value="slot">Slot</option>
+                        <option value="tgslive">VivoGames-LuckyStreak</option>
+                        <option value="rummy">Rummy</option>
+                        <option value="ludo-lands">Ludo Lands</option>
+                        <option value="vivo">vivo gaming</option>
+                        <option value="snakes-and-ladders">snakes and ladders</option>
+                        <option value="smart">Smart Soft</option>
+                        <option value="astar">Astar Game</option>
+                        <option value="bc">Creedroomz</option>
+                        <option value="tembo">Tembo</option>
+                        <option value="lottery">Lottery</option>
+                        <option value="av">Aviator</option>
+                        <option value="ds">Dragoon soft</option>
+                        <option value="bcslot">Pascal Game</option>
+                        <option value="scratch">Scratch</option>
+                        <option value="darwin">Darwin</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-md-2 d-grid">
+                    <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                  </div>
+                </form>
+                <div class="row row10 mt-2 justify-content-between">
+                  <div class="col-lg-2 col-6">
+                    <div class="mb-2 input-group position-relative">
+                      <span class="me-2">Show</span>
+                      <select class="form-select">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                        <option value="50">50</option>
+                      </select><span class="ms-2">Entries</span>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-6">
+                    <div class="mb-2 input-group position-relative">
+                      <span class="me-2">Search:</span><input type="search" class="form-control"
+                        placeholder="0 records..." value="">
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-2 table-responsive live-casino-bets">
+                  <table role="table" class="table table-bordered table-striped">
+                    <thead>
+                      <tr role="row">
+                        <th colspan="1" role="columnheader" class="game-name">Game Name</th>
+                        <th colspan="1" role="columnheader" class="report-type">Type</th>
+                        <th colspan="1" role="columnheader" class="report-amount text-end">Amount</th>
+                        <th colspan="1" role="columnheader" class="report-amount text-end">Total</th>
+                        <th colspan="1" role="columnheader" class="report-date">Date</th>
+                        <th colspan="1" role="columnheader">Round Id</th>
+                        <th colspan="1" role="columnheader">Transaction Id</th>
+                      </tr>
+                    </thead>
+                    <tbody role="rowgroup"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <app-footer></app-footer>
+  </div>
+</div>

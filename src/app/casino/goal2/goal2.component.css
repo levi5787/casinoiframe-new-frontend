@@ -1,0 +1,45 @@
+@media only screen and (max-width: 767px) {
+  .goal2 .market-6 .market-nation-detail {
+    width: calc(100% - 60%) !important;
+  }
+}
+
+.goal .market-6 .market-nation-detail {
+  width: calc(100% - 180px);
+}
+
+.game-market.market-6 .market-body .market-row {
+  flex-wrap: nowrap !important;
+}
+
+.market-comb {
+    min-width: calc(100% - 4px);
+    max-width: calc(100% - 4px);
+    width: calc(100% - 4px);
+    margin-left: 2px;
+    margin-right: 2px;
+    flex: 1 0 calc(100% - 4px);
+}
+.row.row5 {
+    margin-left: -5px;
+    margin-right: -5px;
+}
+.row {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(-1 * var(--bs-gutter-y));
+    margin-right: calc(-.5 * var(--bs-gutter-x));
+    margin-left: calc(-.5 * var(--bs-gutter-x));
+}
+
+.market-comb .market-nation-detail {
+  width: calc(100% - 160px);
+}
+
+.market-comb .market-nation-detail .market-nation-name {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+}

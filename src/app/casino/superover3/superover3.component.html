@@ -1,0 +1,769 @@
+<div style="display: flex; flex-wrap: wrap;">
+  <div class="center-container">
+    <div class="casino-page-container super-over">
+      <div class="casino-header">
+        <span class="casino-name">Mini superover<a class="ms-1">
+            <small (click)="open(rules)">Rules</small></a>
+        </span>
+        <span class="casino-rid d-none d-xl-inline-block">
+          <small>Round ID: <span>{{roundId==''?'0':roundId}}</span></small></span>
+      </div>
+      <!-- Nav Section Mobile -->
+      <div class="casino-title-header-mobile d-xl-none">
+        <ul class="nav nav-tabs menu-tabs">
+          <li class="nav-item">
+            <div (click)="gameTabClicked()" class="nav-link" [class.active]="gametab">Game</div>
+          </li>
+          <li class="nav-item">
+            <div (click)="betTabClicked()" class="nav-link" [class.active]="bettab">Placed Bet ({{mybets.length}})</div>
+          </li>
+        </ul>
+        <div class="pe-2">
+          <span class="casino-rid">Round ID: <span>{{roundId==''?'0':roundId}}</span></span>
+        </div>
+      </div>
+      <!-- Game Tab Section -->
+      <div class="" [class.d-none]="bettab">
+        <!-- Scoreboard section -->
+        <div class="scorecard mb-1" *ngIf="this.Score">
+          <div class="row">
+            <div class="col-12 col-md-6">
+              <p class="team-1 row">
+                <span class="team-name col-3">{{Score.spnnation1}}</span>
+                <span class="score col-4 text-end">{{Score.score1}}</span>
+                <span class="team-name col-5">
+                  <span *ngIf="Score.spnrunrate1">CRR {{Score.spnrunrate1}} </span>
+                  <span *ngIf="Score.spnreqrate1">RR {{Score.spnreqrate1}}</span>
+                </span>
+              </p>
+              <p class="team-1 row mt-2">
+                <span class="team-name col-3">{{Score.spnnation2}}</span>
+                <span class="score col-4 text-end">{{Score.score2}}</span>
+                <span class="team-name col-5">
+                  <span *ngIf="Score.spnrunrate2">CRR {{Score.spnrunrate2}} </span>
+                  <span *ngIf="Score.spnreqrate2">RR {{Score.spnreqrate2}}</span>
+                </span>
+              </p>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="row">
+                <div class="col-12">
+                  <div class="text-xl-end">
+                    <span>{{Score.spnmessage}}</span>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <p class="text-xl-end ball-by-ball mt-2">
+                        <span *ngFor="let item of balls; trackBy:trackByFunc;">
+                          <span class="ball-runs" *ngIf="item!=''" [class.wicket]="item=='ww'" [class.four]="item=='4'"
+                            [class.six]="item=='6'">{{item}}</span>
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="casino-video">
+          <div class="video-box-container">
+            <div class="casino-video-box">
+              <iframe [src]="safeURL"></iframe>
+            </div>
+          </div>
+          <div class="casino-video-cards" *ngIf="data">
+            <div class="mt-1">
+              <div><img *ngIf="c1!='1'" [src]="'/img/superover/balls/'+c1"></div>
+            </div>
+            <div class="mt-1">
+              <div><img *ngIf="c2!='1'" [src]="'/img/superover/balls/'+c2"></div>
+            </div>
+            <div class="mt-1">
+              <div><img *ngIf="c3!='1'" [src]="'/img/superover/balls/'+c3"></div>
+            </div>
+            <div class="mt-1">
+              <div><img *ngIf="c4!='1'" [src]="'/img/superover/balls/'+c4"></div>
+            </div>
+          </div>
+          <!-- Flip Clock -->
+          <div id="flipdown" class="flipdown flipdown__theme-dark clock flip-clock-wrapper">
+            <div class="rotor-group">
+              <div class="rotor">
+                <div class="rotor-leaf" [class.flipped]="flipfirst">
+                  <figure class="rotor-leaf-rear">{{cfirstnum}}</figure>
+                  <figure class="rotor-leaf-front">{{cfirstnum}}</figure>
+                </div>
+                <div class="rotor-top">{{cfirstnum}}</div>
+                <div class="rotor-bottom">{{cfirstnum}}</div>
+              </div>
+              <div class="rotor">
+                <div class="rotor-leaf" [class.flipped]="flipsecond">
+                  <figure class="rotor-leaf-rear">{{clastnum}}</figure>
+                  <figure class="rotor-leaf-front">{{clastnum}}</figure>
+                </div>
+                <div class="rotor-top">{{clastnum}}</div>
+                <div class="rotor-bottom">{{clastnum}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game Details -->
+        <div class="casino-detail detail-page-container position-relative">
+          <div class="game-market market-2" *ngIf="bookmaker.section">
+            <div class="market-title">
+              <span>{{bookmaker.mname}}</span>
+            </div>
+            <div class="market-header">
+              <div class="market-nation-detail">
+                <span class="market-nation-name">
+                  Min: {{bookmaker.min}} Max: {{bookmaker.max | shortNumber}}
+                </span>
+              </div>
+              <div class="market-odd-box back"><b>Back</b></div>
+              <div class="market-odd-box lay"><b>Lay</b></div>
+            </div>
+            <div class="market-body" [attr.data-title]="bookmaker.status">
+              <div class="market-row" *ngFor="let item of bookmaker.section; let i = index; trackBy:trackByFunc;"
+                [attr.data-title]="item.gstatus" [class.suspended-row]="item.gstatus!='ACTIVE'&&item.status!='OPEN'">
+                <div class="market-nation-detail">
+                  <span class="market-nation-name">{{item.nat}}</span>
+                  <div class="market-nation-book">
+                    <span *ngIf="bookmakerBook.length>0" class="market-book"
+                      [class.text-success]="bookmakerBook[i]['amount']>0"
+                      [class.text-danger]="bookmakerBook[i]['amount']<0">{{bookmakerBook[i]['amount']}}</span>
+                  </div>
+                </div>
+                <div class="market-odd-box" *ngFor="let odds of item.odds;trackBy:trackByFunc"
+                  (click)="openBetForm(placebet,item.nat,odds.odds,odds.otype,item.sid,'Bookmaker')"
+                  [ngClass]="odds.otype" [class.betting-disabled]="odds.odds==0"
+                  [class.blink]="valueSpan.innerText != odds.odds && valueSpan.innerText!='-'">
+                  <span #valueSpan class="market-odd">{{odds.odds==0?'-':odds.odds}}</span>
+                  <span class="market-volume">{{odds.size==0?'':odds.size}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fancy -->
+          <div class="game-market market-6" *ngIf="fancy.section">
+            <div class="market-title">
+              <span>{{fancy.mname}}</span>
+            </div>
+            <div class="market-header">
+              <div class="market-nation-detail"></div>
+              <div class="market-odd-box lay"><b>No</b></div>
+              <div class="market-odd-box back"><b>Yes</b></div>
+              <div class="fancy-min-max-box"></div>
+            </div>
+            <div class="market-body" [attr.data-title]="fancy.status">
+              <div>
+                <div class="fancy-market" *ngFor="let item of fancy.section; let i = index; trackBy:trackByFunc;"
+                  [attr.data-title]="item.gstatus" [class.suspended-row]="item.gstatus!='ACTIVE'&&item.status!='OPEN'">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{item.nat}}</span>
+                      <div [class.text-danger]="fancyBook[item.nat]<0" class="market-book float-end"
+                        *ngIf="fancyBook[item.nat]">{{fancyBook[item.nat]}}</div>
+                    </div>
+                    <div class="market-odd-box" *ngFor="let odds of item.odds;trackBy:trackByFunc"
+                      (click)="openBetForm(placebet,item.nat+'-'+odds.size,odds.odds,odds.otype,item.sid,'Fancy',item.min,item.max)"
+                      [ngClass]="odds.otype" [class.betting-disabled]="odds.odds==0">
+                      <span class="market-odd">{{odds.odds==0?'-':odds.odds}}</span>
+                      <span class="market-volume">{{odds.size==0?'-':odds.size}}</span>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{item.min}}</span>
+                        <span class="w-100 d-block">Max: {{item.max | shortNumber}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tie Market -->
+          <div class="game-market market-6" *ngIf="tie.odds">
+            <div class="market-title">
+              <span>{{tie.nat}}</span>
+            </div>
+            <div class="row row10">
+              <div class="col-md-12">
+                <div class="market-header">
+                  <div class="market-nation-detail"></div>
+                  <div class="market-odd-box back"><b>Back</b></div>
+                  <div class="market-odd-box lay"><b>Lay</b></div>
+                  <div class="fancy-min-max-box"></div>
+                </div>
+              </div>
+            </div>
+            <div class="market-body" [attr.data-title]="tie.gstatus">
+              <div class="row row10">
+                <div class="col-md-12">
+                  <div class="fancy-market" [attr.data-title]="tie.gstatus"
+                    [class.suspended-row]="tie.gstatus!='ACTIVE'&&tie.gstatus!='OPEN'">
+                    <div class="market-row">
+                      <div class="market-nation-detail">
+                        <span class="market-nation-name">Tie</span>
+                        <div class="market-nation-book" *ngIf="fancy1Book['Tie']">
+                          <span [class.text-danger]="fancy1Book['Tie']<0">{{fancy1Book['Tie']}}</span>
+                        </div>
+                      </div>
+                      <div class="market-odd-box" *ngFor="let odds of tie.odds;trackBy:trackByFunc"
+                        (click)="openBetForm(placebet,'Tie',odds.odds,odds.otype,odds.sid,'Fancy1',tie.min,tie.max)"
+                        [ngClass]="odds.otype" [class.betting-disabled]="odds.odds==0">
+                        <span class="market-odd">{{odds.odds==0?'-':odds.odds}}</span>
+                        <span class="market-volume">{{odds.size==0?'-':odds.size}}</span>
+                      </div>
+                      <div class="fancy-min-max-box">
+                        <div class="fancy-min-max">
+                          <span class="w-100 d-block">Min: {{tie.min}}</span>
+                          <span class="w-100 d-block">Max: {{tie.max | shortNumber}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fancy1 Market -->
+          <div class="game-market market-6" *ngIf="fancy1.section">
+            <div class="market-title">
+              <span>{{fancy1.mname}}</span>
+            </div>
+            <div class="row row10">
+              <div class="col-md-6">
+                <div class="market-header">
+                  <div class="market-nation-detail"></div>
+                  <div class="market-odd-box back"><b>Back</b></div>
+                  <div class="market-odd-box lay"><b>Lay</b></div>
+                  <div class="fancy-min-max-box"></div>
+                </div>
+              </div>
+              <div class="col-md-6 d-none d-xl-block">
+                <div class="market-header">
+                  <div class="market-nation-detail"></div>
+                  <div class="market-odd-box back"><b>Back</b></div>
+                  <div class="market-odd-box lay"><b>Lay</b></div>
+                  <div class="fancy-min-max-box"></div>
+                </div>
+              </div>
+            </div>
+            <div class="market-body" [attr.data-title]="fancy1.status">
+              <div class="row row10">
+                <div class="col-md-6" *ngFor="let item of fancy1.section; let i = index; trackBy:trackByFunc;">
+                  <div class="fancy-market" [attr.data-title]="item.gstatus"
+                    [class.suspended-row]="item.gstatus!='ACTIVE'&&item.status!='OPEN'">
+                    <div class="market-row">
+                      <div class="market-nation-detail">
+                        <span class="market-nation-name">{{item.nat}}</span>
+                        <div [class.text-danger]="fancy1Book[item.nat]<0" class="market-book float-end"
+                          *ngIf="fancy1Book[item.nat]">{{fancy1Book[item.nat]}}</div>
+                      </div>
+                      <div class="market-odd-box" *ngFor="let odds of item.odds;trackBy:trackByFunc"
+                        (click)="openBetForm(placebet,item.nat,odds.odds,odds.otype,item.sid,'Fancy1',item.min,item.max)"
+                        [ngClass]="odds.otype" [class.betting-disabled]="odds.odds==0">
+                        <span class="market-odd">{{odds.odds==0?'-':odds.odds}}</span>
+                        <span class="market-volume">{{odds.size==0?'':odds.size}}</span>
+                      </div>
+                      <div class="fancy-min-max-box">
+                        <div class="fancy-min-max">
+                          <span class="w-100 d-block">Min: {{item.min}}</span>
+                          <span class="w-100 d-block">Max: {{item.max | shortNumber}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="casino-last-result-title">
+            <span>Last Result</span>
+            <span><a href="/casino-results/superover3">View All</a></span>
+          </div>
+          <div class="casino-last-results">
+            <p *ngFor="let item of results.res;trackBy:trackByMid">
+              <span *ngIf="item['win']=='1'" (click)="openResult(result,item['mid'])" class="result result-a">I</span>
+              <span *ngIf="item['win']=='2'" (click)="openResult(result,item['mid'])" class="result result-b">A</span>
+              <span *ngIf="item['win']=='0'" (click)="openResult(result,item['mid'])" class="result">T</span>
+            </p>
+          </div>
+          <div class="mt-2 w-100"></div>
+        </div>
+      </div>
+      <!-- Bet Tab Section -->
+      <div [class.d-none]="gametab">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Nation</th>
+                <th class="text-end">Odds</th>
+                <th class="text-end">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of mybets" [ngClass]="item.betType">
+                <td> {{item.selectionName}} {{item.oddsType=='Fancy'?' / '+item.rate:''}}</td>
+                <td class="text-end">{{twoDecimal(item.oddsType=='Fancy'?item.score:item.rate)}}</td>
+                <td class="text-end">{{twoDecimal(item.stake)}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- sidebar righ -->
+
+  <div class="sidebar right-sidebar casino-right-sidebar" [class.sticky]="isSticky">
+    <!-- Placebet Section -->
+    <div class="sidebar-box place-bet-container position-relative" *ngIf="showbetform">
+      <div *ngIf="placeLoader" id="loader-section">
+        <div id="load-inner"><i class="fa fa-spinner fa-spin"></i></div>
+      </div>
+      <div class="sidebar-title">
+        <h4>Place Bet</h4>
+      </div>
+      <div class="place-bet-box" [ngClass]="betType">
+        <div class="place-bet-box-header">
+          <div class="place-bet-for">(Bet for)</div>
+          <div class="place-bet-odds">Odds</div>
+          <div class="place-bet-stake">Stake</div>
+          <div class="place-bet-profit">Profit</div>
+        </div>
+        <div class="place-bet-box-body">
+          <div class="place-bet-for"><span>{{betFor}}</span></div>
+          <div class="place-bet-odds">
+            <input [(ngModel)]="odds" name="odds" required="required" type="text" class="form-control" disabled=""
+              value="">
+            <div class="spinner-buttons input-group-btn btn-group-vertical">
+              <button class="btn-default">
+                <i class="fa fa-angle-up"></i>
+              </button>
+              <button class="btn-default">
+                <i class="fa fa-angle-down"></i>
+              </button>
+            </div>
+          </div>
+          <div class="place-bet-stake">
+            <input type="number" [(ngModel)]="stake" (keyup)="calcProfit(stake)" name="stake" maxlength="10"
+              pattern="^\d+$" required="required" class="form-control" value="">
+          </div>
+          <div class="place-bet-profit">{{profit}}</div>
+        </div>
+        <div class="place-bet-buttons">
+          <button *ngFor="let button of placebetButton; trackBy:trackByFunc" (click)="placeStake(button.value)"
+            class="btn btn-place-bet">+{{button.name}}</button>
+        </div>
+        <div class="place-bet-action-buttons">
+          <div><button (click)="openButtons(setButton)" class="btn btn-info">Edit</button></div>
+          <div>
+            <button (click)="hideBetPlace()" class="btn btn-danger me-1">Reset</button>
+            <button (click)="submitbet()" class="btn btn-success" [class.disabled]="stake<=1">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- My Bet Section -->
+    <div class="sidebar-box my-bet-container">
+      <div class="sidebar-title">
+        <h4>My Bet</h4>
+      </div>
+      <div class="my-bets">
+        <div class="table-responsive w-100">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Matched Bet</th>
+                <th class="text-end">Odds</th>
+                <th class="text-end">Stake</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of mybets" [ngClass]="item.betType">
+                <td>{{item.selectionName}} {{item.oddsType=='Fancy'?' / '+item.rate:''}}</td>
+                <td class="text-end">{{item.oddsType=='Fancy'||item.oddsType=='Khado'?item.score:item.rate}}
+                </td>
+                <td class="text-end">{{item.stake}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Game Rulse -->
+<ng-template #rules let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">Mini SuperOver Rules</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <style type="text/css">
+          .rules-section .row.row5 {
+            margin-left: -5px;
+            margin-right: -5px;
+          }
+
+          .rules-section .pl-2 {
+            padding-left: .5rem !important;
+          }
+
+          .rules-section .pr-2 {
+            padding-right: .5rem !important;
+          }
+
+          .rules-section .row.row5>[class*="col-"],
+          .rules-section .row.row5>[class*="col"] {
+            padding-left: 5px;
+            padding-right: 5px;
+          }
+
+          .rules-section {
+            text-align: left;
+            margin-bottom: 10px;
+          }
+
+          .rules-section .table {
+            color: #fff;
+            border: 1px solid #444;
+            background-color: #222;
+            font-size: 12px;
+          }
+
+          .rules-section .table td,
+          .rules-section .table th {
+            border-bottom: 1px solid #444;
+          }
+
+          .rules-section ul li,
+          .rules-section p {
+            margin-bottom: 5px;
+          }
+
+          .rules-section::-webkit-scrollbar {
+            width: 8px;
+          }
+
+          .rules-section::-webkit-scrollbar-track {
+            background: #666666;
+          }
+
+          .rules-section::-webkit-scrollbar-thumb {
+            background-color: #333333;
+          }
+
+          .rules-section .rules-highlight {
+            color: #FDCF13;
+            font-size: 16px;
+          }
+
+          .rules-section .rules-sub-highlight {
+            color: #FDCF13;
+            font-size: 14px;
+          }
+
+          .rules-section .list-style,
+          .rules-section .list-style li {
+            list-style: disc;
+          }
+
+          .rules-section .rule-card {
+            height: 20px;
+            margin-left: 5px;
+          }
+
+          .rules-section .card-character {
+            font-family: Card Characters;
+          }
+
+          .rules-section .red-card {
+            color: red;
+          }
+
+          .rules-section .black-card {
+            color: black;
+          }
+
+          .rules-section .cards-box {
+            background: #fff;
+            padding: 6px;
+            display: inline-block;
+            color: #000;
+            min-width: 150px;
+          }
+        </style>
+
+        <div class="rules-section">
+          <ul class="pl-2 pr-2">
+            <li>Mini Super Over is a shorter version of super over cricket.</li>
+            <li>This game is played between two teams. Team batting first is India and
+              team batting second is Australia.
+            </li>
+            <li>Mini Super over is a four Ball each side match.</li>
+            <li>This game is played with 21 card deck.
+              <ul class="pl-2 pr-2">
+                <li>A = (One run) X 3 cards</li>
+                <li>2 = (Two runs) X 3 cards</li>
+                <li>3 = (Three runs) X 3 cards</li>
+                <li>4 = (Four runs) X 3 cards</li>
+                <li>6 = (Six runs) X 3 cards</li>
+                <li>10 = (0 run) X 3 cards</li>
+                <li>K = (wicket) X 3 cards</li>
+                <li>21 cards total</li>
+              </ul>
+            </li>
+            <li>If wicket falls at any stage of the innings the team batting will be
+              considered as all out.
+            </li>
+            <li>If scores of both the teams are equal then the match will be
+              considered as Tie.
+            </li>
+            <li>Difference of wicket between teams does not count.</li>
+            <li>Session and Fancy markets will be considered valid though the
+              match ends in Tie.
+            </li>
+            <li>Team Scoring maximum runs will be the winner.</li>
+            <li>At the end of each inning deck will be shuffled.</li>
+            <li>Odds will be available for every ball.</li>
+            <li>Term boundary in fancy market defines four &amp; six both or scoring four
+              runs or six runs both will be considered as boundary.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Game Result -->
+<ng-template #result let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">Result</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="casino-result-modal">
+        <div class="casino-result-round-id">
+          <span><b>Round Id: </b> {{temprId}}</span>
+          <span><b>Match Time: </b>{{tempDate}}</span>
+        </div>
+        <div class="five-cricket-result">
+          <div class="mt-2">
+            <div class="text-end score-head">
+              Winner: <span class="text-fancy"> {{tempWinner}}</span> | {{tempdesc}}
+            </div>
+          </div>
+          <div class="mt-2">
+            <h4>First Inning</h4>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>IND</th>
+                    <th class="text-center">1</th>
+                    <th class="text-center">2</th>
+                    <th class="text-center">3</th>
+                    <th class="text-center">4</th>
+                    <th class="text-center">Run/Over</th>
+                    <th class="text-center">Score</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Over 1</td>
+                    <td class="text-center"><span
+                        class="">{{this.tempScore['indScore']?.[0]?.wkt==true?'ww':this.tempScore['indScore']?.[0]?.run}}</span>
+                    </td>
+                    <td class="text-center"><span
+                        class="">{{this.tempScore['indScore']?.[1]?.wkt==true?'ww':this.tempScore['indScore']?.[1]?.run}}</span>
+                    </td>
+                    <td class="text-center"><span
+                        class="">{{this.tempScore['indScore']?.[2]?.wkt==true?'ww':this.tempScore['indScore']?.[2]?.run}}</span>
+                    </td>
+                    <td class="text-center"><span
+                        class="">{{this.tempScore['indScore']?.[3]?.wkt==true?'ww':this.tempScore['indScore']?.[3]?.run}}</span>
+                    </td>
+                    <td class="text-center">{{this.tempScore?.indRun}}</td>
+                    <td class="text-center">{{this.tempScore?.indRun+'/'+this.tempScore?.indWkt}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="mt-2">
+            <h4>Second Inning</h4>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>AUS</th>
+                    <th class="text-center">1</th>
+                    <th class="text-center">2</th>
+                    <th class="text-center">3</th>
+                    <th class="text-center">4</th>
+                    <th class="text-center">Run/Over</th>
+                    <th class="text-center">Score</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Over 1</td>
+                    <td class="text-center"><span
+                        class="">{{this.tempScore['ausScore']?.[0]?.wkt==true?'ww':this.tempScore['ausScore']?.[0]?.run}}</span>
+                    </td>
+                    <td class="text-center"><span
+                        class="">{{this.tempScore['ausScore']?.[1]?.wkt==true?'ww':this.tempScore['ausScore']?.[1]?.run}}</span>
+                    </td>
+                    <td class="text-center"><span
+                        class="">{{this.tempScore['ausScore']?.[2]?.wkt==true?'ww':this.tempScore['ausScore']?.[2]?.run}}</span>
+                    </td>
+                    <td class="text-center"><span
+                        class="">{{this.tempScore['ausScore']?.[3]?.wkt==true?'ww':this.tempScore['ausScore']?.[3]?.run}}</span>
+                    </td>
+                    <td class="text-center">{{this.tempScore?.ausRun}}</td>
+                    <td class="text-center">{{this.tempScore?.ausRun+'/'+this.tempScore?.ausWkt}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Placebet Section Mobile -->
+<ng-template #placebet let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">Place Bet</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="place-bet-modal casino-bet-modal" [ngClass]="betType">
+        <div *ngIf="placeLoader" id="loader-section">
+          <div id="load-inner">
+            <i class="fa fa-spinner fa-spin"></i>
+          </div>
+        </div>
+        <div class="row row5">
+          <div class="col-6"><b>{{ betFor }}</b></div>
+          <div class="col-6 text-end"><span>Profit:</span></div>
+        </div>
+        <div class="odd-stake-box">
+          <div class="row row5 mt-1">
+            <div class="col-6 text-center">Amount</div>
+            <div class="col-6 text-center">Odds</div>
+          </div>
+          <div class="row row5 mt-1">
+            <div class="col-6"><input type="number" class="stakeinput w-100" [(ngModel)]="stake"
+                (keyup)="calcProfit(stake)" name="stake" maxlength="10" value=""></div>
+            <div class="col-6">
+              <div class="float-end"><input type="text" class="stakeinput" [(ngModel)]="odds" name="odds" disabled=""
+                  value=""></div>
+            </div>
+          </div>
+        </div>
+        <div class="place-bet-buttons mt-1">
+          <button class="btn btn-place-bet" *ngFor="let button of placebetButton; trackBy: trackByFunc"
+            (click)="placeStake(button.value)">+{{ button.name }}</button>
+        </div>
+
+        <div class="mt-1 place-bet-btn-box">
+          <button class="btn btn-link" (click)="resetStake()">clear</button>
+          <button class="btn btn-info" (click)="openButtons(setButton)">Edit</button>
+          <button class="btn btn-danger" (click)="d('Cross click')">Reset</button>
+          <button class="btn btn-success" [class.disabled]="stake <= 1" (click)="submitbet()">Place Bet</button>
+        </div>
+        <div class="mt-3 d-flex justify-content-between align-items-center">
+          <b><span *ngIf="max!=0">Range: {{min}} to {{max | shortNumber}}</span></b>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Set Button Section -->
+<ng-template #setButton let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">Set Button Value</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="mt-1 nav nav-pills" role="tablist">
+        <div class="nav-item">
+          <a role="tab" (click)="clickSetButtonTab('game')" [class.active]="setButtonTab=='game'" class="nav-link">Game
+            Buttons
+          </a>
+        </div>
+        <div class="nav-item">
+          <a role="tab" (click)="clickSetButtonTab('casino')" [class.active]="setButtonTab=='casino'"
+            class="nav-link">Casino Buttons
+          </a>
+        </div>
+      </div>
+      <div class="mt-1 tab-content">
+        <div role="tabpanel" class="fade tab-pane show" [class.active]="setButtonTab=='game'">
+          <form (submit)="updateButtons()">
+            <div class="row row10">
+              <div class="mb-1 col-6"><label class="form-label"><b>Price Label:</b></label></div>
+              <div class="mb-1 col-6"><label class="form-label"><b>Price Value:</b></label></div>
+            </div>
+            <div class="row row10" *ngFor="let item of userButtons.gamebutton; let i=index;">
+              <div class="mb-3 col-6 position-relative">
+                <input type="text" [name]="'game'+item.name+i" class="form-control" [(ngModel)]="item.name">
+              </div>
+              <div class="mb-3 col-6 position-relative">
+                <input type="number" [name]="'game'+item.value+i" class="form-control" [(ngModel)]="item.value">
+              </div>
+            </div>
+
+            <div class="row row10">
+              <div class="mb-3 col-md-6">
+                <button type="submit" class="btn btn-primary btn-block">Update</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div role="tabpanel" class="fade tab-pane show" [class.active]="setButtonTab=='casino'">
+          <form (submit)="updateButtons()">
+            <div class="row row10">
+              <div class="mb-1 col-6"><label class="form-label"><b>Price Label:</b></label></div>
+              <div class="mb-1 col-6"><label class="form-label"><b>Price Value:</b></label></div>
+            </div>
+            <div class="row row10" *ngFor="let item of userButtons.casinobutton; let i=index;">
+              <div class="mb-3 col-6 position-relative">
+                <input type="text" [name]="'casino'+item.name+i" class="form-control" [(ngModel)]="item.name">
+              </div>
+              <div class="mb-3 col-6 position-relative">
+                <input type="number" [name]="'casino'+item.value+i" class="form-control" [(ngModel)]="item.value">
+              </div>
+            </div>
+            <div class="row row10">
+              <div class="mb-3 col-md-6 ">
+                <button type="submit" class="btn btn-primary btn-block">Update</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

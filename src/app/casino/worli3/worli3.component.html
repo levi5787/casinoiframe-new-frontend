@@ -1,0 +1,202 @@
+<!-- MATKA MARKET (worli3) · structure mirrors live d247 (.worli.matka) -->
+<div style="display: flex; flex-wrap: wrap;">
+  <div class="center-container">
+    <div class="casino-page-container worli matka">
+
+      <div class="casino-header">
+        <span class="casino-name">Matka Market
+          <a class="ms-1"><small> Rules</small></a>
+        </span>
+        <span class="casino-rid d-none d-xl-inline-block"><small>Round ID: <span>{{ roundId }}</span></small></span>
+      </div>
+
+      <!-- timed market tabs -->
+      <div class="matka-tabs">
+        <ul class="nav nav-pills">
+          <li class="nav-item" *ngFor="let m of markets">
+            <a class="nav-link" [class.active]="activeMarket === m.key" (click)="setMarket(m.key)">
+              <span>{{ m.name }}</span>
+              <div class="remaining-time">
+                <img src="/img/icons/volume-off-solid.png" alt="">
+                <span>{{ countdown(m) }}</span>
+              </div>
+              <div class="game-time"><span>{{ m.date }}</span></div>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="casino-title-header-mobile d-xl-none">
+        <ul class="nav nav-tabs menu-tabs">
+          <li class="nav-item"><div (click)="gameTabClicked()" class="nav-link" [class.active]="gametab">Game</div></li>
+          <li class="nav-item"><div (click)="betTabClicked()" class="nav-link" [class.active]="bettab">Placed Bet ({{ mybets.length }})</div></li>
+        </ul>
+      </div>
+
+      <div [class.d-none]="bettab">
+        <div class="casino-video">
+          <div class="video-box-container"><div class="casino-video-box"><iframe [src]="safeURL"></iframe></div></div>
+
+          <!-- coin bar -->
+          <div class="matka-coins">
+            <div class="matka-coin-title"><span>Set Your Coin Amount</span></div>
+            <div class="matka-total-coin">
+              <div class="casino-coin">
+                <div class="bet-chip-holder"><div class="bet-chip">
+                  <div class="bet-chip-front"></div><div class="bet-chip-top"></div>
+                  <div class="bet-chip-amount"><span class="casino-coin-value">{{ selectedCoin || 0 }}</span></div>
+                </div></div>
+              </div>
+              <div>=</div>
+            </div>
+            <div class="matka-other-coins">
+              <ng-container *ngFor="let c of coins">
+                <div>+</div>
+                <div class="casino-coin" [class.selected]="selectedCoin === c" (click)="selectCoin(c)">
+                  <div class="bet-chip-holder"><div class="bet-chip">
+                    <div class="bet-chip-front"></div><div class="bet-chip-top"></div>
+                    <div class="bet-chip-amount"><span class="casino-coin-value">{{ c >= 1000 ? (c/1000) + 'K' : c }}</span></div>
+                  </div></div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+
+        <div class="casino-detail">
+          <!-- bet-type tabs -->
+          <div class="nav nav-pills">
+            <div class="nav-item" *ngFor="let t of betTypes">
+              <a class="nav-link" [class.active]="activeBetType === t.key" (click)="setBetType(t.key)">{{ t.label }}</a>
+            </div>
+          </div>
+
+          <div class="casino-box tab-content w-100">
+            <!-- Jodi 10×10 -->
+            <div class="fade jodi tab-pane" [class.active]="activeBetType === 'jodi'" [class.show]="activeBetType === 'jodi'">
+              <div class="casino-table-full-box">
+                <div class="worlibox">
+                  <div class="worli-full">
+                    <div class="worli-box-title"></div>
+                    <div class="worli-box-row" *ngFor="let row of jodiRows">
+                      <div class="worli-odd-box back" *ngFor="let j of row" (click)="pickNumber(j)">
+                        <span class="worli-odd">{{ j }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Single -->
+            <div class="fade single tab-pane" [class.active]="activeBetType === 'single'" [class.show]="activeBetType === 'single'">
+              <div class="worlibox">
+                <div class="worli-left">
+                  <div class="worli-box-title"></div>
+                  <div class="worli-box-row">
+                    <div class="worli-odd-box back" *ngFor="let n of ['1','2','3','4','5']" (click)="pickNumber(n)"><span class="worli-odd">{{ n }}</span></div>
+                  </div>
+                  <div class="worli-box-row">
+                    <div class="worli-odd-box back" *ngFor="let n of ['6','7','8','9','0']" (click)="pickNumber(n)"><span class="worli-odd">{{ n }}</span></div>
+                  </div>
+                </div>
+                <div class="worli-right">
+                  <div class="worli-box-title"></div>
+                  <div class="worli-box-row">
+                    <div class="worli-odd-box back" (click)="pickNumber('Line 1')"><span class="worli-odd">Line 1</span><span class="d-block">1|2|3|4|5</span></div>
+                    <div class="worli-odd-box back" (click)="pickNumber('Odd')"><span class="worli-odd">Odd</span><span class="d-block">1|3|5|7|9</span></div>
+                  </div>
+                  <div class="worli-box-row">
+                    <div class="worli-odd-box back" (click)="pickNumber('Line 2')"><span class="worli-odd">Line 2</span><span class="d-block">6|7|8|9|0</span></div>
+                    <div class="worli-odd-box back" (click)="pickNumber('Even')"><span class="worli-odd">Even</span><span class="d-block">2|4|6|8|0</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SP / DP / Trio / Charts / others — grid from feed -->
+            <div class="fade tab-pane"
+                 *ngFor="let t of betTypes"
+                 [class.active]="activeBetType === t.key && t.key !== 'jodi' && t.key !== 'single'"
+                 [class.show]="activeBetType === t.key && t.key !== 'jodi' && t.key !== 'single'"
+                 [ngClass]="t.key">
+              <ng-container *ngIf="activeBetType === t.key && t.key !== 'jodi' && t.key !== 'single'">
+                <div class="worlibox">
+                  <div class="worli-left">
+                    <div class="worli-box-title"></div>
+                    <div class="worli-box-row">
+                      <div class="worli-odd-box back" *ngFor="let n of singleDigits.slice(0,5)" (click)="pickNumber(n)"><span class="worli-odd">{{ n }}</span></div>
+                    </div>
+                    <div class="worli-box-row">
+                      <div class="worli-odd-box back" *ngFor="let n of singleDigits.slice(5)" (click)="pickNumber(n)"><span class="worli-odd">{{ n }}</span></div>
+                    </div>
+                  </div>
+                  <div class="worli-right">
+                    <div class="worli-box-title"></div>
+                    <div class="worli-box-row">
+                      <div class="worli-odd-box back" (click)="pickNumber(t.label + ' ALL')"><span class="worli-odd">{{ t.label }} ALL</span></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="casino-remark">{{ t.label }} number list comes from the live feed.</div><!-- TODO(data) -->
+              </ng-container>
+            </div>
+          </div>
+
+          <!-- cart -->
+          <div class="worli-clear-box" *ngIf="cart.length">
+            <div class="d-flex flex-wrap align-items-center" style="gap:6px;">
+              <b>Bet Slip ({{ cart.length }}) · Total {{ cartTotal }}</b>
+              <span class="matka-del-bet" *ngFor="let c of cart; let i = index" (click)="removeCart(i)">
+                {{ c.betType }}·{{ c.number }}·{{ c.amount }} ✕
+              </span>
+              <button class="btn btn-danger btn-sm ms-2" (click)="clearCart()">Clear</button>
+              <button class="btn btn-success btn-sm" [class.disabled]="placeLoader" (click)="submitCart()">Place Bets</button>
+            </div>
+          </div>
+
+          <div class="casino-last-result-title"><span>Last Result</span><span><a href="/casino-results/worli3">View All</a></span></div>
+          <div class="matka-result casino-last-results">
+            <span class="result" *ngFor="let item of results; trackBy: trackByMid" (click)="openResult(result, item['mid'])">{{ item.val }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div [class.d-none]="gametab">
+        <div class="table-responsive"><table class="table">
+          <thead><tr><th>Matched Bet</th><th class="text-end">Odds</th><th class="text-end">Stake</th></tr></thead>
+          <tbody><tr *ngFor="let item of mybets" [ngClass]="item.betType"><td>{{ item['selectionName'] }}</td><td class="text-end">{{ item['rate'] }}</td><td class="text-end">{{ item['stake'] }}</td></tr></tbody>
+        </table></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="sidebar right-sidebar casino-right-sidebar" [class.sticky]="isSticky">
+    <div class="sidebar-box my-bet-container">
+      <div class="sidebar-title"><h4>My Bet</h4></div>
+      <div class="my-bets"><div class="table-responsive"><table class="table">
+        <thead><tr><th>Matched Bet</th><th class="text-end">Odds</th><th class="text-end">Stake</th></tr></thead>
+        <tbody><tr *ngFor="let item of mybets" [ngClass]="item.betType"><td>{{ item['selectionName'] }}</td><td class="text-end">{{ item['rate'] }}</td><td class="text-end">{{ item['stake'] }}</td></tr></tbody>
+      </table></div></div>
+    </div>
+  </div>
+</div>
+
+<ng-template #result let-c="close" let-d="dismiss"><div role="document">
+  <div class="modal-header"><div class="modal-title h4">Matka Market Result</div><button type="button" class="btn-close" (click)="d('x')"></button></div>
+  <div class="modal-body"><div class="casino-result-modal"><div class="casino-result-round-id"><span><b>Round Id: </b>{{ roundId }}</span></div></div></div>
+</div></ng-template>
+
+<ng-template #setButton let-c="close" let-d="dismiss"><div role="document">
+  <div class="modal-header"><div class="modal-title h4">Set Button Value</div><button type="button" class="btn-close" (click)="d('x')"></button></div>
+  <div class="modal-body">
+    <form (submit)="updateButtons()">
+      <div class="row row10" *ngFor="let item of userButtons.casinobutton; let i = index;">
+        <div class="mb-2 col-6"><input type="text" [name]="'c' + i" class="form-control" [(ngModel)]="item.name"></div>
+        <div class="mb-2 col-6"><input type="number" [name]="'cv' + i" class="form-control" [(ngModel)]="item.value"></div>
+      </div>
+      <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+  </div>
+</div></ng-template>

@@ -1,0 +1,300 @@
+<div id="root">
+  <div
+    style="position: fixed; z-index: 9999; inset: 16px; pointer-events: none"
+  ></div>
+  <div class="wrapper">
+    <app-header></app-header>
+    <div class="main-container">
+      <div class="sidebar left-sidebar">
+        <app-sidebar></app-sidebar>
+      </div>
+      <div class="center-main-container report-page">
+        <div class="center-container">
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-title">Current Bets</h4>
+            </div>
+            <div class="card-body">
+              <div class="report-form">
+                <form class="row row10">
+                  <div class="col-lg-4 col-md-4">
+                    <div class="mb-4 input-group position-relative gap-2">
+                      <select
+                        class="form-select"
+                        (change)="sportChanged()"
+                        name="gtype"
+                        [(ngModel)]="sportType"
+                      >
+                        <option value="" disabled>Select Report Type</option>
+                        <option value="1">Sports</option>
+                        <option value="2">Casino</option>
+                      </select>
+
+                      <select
+                        class="form-select"
+                        (change)="sportChanged()"
+                        name="gtype"
+                        [(ngModel)]="betStatus"
+                      >
+                        <option value="" disabled>Select Bet Status</option>
+                        <option value="matched">Matched</option>
+                        <option value="deleted">Deleted</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-md-2 d-grid">
+                    <button
+                      type="submit"
+                      (click)="getBets()"
+                      class="btn btn-primary btn-block"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </form>
+                <div
+                  class="row row10 mt-2 justify-content-between align-items-center"
+                >
+                  <div class="col-lg-2 col-5">
+                    <div class="mb-2 input-group position-relative">
+                      <span class="me-2">Show</span>
+                      <select
+                        (change)="this.offsetChange()"
+                        name="offset"
+                        class="form-select"
+                        [(ngModel)]="offset"
+                      >
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                        <option value="50">50</option>
+                      </select>
+                      <span class="ms-2">Entries</span>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-7 text-center">
+                    <div class="form-check form-check-inline">
+                      <input
+                        (change)="filterBets($event)"
+                        type="radio"
+                        class="form-check-input"
+                        id="all"
+                        name="filter"
+                        value="all"
+                        [(ngModel)]="betType"
+                      />All<label class="form-check-label" for="all"></label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        (change)="filterBets($event)"
+                        type="radio"
+                        class="form-check-input"
+                        id="back"
+                        name="filter"
+                        value="back"
+                        [(ngModel)]="betType"
+                      />Back<label class="form-check-label" for="back"></label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        (change)="filterBets($event)"
+                        type="radio"
+                        class="form-check-input"
+                        id="lay"
+                        name="filter"
+                        value="lay"
+                        [(ngModel)]="betType"
+                      />Lay<label class="form-check-label" for="lay"></label>
+                    </div>
+                  </div>
+                  <div class="col-lg-3 col-md-6 col-7 text-center">
+                    <div>
+                      Total Bets:
+                      <span class="me-2">{{ betInfo.total }}</span> Total
+                      Amount: <span class="me-2">{{ betInfo.amount }}</span>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-5">
+                    <div class="mb-2 input-group position-relative">
+                      <span class="me-2">Search:</span>
+                      <input
+                        type="search"
+                        (input)="search()"
+                        class="form-control"
+                        [placeholder]="betInfo.total + ' records...'"
+                        [(ngModel)]="searchString"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="mt-2 table-responsive"
+                  [class.position-relative]="loader"
+                >
+                  <div *ngIf="loader" id="loader-section">
+                    <div id="load-inner">
+                      <i class="fa fa-spinner fa-spin"></i>
+                    </div>
+                  </div>
+                  <table
+                    role="table"
+                    class="table table-bordered table-striped"
+                  >
+                    <thead>
+                      <tr role="row">
+                        <th
+                          colspan="1"
+                          role="columnheader"
+                          class="report-sport"
+                          *ngIf="sportType == '1'"
+                        >
+                          Sports
+                        </th>
+                        <th colspan="1" role="columnheader">Event Name</th>
+                        <th
+                          colspan="1"
+                          role="columnheader"
+                          *ngIf="sportType == '1'"
+                        >
+                          Market Name
+                        </th>
+                        <th colspan="1" role="columnheader">Nation</th>
+                        <th
+                          colspan="1"
+                          role="columnheader"
+                          class="report-amount text-end"
+                        >
+                          User Rate
+                        </th>
+                        <th
+                          colspan="1"
+                          role="columnheader"
+                          class="report-amount text-end"
+                        >
+                          Amount
+                        </th>
+                        <th colspan="1" role="columnheader" class="report-date">
+                          Place Date
+                        </th>
+                        <th
+                          colspan="1"
+                          role="columnheader"
+                          class="report-action"
+                        >
+                          <div class="text-end">
+                            <div class="form-check form-check-inline">
+                              <input
+                                type="checkbox"
+                                class="form-check-input"
+                                title="Toggle All Current Page Rows Selected"
+                                style="cursor: pointer"
+                              />
+                            </div>
+                          </div>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody role="rowgroup">
+                      <tr
+                        role="row"
+                        *ngFor="let item of bets; let i = index"
+                        [ngClass]="item.betType"
+                      >
+                        <td
+                          role="cell"
+                          class="report-sport"
+                          *ngIf="sportType == '1'"
+                        >
+                          {{ sportNames[item.sportId] }}
+                        </td>
+                        <td role="cell">{{ item.eventName }}</td>
+                        <td role="cell" *ngIf="sportType == '1'">
+                          {{ item.oddsType }}
+                        </td>
+                        <td role="cell">
+                          <span role="cell"
+                            >{{ item.selectionName
+                            }}{{
+                              item.oddsType == "Fancy"
+                                ? " /
+                            " + item.rate
+                                : ""
+                            }}</span
+                          >
+                        </td>
+                        <td role="cell" class="report-amount text-end">
+                          {{
+                            item.oddsType == "Fancy" ? item.score : item.rate
+                          }}
+                        </td>
+                        <td role="cell" class="report-amount text-end">
+                          {{ item.stake }}
+                        </td>
+                        <td role="cell" class="report-date">
+                          {{ item.createdAt | date: "M/dd/yyyy h:mm:ss" }}
+                        </td>
+                        <td role="cell" class="report-action">
+                          <div class="text-end">
+                            <div class="form-check form-check-inline">
+                              <input
+                                type="checkbox"
+                                class="form-check-input"
+                                title="Toggle Row Selected"
+                                style="cursor: pointer"
+                              />
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="custom-pagination mt-2" *ngIf="bets.length">
+                  <div
+                    (click)="pageChange('first')"
+                    [class.disabled]="page <= 1"
+                  >
+                    First
+                  </div>
+                  <div
+                    (click)="pageChange('previous')"
+                    [class.disabled]="page <= 1"
+                  >
+                    Previous
+                  </div>
+                  <div
+                    (click)="pageChange('next')"
+                    [class.disabled]="page >= totalPage"
+                  >
+                    Next
+                  </div>
+                  <div
+                    (click)="pageChange('last')"
+                    [class.disabled]="page >= totalPage"
+                  >
+                    Last
+                  </div>
+                  <div>
+                    <span class="me-2"
+                      >Page <b>{{ page }} of {{ totalPage }}</b></span
+                    >
+                    <span class="me-2">| Go to Page</span>
+                    <input
+                      (input)="goToPage()"
+                      class="form-control"
+                      type="number"
+                      name="gopage"
+                      [(ngModel)]="goPage"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <app-footer></app-footer>
+  </div>
+</div>

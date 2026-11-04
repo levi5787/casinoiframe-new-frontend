@@ -1,0 +1,1171 @@
+<div style="display: flex; flex-wrap: wrap">
+  <div class="center-container">
+    <div class="casino-page-container teenpatti2cards">
+      <div class="casino-header">
+        <span class="casino-name">2 Cards Teenpatti<a class="ms-1"><small
+              (click)="open(rules)">Rules</small></a></span><span
+          class="casino-rid d-none d-xl-inline-block"><small>Round ID: <span>{{ roundId }}</span></small></span>
+      </div>
+      <div class="casino-title-header-mobile d-xl-none">
+        <ul class="nav nav-tabs menu-tabs">
+          <li class="nav-item">
+            <div class="nav-link" (click)="gameTabClicked()" [class.active]="gametab">
+              Game
+            </div>
+          </li>
+          <li class="nav-item">
+            <div class="nav-link" (click)="betTabClicked()" [class.active]="bettab">
+              Placed Bet ({{ mybets.length }})
+            </div>
+          </li>
+        </ul>
+        <div class="pe-2">
+          <span class="casino-rid">Round ID: <span>{{ roundId }}</span></span>
+        </div>
+      </div>
+      <div [class.d-none]="bettab">
+        <div class="casino-video">
+          <div class="video-box-container">
+            <div class="casino-video-box">
+              <iframe [src]="safeURL"></iframe>
+            </div>
+          </div>
+          <!-- video cards -->
+          <div class="casino-video-cards" *ngIf="datas">
+            <div class="">
+              <div class="flip-card-container">
+                <div class="flip-card">
+                  <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                      <img [src]="c1" />
+                    </div>
+                    <div class="flip-card-back">
+                      <img [src]="c1" />
+                    </div>
+                  </div>
+                </div>
+                <div class="flip-card">
+                  <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                      <img [src]="c3" />
+                    </div>
+                    <div class="flip-card-back">
+                      <img [src]="c3" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-1">
+              <div class="flip-card-container">
+                <div class="flip-card">
+                  <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                      <img [src]="c2" />
+                    </div>
+                    <div class="flip-card-back">
+                      <img [src]="c2" />
+                    </div>
+                  </div>
+                </div>
+                <div class="flip-card">
+                  <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                      <img [src]="c4" />
+                    </div>
+                    <div class="flip-card-back">
+                      <img [src]="c4" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- flip clock -->
+          <div id="flipdown" class="flipdown flipdown__theme-dark clock flip-clock-wrapper">
+            <div class="rotor-group">
+              <div class="rotor">
+                <div class="rotor-leaf" [class.flipped]="flipfirst">
+                  <figure class="rotor-leaf-rear">{{ cfirstnum }}</figure>
+                  <figure class="rotor-leaf-front">{{ cfirstnum }}</figure>
+                </div>
+                <div class="rotor-top">{{ cfirstnum }}</div>
+                <div class="rotor-bottom">{{ cfirstnum }}</div>
+              </div>
+              <div class="rotor">
+                <div class="rotor-leaf" [class.flipped]="flipsecond">
+                  <figure class="rotor-leaf-rear">{{ clastnum }}</figure>
+                  <figure class="rotor-leaf-front">{{ clastnum }}</figure>
+                </div>
+                <div class="rotor-top">{{ clastnum }}</div>
+                <div class="rotor-bottom">{{ clastnum }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- casino detail -->
+        <div class="casino-detail">
+          <div class="casino-table">
+            <div class="casino-table-box" *ngIf="datas">
+              <div class="casino-table-left-box">
+                <div class="casino-table-body">
+                  <div class="casino-table-row">
+                    <div class="casino-nation-detail">
+                      <div class="casino-nation-name">Player A</div>
+                      <span *ngIf="winnerBook.length > 0" [class.text-success]="winnerBook[0].amount > 0"
+                        [class.text-danger]="winnerBook[0].amount < 0">{{ winnerBook[0].amount }}</span>
+                    </div>
+                    <div class="casino-odds-box back" [class.suspended-box]="playerA.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Player A',
+                          playerA.b,
+                          'back',
+                          1,
+                          'Winner',
+                          playerAmin,
+                          playerAmax
+                        )
+                      ">
+                      <span class="casino-odds">{{ playerA?.b }}</span>
+                    </div>
+                    <div class="casino-odds-box lay" [class.suspended-box]="playerA.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Player A',
+                          playerA.l,
+                          'lay',
+                          1,
+                          'Winner',
+                          playerAmin,
+                          playerAmax
+                        )
+                      ">
+                      <span class="casino-odds">{{ playerA?.l }}</span>
+                    </div>
+                  </div>
+                  <div class="casino-table-row mini-baccarat">
+                    <div class="casino-nation-detail">
+                      <div class="casino-nation-name">Mini Baccarat A</div>
+                      <span *ngIf="miniBaccaratABook.length > 0" [class.text-success]="miniBaccaratABook[1].amount > 0"
+                        [class.text-danger]="miniBaccaratABook[1].amount < 0">{{ miniBaccaratABook[1].amount }}</span>
+                    </div>
+                    <div class="casino-odds-box back" [class.suspended-box]="miniBaccaratA.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Mini Baccarat A',
+                          miniBaccaratA.b,
+                          'back',
+                          5,
+                          'Mini Baccarat A',
+                          miniBaccaratAmin,
+                          miniBaccaratAmax
+                        )
+                      ">
+                      <span class="casino-odds">{{ miniBaccaratA?.b }}</span>
+                    </div>
+                  </div>
+
+                  <!-- <div class="casino-table-row">
+                    <div class="casino-nation-detail">
+                      <div class="casino-nation-name">Total A</div>
+                      <span
+                        *ngIf="totalABook.length > 0"
+                        [class.text-success]="totalABook[0].amount > 0"
+                        [class.text-danger]="totalABook[0].amount < 0"
+                        >{{ totalABook[0].amount }}</span
+                      >
+                    </div>
+                    <div
+                      class="casino-odds-box lay"
+                      [class.suspended-box]="totalA.gstatus != 'OPEN'"
+                      (click)="
+                        openBetForm(
+                          placebet,
+                          'Total A',
+                          totalA.l,
+                          'lay',
+                          3,
+                          'totalA',
+                          totalAmin,
+                          totalAmax
+                        )
+                      "
+                    >
+                      <span class="casino-volume">{{ totalA?.l }}</span
+                      ><span class="casino-odds">{{ totalA?.lbhav }}</span>
+                    </div>
+                    <div
+                      class="casino-odds-box back"
+                      [class.suspended-box]="totalA.gstatus != 'OPEN'"
+                      (click)="
+                        openBetForm(
+                          placebet,
+                          'Total A',
+                          totalA.b,
+                          'back',
+                          3,
+                          'totalA',
+                          totalAmin,
+                          totalAmax
+                        )
+                      "
+                    >
+                      <span class="casino-volume">{{ totalA?.b }}</span
+                      ><span class="casino-odds">{{ totalA?.bbhav }}</span>
+                    </div>
+                  </div> -->
+
+                </div>
+              </div>
+              <div class="casino-table-box-divider"></div>
+              <div class="casino-table-right-box">
+                <div class="casino-table-body">
+                  <div class="casino-table-row">
+                    <div class="casino-nation-detail">
+                      <div class="casino-nation-name">Player B</div>
+                      <span *ngIf="winnerBook.length > 0" [class.text-success]="winnerBook[1].amount > 0"
+                        [class.text-danger]="winnerBook[1].amount < 0">{{ winnerBook[1].amount }}</span>
+                    </div>
+                    <div class="casino-odds-box back" [class.suspended-box]="playerB.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Player B',
+                          playerB.b,
+                          'back',
+                          2,
+                          'Winner',
+                          playerBmin,
+                          playerBmax
+                        )
+                      ">
+                      <span class="casino-odds">{{ playerB?.b }}</span>
+                    </div>
+                    <div class="casino-odds-box lay" [class.suspended-box]="playerB.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Player B',
+                          playerB.l,
+                          'lay',
+                          2,
+                          'Winner',
+                          playerBmin,
+                          playerBmax
+                        )
+                      ">
+                      <span class="casino-odds">{{ playerB?.l }}</span>
+                    </div>
+                  </div>
+                  <div class="casino-table-row mini-baccarat">
+                    <div class="casino-nation-detail">
+                      <div class="casino-nation-name">Mini Baccarat B</div>
+                      <span *ngIf="miniBaccaratBBook.length > 0" [class.text-success]="miniBaccaratBBook[1].amount > 0"
+                        [class.text-danger]="miniBaccaratBBook[1].amount < 0">{{ miniBaccaratBBook[1].amount }}</span>
+                    </div>
+                    <div class="casino-odds-box back" [class.suspended-box]="miniBaccaratB.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Mini Baccarat B',
+                          miniBaccaratB.b,
+                          'back',
+                          6,
+                          'Mini Baccarat B',
+                          miniBaccaratBmin,
+                          miniBaccaratBmax
+                        )
+                      ">
+                      <span class="casino-odds">{{ miniBaccaratB?.b }}</span>
+                    </div>
+                  </div>
+
+                  <!-- <div class="casino-table-row">
+                    <div class="casino-nation-detail">
+                      <div class="casino-nation-name">Total B</div>
+                      <span
+                        *ngIf="totalBBook.length > 0"
+                        [class.text-success]="totalBBook[0].amount > 0"
+                        [class.text-danger]="totalBBook[0].amount < 0"
+                        >{{ totalBBook[0].amount }}</span
+                      >
+                    </div>
+                    <div
+                      class="casino-odds-box lay"
+                      [class.suspended-box]="totalB.gstatus != 'OPEN'"
+                      (click)="
+                        openBetForm(
+                          placebet,
+                          'Total B',
+                          totalB.l,
+                          'lay',
+                          4,
+                          'totalB',
+                          totalBmin,
+                          totalBmax
+                        )
+                      "
+                    >
+                      <span class="casino-volume">{{ totalB?.l }}</span
+                      ><span class="casino-odds">{{ totalB?.lbhav }}</span>
+                    </div>
+                    <div
+                      class="casino-odds-box back"
+                      [class.suspended-box]="totalB.gstatus != 'OPEN'"
+                      (click)="
+                        openBetForm(
+                          placebet,
+                          'Total B',
+                          totalB.b,
+                          'back',
+                          4,
+                          'totalB',
+                          totalBmin,
+                          totalBmax
+                        )
+                      "
+                    >
+                      <span class="casino-volume">{{ totalB?.b }}</span
+                      ><span class="casino-odds">{{ totalB?.bbhav }}</span>
+                    </div>
+                  </div> -->
+
+                </div>
+              </div>
+            </div>
+            <div class="casino-table-full-box color-plus my-2">
+              <div class="casino-odds-box back" [class.suspended-box]="colorPlus.gstatus != 'OPEN'" (click)="
+                  openBetForm(
+                    placebet,
+                    'Color Plus',
+                    colorPlus.b,
+                    'back',
+                    7,
+                    'colourPlus',
+                    colorPlusmin,
+                    colorPlusmax
+                  )
+                ">
+                <span class="casino-odds">Color Plus</span>
+                <span *ngIf="colourplusBook.length > 0" [class.text-success]="colourplusBook[0].amount > 0"
+                  [class.text-danger]="colourplusBook[0].amount < 0">{{ colourplusBook[0].amount }}</span>
+              </div>
+            </div>
+            <div class="casino-remark mt-1">
+              <marquee scrollamount="3">
+                Play Our New Game Premium Teenpatti 1 Day
+              </marquee>
+            </div>
+          </div>
+          <div class="casino-last-result-title">
+            <span>Last Result</span><span><a href="/casino-results/patti2">View All</a></span>
+          </div>
+          <div class="casino-last-results">
+            <span *ngFor="let item of results?.res" class="result" [ngClass]="
+                item.win === '1'
+                  ? 'result-a'
+                  : item.win === '2'
+                    ? 'result-b'
+                    : 'result-tie'
+              " (click)="openResult(result, item.mid)">
+              {{ item.win === "1" ? "A" : item.win === "2" ? "B" : "T" }}
+            </span>
+          </div>
+
+          <div class="sidebar-box my-bet-container mt-2 d-xl-none">
+            <div class="sidebar-title">
+              <h4>Rules</h4>
+            </div>
+            <div class="">
+              <div class="table-responsive">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th colspan="2" class="text-center">Color Plus Rules</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Three card Sequence</td>
+                      <td>1 TO 3</td>
+                    </tr>
+                    <tr>
+                      <td>Four card color</td>
+                      <td>1 TO 9</td>
+                    </tr>
+                    <tr>
+                      <td>Four card Sequence</td>
+                      <td>1 TO 9</td>
+                    </tr>
+                    <tr>
+                      <td>Three of a kind</td>
+                      <td>1 TO 12</td>
+                    </tr>
+                    <tr>
+                      <td>Three card pure Sequence</td>
+                      <td>1 TO 15</td>
+                    </tr>
+                    <tr>
+                      <td>Four card pure Sequence</td>
+                      <td>1 TO 150</td>
+                    </tr>
+                    <tr>
+                      <td>Four of a kind</td>
+                      <td>1 TO 200</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bet Tab -->
+      <div [class.d-none]="gametab">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Matched Bet</th>
+                <th class="text-end">Odds</th>
+                <th class="text-end">Stake</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of mybets" [ngClass]="item.betType">
+                <td>{{ item.selectionName }}</td>
+                <td class="text-end">{{ twoDecimal(item.rate) }}</td>
+                <td class="text-end">{{ twoDecimal(item.stake) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sidebar right-sidebar casino-right-sidebar" [class.sticky]="isSticky">
+    <!-- Placebet Section Desktop -->
+    <div class="sidebar-box place-bet-container position-relative" *ngIf="showbetform">
+      <div *ngIf="placeLoader" id="loader-section">
+        <div id="load-inner">
+          <i class="fa fa-spinner fa-spin"></i>
+        </div>
+      </div>
+      <div class="sidebar-title">
+        <h4>Place Bet</h4>
+        <span *ngIf="max != 0">Range: {{ min }} to {{ max | shortNumber }}</span>
+      </div>
+      <div class="place-bet-box" [ngClass]="betType">
+        <div class="place-bet-box-header">
+          <div class="place-bet-for">(Bet for)</div>
+          <div class="place-bet-odds">Odds</div>
+          <div class="place-bet-stake">Stake</div>
+          <div class="place-bet-profit">Profit</div>
+        </div>
+        <div class="place-bet-box-body">
+          <div class="place-bet-for">
+            <i class="fas fa-times text-danger me-1"></i>
+            <span>{{ betFor }}</span>
+          </div>
+          <div class="place-bet-odds">
+            <input type="text" [(ngModel)]="odds" name="odds" class="form-control" disabled="" />
+          </div>
+          <div class="place-bet-stake">
+            <input type="number" [(ngModel)]="stake" (keyup)="calcProfit(stake)" name="stake" maxlength="10"
+              class="form-control" value="" />
+          </div>
+          <div class="place-bet-profit"></div>
+        </div>
+        <div class="place-bet-buttons">
+          <button *ngFor="let button of placebetButton; trackBy: trackByFunc" (click)="placeStake(button.value)"
+            class="btn btn-place-bet">
+            +{{ button.name }}
+          </button>
+        </div>
+        <div class="place-bet-action-buttons">
+          <div>
+            <button (click)="openButtons(setButton)" class="btn btn-info">
+              Edit
+            </button>
+          </div>
+          <div>
+            <button class="btn btn-danger me-1" (click)="hideBetPlace()">
+              Reset
+            </button>
+            <button class="btn btn-success" [class.disabled]="!stake" (click)="submitbet()">
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- my bet Desktop -->
+    <div class="sidebar-box my-bet-container">
+      <div class="sidebar-title">
+        <h4>My Bet</h4>
+      </div>
+      <div class="my-bets">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Matched Bet</th>
+                <th class="text-end">Odds</th>
+                <th class="text-end">Stake</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of mybets" [ngClass]="item.betType">
+                <td>{{ item["selectionName"] }}</td>
+                <td class="text-end">{{ item["rate"] }}</td>
+                <td class="text-end">{{ item["stake"] }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar Rules -->
+    <div class="sidebar-box my-bet-container">
+      <div class="sidebar-title">
+        <h4>Rules</h4>
+      </div>
+      <div class="">
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th colspan="2" class="text-center">Color Plus Rules</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Three card Sequence</td>
+                <td>1 TO 3</td>
+              </tr>
+              <tr>
+                <td>Four card color</td>
+                <td>1 TO 9</td>
+              </tr>
+              <tr>
+                <td>Four card Sequence</td>
+                <td>1 TO 9</td>
+              </tr>
+              <tr>
+                <td>Three of a kind</td>
+                <td>1 TO 12</td>
+              </tr>
+              <tr>
+                <td>Three card pure Sequence</td>
+                <td>1 TO 15</td>
+              </tr>
+              <tr>
+                <td>Four card pure Sequence</td>
+                <td>1 TO 150</td>
+              </tr>
+              <tr>
+                <td>Four of a kind</td>
+                <td>1 TO 200</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Result Modal -->
+<ng-template #result let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title h4">TWO CARDS TEENPATTI</div>
+      <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+
+    <div class="modal-body">
+      <div class="casino-result-modal">
+        <div class="casino-result-round-id">
+          <span><b>Round Id: </b> {{ temprId }}</span><span><b>Match Time: </b>{{ temptime }}</span>
+        </div>
+        <div class="row mt-2">
+          <div class="col-md-6 text-center">
+            <h4 class="result-title">Player A</h4>
+            <div class="casino-result-cards">
+              <div class="casino-winner-icon" *ngIf="tempWinner == 'Player A'">
+                <i class="fas fa-trophy"></i>
+              </div>
+              <img [src]="tempCards[0]" *ngIf="tempCards[0]" />
+              <img [src]="tempCards[2]" *ngIf="tempCards[1]" />
+            </div>
+          </div>
+          <div class="col-md-6 text-center">
+            <h4 class="result-title">Player B</h4>
+            <div class="casino-result-cards">
+              <img [src]="tempCards[1]" *ngIf="tempCards[2]" />
+              <img [src]="tempCards[3]" *ngIf="tempCards[3]" />
+              <div class="casino-winner-icon" *ngIf="tempWinner == 'Player B'">
+              <i class="fas fa-trophy"></i>
+            </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-2 justify-content-center">
+          <div class="col-md-6">
+            <div class="casino-result-desc">
+              <div class="casino-result-desc-item">
+                <div>Winner</div>
+                <div>{{ tempWinner }}</div>
+              </div>
+              <div class="casino-result-desc-item">
+                <div>Mini Baccarat</div>
+                <div>{{ temprdesc[1] }}</div>
+              </div>
+              <div class="casino-result-desc-item">
+                <div>Total</div>
+                <div>{{ temprdesc[2] }}</div>
+              </div>
+              <div class="casino-result-desc-item">
+                <div>Color Plus</div>
+                <div>{{ temprdesc[3] }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Rules -->
+<ng-template #rules let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title h4">TWO CARDS TEENPATTI Rules</div>
+      <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <style type="text/css">
+          .rules-section .row.row5 {
+            margin-left: -5px;
+            margin-right: -5px;
+          }
+
+          .rules-section .pl-2 {
+            padding-left: 0.5rem !important;
+          }
+
+          .rules-section .pr-2 {
+            padding-right: 0.5rem !important;
+          }
+
+          .rules-section .row.row5>[class*="col-"],
+          .rules-section .row.row5>[class*="col"] {
+            padding-left: 5px;
+            padding-right: 5px;
+          }
+
+          .rules-section {
+            text-align: left;
+            margin-bottom: 10px;
+          }
+
+          .rules-section .table {
+            color: #fff;
+            border: 1px solid #444;
+            background-color: #222;
+            font-size: 12px;
+          }
+
+          .rules-section .table td,
+          .rules-section .table th {
+            border-bottom: 1px solid #444;
+          }
+
+          .rules-section ul li,
+          .rules-section p {
+            margin-bottom: 5px;
+          }
+
+          .rules-section::-webkit-scrollbar {
+            width: 8px;
+          }
+
+          .rules-section::-webkit-scrollbar-track {
+            background: #666666;
+          }
+
+          .rules-section::-webkit-scrollbar-thumb {
+            background-color: #333333;
+          }
+
+          .rules-section .rules-highlight {
+            color: #fdcf13;
+            font-size: 16px;
+          }
+
+          .rules-section .rules-sub-highlight {
+            color: #fdcf13;
+            font-size: 14px;
+          }
+
+          .rules-section .list-style,
+          .rules-section .list-style li {
+            list-style: disc;
+          }
+
+          .rules-section .rule-card {
+            height: 20px;
+            margin-left: 5px;
+          }
+
+          .rules-section .card-character {
+            font-family: Card Characters;
+          }
+
+          .rules-section .red-card {
+            color: red;
+          }
+
+          .rules-section .black-card {
+            color: black;
+          }
+
+          .rules-section .cards-box {
+            background: #fff;
+            padding: 6px;
+            display: inline-block;
+            color: #000;
+            min-width: 150px;
+          }
+
+          .rules-section img {
+            height: 30px;
+            margin-right: 5px;
+          }
+        </style>
+
+        <!-- Color Plus -->
+        <div class="rules-section">
+          <h6 class="rules-highlight">Color Plus:</h6>
+          <p>
+            It contains seven circumstances to bet on simultaneously, however
+            you can only win prize money on the item which has the higher rate.
+          </p>
+          <p>The seven outcomes on which you can bet are listed below:</p>
+          <ul class="pl-4 pr-4 list-style">
+            <li>
+              <div>3 card sequence</div>
+              <div class="cards-box">
+                <span>E.g</span>
+                <span class="card-character red-card ml-1">2&#123;</span>
+                <span class="card-character black-card ml-1">3]</span>
+                <span class="card-character red-card ml-1">4[</span>
+              </div>
+            </li>
+            <li>
+              <div>3 of a Kind</div>
+              <div class="cards-box">
+                <span>E.g</span>
+                <span class="card-character red-card ml-1">3&#123;</span>
+                <span class="card-character red-card ml-1">3[</span>
+                <span class="card-character black-card ml-1">3&#125;</span>
+              </div>
+            </li>
+            <li>
+              <div>3 card pure sequence</div>
+              <div class="cards-box">
+                <span>E.g</span>
+                <span class="card-character red-card ml-1">2&#123;</span>
+                <span class="card-character red-card ml-1">3&#123;</span>
+                <span class="card-character red-card ml-1">4&#123;</span>
+              </div>
+            </li>
+            <li>
+              <div>4 card colour</div>
+              <div class="cards-box">
+                <span>E.g</span>
+                <span class="card-character black-card ml-1">2]</span>
+                <span class="card-character black-card ml-1">6]</span>
+                <span class="card-character black-card ml-1">7]</span>
+                <span class="card-character black-card ml-1">9]</span>
+              </div>
+            </li>
+            <li>
+              <div>4 card sequence</div>
+              <div class="cards-box">
+                <span>E.g</span>
+                <span class="card-character black-card ml-1">2&#125;</span>
+                <span class="card-character red-card ml-1">3[</span>
+                <span class="card-character black-card ml-1">4]</span>
+                <span class="card-character red-card ml-1">5[</span>
+              </div>
+            </li>
+            <li>
+              <div>4 card pure sequence</div>
+              <div class="cards-box">
+                <span>E.g</span>
+                <span class="card-character black-card ml-1">2&#125;</span>
+                <span class="card-character black-card ml-1">3&#125;</span>
+                <span class="card-character black-card ml-1">4&#125;</span>
+                <span class="card-character black-card ml-1">5&#125;</span>
+              </div>
+            </li>
+            <li>
+              <div>4 of a kind</div>
+              <div class="cards-box">
+                <span>E.g</span>
+                <span class="card-character red-card ml-1">3&#123;</span>
+                <span class="card-character black-card ml-1">3]</span>
+                <span class="card-character red-card ml-1">3[</span>
+                <span class="card-character black-card ml-1">3&#125;</span>
+              </div>
+            </li>
+          </ul>
+          <div class="mt-2">
+            <div>if your card is</div>
+            <div class="cards-box">
+              <span>E.g</span>
+              <span class="card-character red-card ml-1">6[</span>
+              <span class="card-character red-card ml-1">7[</span>
+              <span class="card-character red-card ml-1">8[</span>
+              <span class="card-character red-card ml-1">9[</span>
+            </div>
+          </div>
+          <div class="mt-2">
+            <p>
+              Here you will win prize in case there is a 4 card pure sequence
+              only...! Hence they will not receive the prize of:
+            </p>
+          </div>
+          <ul class="pl-4 pr-4 list-style">
+            <li>3 card sequence</li>
+            <li>4 card sequence</li>
+            <li>4 card color</li>
+            <li>3 card pure sequence</li>
+          </ul>
+          <div class="mt-2">
+            <p>Next example. If the cards are:</p>
+          </div>
+          <ul class="pl-4 pr-4 list-style">
+            <li>King of Spades</li>
+            <li>King of Clubs</li>
+            <li>King of Diamonds</li>
+            <li>King of Hearts</li>
+          </ul>
+          <div class="mt-2">
+            <p>
+              In this instance you will only receive the prize of 4 of a kind,
+              therefore you will not win prize of 3 of a kind.
+            </p>
+            <p>
+              You will only be able to win one prize, the one which is the most
+              beneficial to them.
+            </p>
+          </div>
+        </div>
+
+        <!-- Main -->
+        <div class="rules-section">
+          <h6 class="rules-highlight">Main:</h6>
+          <p>
+            In case of consecutive cards, the third card is to be considered in
+            ascending order only. For example,
+          </p>
+          <p>
+            if the first two cards are king &amp; ace then the third card is 2,
+            so it becomes: k, A &amp; 2 (which is not sequence).
+          </p>
+          <p>
+            If the first two cards are 2 &amp; 3, then third card is 4, so it
+            becomes 2,3,4 (it will not be 1,2,3).
+          </p>
+          <p>The sequence in order from 1st to last is listed below:</p>
+          <div class="row row5 pl-2 pr-2">
+            <div class="col-6">
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <td>Queen &amp; King</td>
+                    <td class="text-right">1st</td>
+                  </tr>
+                  <tr>
+                    <td>Ace &amp; 2</td>
+                    <td class="text-right">2nd</td>
+                  </tr>
+                  <tr>
+                    <td>Jack &amp; Queen</td>
+                    <td class="text-right">3rd</td>
+                  </tr>
+                  <tr>
+                    <td>10 &amp; Jack</td>
+                    <td class="text-right">4th</td>
+                  </tr>
+                  <tr>
+                    <td>9 &amp; 10</td>
+                    <td class="text-right">5th</td>
+                  </tr>
+                  <tr>
+                    <td>8 &amp; 9</td>
+                    <td class="text-right">6th</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="col-6">
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <td>7 &amp; 8</td>
+                    <td class="text-right">7th</td>
+                  </tr>
+                  <tr>
+                    <td>6 &amp; 7</td>
+                    <td class="text-right">8th</td>
+                  </tr>
+                  <tr>
+                    <td>5 &amp; 6</td>
+                    <td class="text-right">9th</td>
+                  </tr>
+                  <tr>
+                    <td>4 &amp; 5</td>
+                    <td class="text-right">10th</td>
+                  </tr>
+                  <tr>
+                    <td>3 &amp; 4</td>
+                    <td class="text-right">11th</td>
+                  </tr>
+                  <tr>
+                    <td>2 &amp; 3</td>
+                    <td class="text-right">12th</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="mt-2">
+            <p>
+              If it is alternative cards eg. 6 &amp; 8. Or 2 &amp; 4 Or Q &amp;
+              A
+            </p>
+            <p>
+              This type of alternative game will not be considered as a
+              sequence..!
+            </p>
+            <p>If it comes 4 &amp; 4 this will be considered as a trio of 4</p>
+            <p>
+              Another example is Ace &amp; Ace, which will be considered as trio
+              of Ace.
+            </p>
+          </div>
+          <div class="mt-2">
+            <p>Best combination of games in order of 1st to last:</p>
+          </div>
+          <ul class="pl-4 pr-4 list-style">
+            <li>Pure sequence: 1st best combination</li>
+            <li>Trio (3 of a kind): 2nd best combination</li>
+            <li>Sequence (straight): 3rd best combination</li>
+            <li>colour (suits): 4th best combination</li>
+          </ul>
+          <p>After that, all the games will be valued of higher card.</p>
+        </div>
+
+        <!-- Mini Baccarat -->
+        <div class="rules-section">
+          <h6 class="rules-highlight">Mini Baccarat:</h6>
+          <p>
+            It is a comparison between the last digit of Total of both the sides
+            Value of cards for baccarat is:
+          </p>
+          <ul class="pl-4 pr-4 list-style">
+            <li>Ace = one point</li>
+            <li>2 = 2 point</li>
+            <li>3 = 3 point</li>
+            <li>4 = 4 point</li>
+            <li>5 = 5 point</li>
+            <li>6 = 6 point</li>
+            <li>7 = 7 point</li>
+            <li>8 = 8 point</li>
+            <li>9 = 9 point</li>
+            <li>10 = 0 point</li>
+            <li>Jack = 0 point</li>
+            <li>Queen = 0 point</li>
+            <li>King = 0 point</li>
+          </ul>
+          <div class="mt-2">
+            <p>Total of two card can be ranged between 0 to 18</p>
+            <p>
+              If total is in single digit, then the same will be considered as
+              baccarat value
+            </p>
+            <p>
+              If the total is of double digit, then the last digit will be
+              considered as baccarat value. Higher value baccarat will win.
+            </p>
+            <p>
+              If baccarat value of both the sides are equal, then both side's
+              will lose their bets..
+            </p>
+          </div>
+        </div>
+
+        <!-- Total -->
+        <div class="rules-section">
+          <h6 class="rules-highlight">Total:</h6>
+          <p>Session is total of 2 cards value</p>
+          <p>value of each cards</p>
+          <ul class="pl-4 pr-4 list-style">
+            <li>Ace = 1 point</li>
+            <li>2 = 2 point</li>
+            <li>3 = 3 point</li>
+            <li>4 = 4 point</li>
+            <li>5 = 5 point</li>
+            <li>6 = 6 point</li>
+            <li>7 = 7 point</li>
+            <li>8 = 8 point</li>
+            <li>9 = 9 point</li>
+            <li>10 = 10 point</li>
+            <li>Jack = 11 point</li>
+            <li>Queen = 12 point</li>
+            <li>King = 13 point</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Placebet Section Mobile -->
+<ng-template #placebet let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">Place Bet</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="place-bet-modal casino-bet-modal" [ngClass]="betType">
+        <div *ngIf="placeLoader" id="loader-section">
+          <div id="load-inner">
+            <i class="fa fa-spinner fa-spin"></i>
+          </div>
+        </div>
+        <div class="row row5">
+          <div class="col-6"><b>{{ betFor }}</b></div>
+          <div class="col-6 text-end"><span>Profit:</span></div>
+        </div>
+        <div class="odd-stake-box">
+          <div class="row row5 mt-1">
+            <div class="col-6 text-center">Amount</div>
+            <div class="col-6 text-center">Odds</div>
+          </div>
+          <div class="row row5 mt-1">
+            <div class="col-6"><input type="number" class="stakeinput w-100" [(ngModel)]="stake"
+                (keyup)="calcProfit(stake)" name="stake" maxlength="10" value=""></div>
+            <div class="col-6">
+              <div class="float-end"><input type="text" class="stakeinput" [(ngModel)]="odds" name="odds" disabled=""
+                  value=""></div>
+            </div>
+          </div>
+        </div>
+        <div class="place-bet-buttons mt-1">
+          <button class="btn btn-place-bet" *ngFor="let button of placebetButton; trackBy: trackByFunc"
+            (click)="placeStake(button.value)">+{{ button.name }}</button>
+        </div>
+
+        <div class="mt-1 place-bet-btn-box">
+          <button class="btn btn-link" (click)="resetStake()">clear</button>
+          <button class="btn btn-info" (click)="openButtons(setButton)">Edit</button>
+          <button class="btn btn-danger" (click)="d('Cross click')">Reset</button>
+          <button class="btn btn-success" [class.disabled]="stake <= 1" (click)="submitbet()">Place Bet</button>
+        </div>
+        <div class="mt-3 d-flex justify-content-between align-items-center">
+          <b><span *ngIf="max!=0">Range: {{min}} to {{max | shortNumber}}</span></b>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Set Button Section -->
+<ng-template #setButton let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">Set Button Value</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="mt-1 nav nav-pills" role="tablist">
+        <div class="nav-item">
+          <a role="tab" (click)="clickSetButtonTab('game')" [class.active]="setButtonTab == 'game'"
+            class="nav-link">Game Buttons
+          </a>
+        </div>
+        <div class="nav-item">
+          <a role="tab" (click)="clickSetButtonTab('casino')" [class.active]="setButtonTab == 'casino'"
+            class="nav-link">Casino Buttons
+          </a>
+        </div>
+      </div>
+      <div class="mt-1 tab-content">
+        <div role="tabpanel" class="fade tab-pane show" [class.active]="setButtonTab == 'game'">
+          <form (submit)="updateButtons()">
+            <div class="row row10">
+              <div class="mb-1 col-6">
+                <label class="form-label"><b>Price Label:</b></label>
+              </div>
+              <div class="mb-1 col-6">
+                <label class="form-label"><b>Price Value:</b></label>
+              </div>
+            </div>
+            <div class="row row10" *ngFor="let item of userButtons.gamebutton; let i = index">
+              <div class="mb-3 col-6 position-relative">
+                <input type="text" [name]="'game' + item.name + i" class="form-control" [(ngModel)]="item.name" />
+              </div>
+              <div class="mb-3 col-6 position-relative">
+                <input type="number" [name]="'game' + item.value + i" class="form-control" [(ngModel)]="item.value" />
+              </div>
+            </div>
+
+            <div class="row row10">
+              <div class="mb-3 col-md-6">
+                <button type="submit" class="btn btn-primary btn-block">
+                  Update
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div role="tabpanel" class="fade tab-pane show" [class.active]="setButtonTab == 'casino'">
+          <form (submit)="updateButtons()">
+            <div class="row row10">
+              <div class="mb-1 col-6">
+                <label class="form-label"><b>Price Label:</b></label>
+              </div>
+              <div class="mb-1 col-6">
+                <label class="form-label"><b>Price Value:</b></label>
+              </div>
+            </div>
+            <div class="row row10" *ngFor="let item of userButtons.casinobutton; let i = index">
+              <div class="mb-3 col-6 position-relative">
+                <input type="text" [name]="'casino' + item.name + i" class="form-control" [(ngModel)]="item.name" />
+              </div>
+              <div class="mb-3 col-6 position-relative">
+                <input type="number" [name]="'casino' + item.value + i" class="form-control" [(ngModel)]="item.value" />
+              </div>
+            </div>
+            <div class="row row10">
+              <div class="mb-3 col-md-6">
+                <button type="submit" class="btn btn-primary btn-block">
+                  Update
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

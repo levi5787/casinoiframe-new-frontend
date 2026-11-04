@@ -1,0 +1,120 @@
+
+
+
+.teenpatti-joker .joker-card .flip-card-container {
+  justify-content: flex-start;
+}
+.joker-card .text-playerb {
+  color: #ef910f;
+  font-weight: bold;
+}
+
+.teenpatti-joker1 .joker-card {
+  flex-wrap: wrap !important;
+  flex-direction: column;
+  position: absolute;
+  display: flex;
+  top: 0;
+  padding: 5px;
+  left: 0;
+}
+
+.teenpatti-joker1 .joker-card h4 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.teenpatti-joker1 .joker-card span img {
+  width: 50px;
+}
+
+.teenpatti-joker1 .casino-video-cards {
+  top: 140px;
+}
+
+.joker1-other-cards img.select {
+  transform: scale(1.2);
+}
+
+.place-bet-action-buttons .joker-card img {
+  height: 50px;
+}
+
+.casino-table-header,
+.casino-table-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--table-border);
+}
+.doli-main .casino-table-row {
+  width: 100%;
+}
+
+
+.joker1-other-cards {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px;
+  background-color: var(--bg-secondary70);
+  color: var(--text-secondary);
+  transition: width 1.5s;
+  width: 100%;
+  overflow: hidden;
+}
+
+.joker1-other-cards h4 {
+  color: var(--text-primary);
+  background: var(--bg-primary90);
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 18px;
+  margin-bottom: 0;
+}
+
+.joker1-other-cards div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.joker1-other-cards img {
+  height: 60px;
+}
+.joker1-other-cards img.select {
+  transform: scale(1.2);
+}
+.teenpatti-joker1 .casino-nation-detail {
+    width: 60%;
+}
+
+.casino-nation-detail {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-left: 5px;
+    min-height: 46px;
+}
+.teenpatti-joker1 .casino-odds-box {
+    width: 20%;
+}
+.casino-odds-box {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 0;
+    font-weight: bold;
+    border-left: 1px solid var(--table-border);
+    cursor: pointer;
+    min-height: 46px;
+}
+

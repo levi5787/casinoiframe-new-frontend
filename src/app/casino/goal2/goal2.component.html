@@ -1,0 +1,4094 @@
+<div style="display: flex; flex-wrap: wrap">
+  <div class="center-container">
+    <div class="casino-page-container ball-by-ball goal goal2">
+      <div class="casino-header">
+        <span class="casino-name">Goal 2<a class="ms-1"><small (click)="open(rules)">Rules</small></a></span><span
+          class="casino-rid d-none d-xl-inline-block"><small>Round ID: <span>{{ roundId }}</span></small></span>
+      </div>
+      <div class="casino-title-header-mobile d-xl-none">
+        <ul class="nav nav-tabs menu-tabs">
+          <li class="nav-item">
+            <div (click)="gameTabClicked()" class="nav-link" [class.active]="gametab">
+              Game
+            </div>
+          </li>
+          <li class="nav-item">
+            <div (click)="betTabClicked()" class="nav-link" [class.active]="bettab">
+              Placed Bet ({{ mybets.length }})
+            </div>
+          </li>
+        </ul>
+        <div class="pe-2">
+          <span class="casino-rid">Round ID: <span>{{ roundId }}</span></span>
+        </div>
+      </div>
+      <!-- Gametab -->
+      <div [class.d-none]="bettab">
+        <div class="casino-video">
+          <div class="video-box-container">
+            <div class="casino-video-box">
+              <iframe [src]="safeURL"></iframe>
+              <div *ngIf="bounceEnter" class="cricket20ballpopup">
+                <img src="/img/balls/soccer-ball.png" />
+                <span>{{ rdesc }}</span>
+              </div>
+            </div>
+          </div>
+          <!-- flip clock -->
+          <div id="flipdown" class="flipdown flipdown__theme-dark clock flip-clock-wrapper">
+            <div class="rotor-group">
+              <div class="rotor">
+                <div class="rotor-leaf" [class.flipped]="flipfirst">
+                  <figure class="rotor-leaf-rear">{{ cfirstnum }}</figure>
+                  <figure class="rotor-leaf-front">{{ cfirstnum }}</figure>
+                </div>
+                <div class="rotor-top">{{ cfirstnum }}</div>
+                <div class="rotor-bottom">{{ cfirstnum }}</div>
+              </div>
+              <div class="rotor">
+                <div class="rotor-leaf" [class.flipped]="flipsecond">
+                  <figure class="rotor-leaf-rear">{{ clastnum }}</figure>
+                  <figure class="rotor-leaf-front">{{ clastnum }}</figure>
+                </div>
+                <div class="rotor-top">{{ clastnum }}</div>
+                <div class="rotor-bottom">{{ clastnum }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Markets -->
+        <div class="casino-detail detail-page-container position-relative" *ngIf="data">
+          <!-- who will goal next -->
+          <div class="game-market market-6 container-fluid container-fluid-5" *ngIf="data">
+            <div class="market-title row row5">Who Will Goal Next?</div>
+            <div class="market-header row row5">
+              <div class="col-12 col-md-12 d-none d-md-block">
+                <div class="market-row">
+                  <div class="market-nation-detail"></div>
+                  <div class="market-odd-box back"><b>Back</b></div>
+                  <div class="market-odd-box lay"><b>Lay</b></div>
+                  <div class="fancy-min-max-box"></div>
+                </div>
+              </div>
+              <div class="col-12 col-md-4 d-md-none">
+                <div class="market-row">
+                  <div class="market-nation-detail"></div>
+                  <div class="market-odd-box back"><b>Back</b></div>
+                  <div class="market-odd-box lay"><b>Lay</b></div>
+                  <div class="fancy-min-max-box"></div>
+                </div>
+              </div>
+            </div>
+            <div class="market-body row">
+              <!-- Cristiano Ronaldo -->
+              <div class="col-12 col-md-12">
+                <div class="fancy-market" data-title="OPEN">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        CRdata.nat
+                        }}</span>
+                      <span *ngIf="winnerBook.length > 0" [class.text-success]="winnerBook[0].amount > 0"
+                        [class.text-danger]="winnerBook[0].amount < 0">{{ winnerBook[0].amount }}</span>
+                    </div>
+                    <div class="market-odd-box back" [class.suspended-box]="CRdata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Cristiano Ronaldo',
+                          CRdata.b,
+                          'back',
+                          1,
+                          'winner'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        CRdata.gstatus != "OPEN" ? "" : CRdata.b
+                        }}</span>
+                      <span class="market-volume">{{ CRdata.bs }}</span>
+                    </div>
+                    <div class="market-odd-box lay" [class.suspended-box]="CRdata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Cristiano Ronaldo',
+                          CRdata.l,
+                          'lay',
+                          1,
+                          'winner'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        CRdata.gstatus != "OPEN" ? "" : CRdata.l
+                        }}</span>
+                      <span class="market-volume">{{ CRdata.ls }}</span>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ CRdata.min }}</span>
+                        <span class="w-100 d-block">Max: {{ CRdata.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Lionel Messi -->
+              <div class="col-12 col-md-12">
+                <div class="fancy-market" data-title="OPEN">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        LMdata.nat
+                        }}</span>
+                      <span *ngIf="winnerBook.length > 0" [class.text-success]="winnerBook[1].amount > 0"
+                        [class.text-danger]="winnerBook[1].amount < 0">{{ winnerBook[1].amount }}</span>
+                    </div>
+                    <div class="market-odd-box back" [class.suspended-box]="LMdata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Lionel Messi',
+                          LMdata.b,
+                          'back',
+                          2,
+                          'winner'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        LMdata.gstatus != "OPEN" ? "" : LMdata.b
+                        }}</span>
+                      <span class="market-volume">{{ LMdata.bs }}</span>
+                    </div>
+                    <div class="market-odd-box lay" [class.suspended-box]="LMdata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Lionel Messi',
+                          LMdata.l,
+                          'lay',
+                          2,
+                          'winner'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        LMdata.gstatus != "OPEN" ? "" : LMdata.l
+                        }}</span>
+                      <span class="market-volume">{{ LMdata.ls }}</span>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ LMdata.min }}</span>
+                        <span class="w-100 d-block">Max: {{ LMdata.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Robert Lewandowski -->
+              <div class="col-12 col-md-12">
+                <div class="fancy-market" data-title="OPEN">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        RLdata.nat
+                        }}</span>
+                      <span *ngIf="winnerBook.length > 0" [class.text-success]="winnerBook[2].amount > 0"
+                        [class.text-danger]="winnerBook[2].amount < 0">{{ winnerBook[2].amount }}</span>
+                    </div>
+                    <div class="market-odd-box back" [class.suspended-box]="RLdata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Robert Lewandowski',
+                          RLdata.b,
+                          'back',
+                          3,
+                          'winner'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        RLdata.gstatus != "OPEN" ? "" : RLdata.b
+                        }}</span>
+                      <span class="market-volume">{{ RLdata.bs }}</span>
+                    </div>
+                    <div class="market-odd-box lay" [class.suspended-box]="RLdata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Robert Lewandowski',
+                          RLdata.l,
+                          'lay',
+                          3,
+                          'winner'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        RLdata.gstatus != "OPEN" ? "" : RLdata.l
+                        }}</span>
+                      <span class="market-volume">{{ RLdata.ls }}</span>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ RLdata.min }}</span>
+                        <span class="w-100 d-block">Max: {{ RLdata.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Karim Benzema -->
+              <div class="col-12 col-md-12">
+                <div class="fancy-market" data-title="OPEN">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        NJdata.nat
+                        }}</span>
+                      <span *ngIf="winnerBook.length > 0" [class.text-success]="winnerBook[3].amount > 0"
+                        [class.text-danger]="winnerBook[3].amount < 0">{{ winnerBook[3].amount }}</span>
+                    </div>
+                    <div class="market-odd-box back" [class.suspended-box]="NJdata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Karim Benzema',
+                          NJdata.b,
+                          'back',
+                          4,
+                          'winner'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        NJdata.gstatus != "OPEN" ? "" : NJdata.b
+                        }}</span>
+                      <span class="market-volume">{{ NJdata.bs }}</span>
+                    </div>
+                    <div class="market-odd-box lay" [class.suspended-box]="NJdata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Karim Benzema',
+                          NJdata.l,
+                          'lay',
+                          4,
+                          'winner'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        NJdata.gstatus != "OPEN" ? "" : NJdata.l
+                        }}</span>
+                      <span class="market-volume">{{ NJdata.ls }}</span>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ NJdata.min }}</span>
+                        <span class="w-100 d-block">Max: {{ NJdata.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Edinson Cavani -->
+              <div class="col-12 col-md-12">
+                <div class="fancy-market" data-title="OPEN">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        HKdata.nat
+                        }}</span>
+                      <span *ngIf="winnerBook.length > 0" [class.text-success]="winnerBook[4].amount > 0"
+                        [class.text-danger]="winnerBook[4].amount < 0">{{ winnerBook[4].amount }}</span>
+                    </div>
+                    <div class="market-odd-box back" [class.suspended-box]="HKdata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Edinson Cavani',
+                          HKdata.b,
+                          'back',
+                          5,
+                          'winner'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        HKdata.gstatus != "OPEN" ? "" : HKdata.b
+                        }}</span>
+                      <span class="market-volume">{{ HKdata.bs }}</span>
+                    </div>
+                    <div class="market-odd-box lay" [class.suspended-box]="HKdata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Edinson Cavani',
+                          HKdata.l,
+                          'lay',
+                          5,
+                          'winner'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        HKdata.gstatus != "OPEN" ? "" : HKdata.l
+                        }}</span>
+                      <span class="market-volume">{{ HKdata.ls }}</span>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ HKdata.min }}</span>
+                        <span class="w-100 d-block">Max: {{ HKdata.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Luis Suarez -->
+              <div class="col-12 col-md-12">
+                <div class="fancy-market" data-title="OPEN">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        ZIdata.nat
+                        }}</span>
+                      <span *ngIf="winnerBook.length > 0" [class.text-success]="winnerBook[5].amount > 0"
+                        [class.text-danger]="winnerBook[5].amount < 0">{{ winnerBook[5].amount }}</span>
+                    </div>
+                    <div class="market-odd-box back" [class.suspended-box]="ZIdata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Luis Suarez',
+                          ZIdata.b,
+                          'back',
+                          6,
+                          'winner'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        ZIdata.gstatus != "OPEN" ? "" : ZIdata.b
+                        }}</span>
+                      <span class="market-volume">{{ ZIdata.bs }}</span>
+                    </div>
+                    <div class="market-odd-box lay" [class.suspended-box]="ZIdata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Luis Suarez',
+                          ZIdata.l,
+                          'lay',
+                          6,
+                          'winner'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        ZIdata.gstatus != "OPEN" ? "" : ZIdata.l
+                        }}</span>
+                      <span class="market-volume">{{ ZIdata.ls }}</span>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ ZIdata.min }}</span>
+                        <span class="w-100 d-block">Max: {{ ZIdata.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Neymar -->
+              <div class="col-12 col-md-12">
+                <div class="fancy-market" data-title="OPEN">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        RuLdata.nat
+                        }}</span>
+                      <span *ngIf="winnerBook.length > 0" [class.text-success]="winnerBook[6].amount > 0"
+                        [class.text-danger]="winnerBook[6].amount < 0">{{ winnerBook[6].amount }}</span>
+                    </div>
+                    <div class="market-odd-box back" [class.suspended-box]="RuLdata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Neymar',
+                          RuLdata.b,
+                          'back',
+                          7,
+                          'winner'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        RuLdata.gstatus != "OPEN" ? "" : RuLdata.b
+                        }}</span>
+                      <span class="market-volume">{{ RuLdata.bs }}</span>
+                    </div>
+                    <div class="market-odd-box lay" [class.suspended-box]="RuLdata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Neymar',
+                          RuLdata.l,
+                          'lay',
+                          7,
+                          'winner'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        RuLdata.gstatus != "OPEN" ? "" : RuLdata.l
+                        }}</span>
+                      <span class="market-volume">{{ RuLdata.ls }}</span>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ RuLdata.min }}</span>
+                        <span class="w-100 d-block">Max: {{ RuLdata.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sergio Aguero -->
+              <div class="col-12 col-md-12">
+                <div class="fancy-market" data-title="OPEN">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        KMdata.nat
+                        }}</span>
+                      <span *ngIf="winnerBook.length > 0" [class.text-success]="winnerBook[7].amount > 0"
+                        [class.text-danger]="winnerBook[7].amount < 0">{{ winnerBook[7].amount }}</span>
+                    </div>
+                    <div class="market-odd-box back" [class.suspended-box]="KMdata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Sergio Aguero',
+                          KMdata.b,
+                          'back',
+                          8,
+                          'winner'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        KMdata.gstatus != "OPEN" ? "" : KMdata.b
+                        }}</span>
+                      <span class="market-volume">{{ KMdata.bs }}</span>
+                    </div>
+                    <div class="market-odd-box lay" [class.suspended-box]="KMdata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Sergio Aguero',
+                          KMdata.l,
+                          'lay',
+                          8,
+                          'winner'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        KMdata.gstatus != "OPEN" ? "" : KMdata.l
+                        }}</span>
+                      <span class="market-volume">{{ KMdata.ls }}</span>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ KMdata.min }}</span>
+                        <span class="w-100 d-block">Max: {{ KMdata.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Olivier Giroud -->
+              <div class="col-12 col-md-12">
+                <div class="fancy-market" data-title="OPEN">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        EHdata.nat
+                        }}</span>
+                      <span *ngIf="winnerBook.length > 0" [class.text-success]="winnerBook[8].amount > 0"
+                        [class.text-danger]="winnerBook[8].amount < 0">{{ winnerBook[8].amount }}</span>
+                    </div>
+                    <div class="market-odd-box back" [class.suspended-box]="EHdata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Olivier Giroud',
+                          EHdata.b,
+                          'back',
+                          9,
+                          'winner'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        EHdata.gstatus != "OPEN" ? "" : EHdata.b
+                        }}</span>
+                      <span class="market-volume">{{ EHdata.bs }}</span>
+                    </div>
+                    <div class="market-odd-box lay" [class.suspended-box]="EHdata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Olivier Giroud',
+                          EHdata.l,
+                          'lay',
+                          9,
+                          'winner'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        EHdata.gstatus != "OPEN" ? "" : EHdata.l
+                        }}</span>
+                      <span class="market-volume">{{ EHdata.ls }}</span>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ EHdata.min }}</span>
+                        <span class="w-100 d-block">Max: {{ EHdata.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Mohamed Salah -->
+              <div class="col-12 col-md-12">
+                <div class="fancy-market" data-title="OPEN">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        NoGoaldata.nat
+                        }}</span>
+                      <span *ngIf="winnerBook.length > 0" [class.text-success]="winnerBook[9].amount > 0"
+                        [class.text-danger]="winnerBook[9].amount < 0">{{ winnerBook[9].amount }}</span>
+                    </div>
+                    <div class="market-odd-box back" [class.suspended-box]="NoGoaldata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Mohamed Salah',
+                          NoGoaldata.b,
+                          'back',
+                          10,
+                          'winner'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        NoGoaldata.gstatus != "OPEN" ? "" : NoGoaldata.b
+                        }}</span>
+                      <span class="market-volume">{{ NoGoaldata.bs }}</span>
+                    </div>
+                    <div class="market-odd-box lay" [class.suspended-box]="NoGoaldata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Mohamed Salah',
+                          NoGoaldata.l,
+                          'lay',
+                          10,
+                          'winner'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        NoGoaldata.gstatus != "OPEN" ? "" : NoGoaldata.l
+                        }}</span>
+                      <span class="market-volume">{{ NoGoaldata.ls }}</span>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ NoGoaldata.min }}</span>
+                        <span class="w-100 d-block">Max: {{ NoGoaldata.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Kylian Mbappe -->
+              <div class="col-12 col-md-12">
+                <div class="fancy-market" data-title="OPEN">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        NoGoaldata1.nat
+                        }}</span>
+                      <span *ngIf="winnerBook.length > 0" [class.text-success]="winnerBook[10].amount > 0"
+                        [class.text-danger]="winnerBook[10].amount < 0">{{ winnerBook[10].amount }}</span>
+                    </div>
+                    <div class="market-odd-box back" [class.suspended-box]="NoGoaldata1.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Kylian Mbappe',
+                          NoGoaldata1.b,
+                          'back',
+                          11,
+                          'winner'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        NoGoaldata1.gstatus != "OPEN" ? "" : NoGoaldata1.b
+                        }}</span>
+                      <span class="market-volume">{{ NoGoaldata1.bs }}</span>
+                    </div>
+                    <div class="market-odd-box lay" [class.suspended-box]="NoGoaldata1.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Kylian Mbappe',
+                          NoGoaldata1.l,
+                          'lay',
+                          11,
+                          'winner'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        NoGoaldata1.gstatus != "OPEN" ? "" : NoGoaldata1.l
+                        }}</span>
+                      <span class="market-volume">{{ NoGoaldata1.ls }}</span>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ NoGoaldata1.min }}</span>
+                        <span class="w-100 d-block">Max: {{ NoGoaldata1.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- No Goal (Player) -->
+              <div class="col-12 col-md-12">
+                <div class="fancy-market" data-title="OPEN">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        NoGoalPlayerdata.nat
+                        }}</span>
+                      <span *ngIf="winnerBook.length > 0" [class.text-success]="winnerBook[11].amount > 0"
+                        [class.text-danger]="winnerBook[11].amount < 0">{{ winnerBook[11].amount }}</span>
+                    </div>
+                    <div class="market-odd-box back" [class.suspended-box]="NoGoalPlayerdata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'No Goal',
+                          NoGoalPlayerdata.b,
+                          'back',
+                          12,
+                          'winner'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        NoGoalPlayerdata.gstatus != "OPEN"
+                        ? ""
+                        : NoGoalPlayerdata.b
+                        }}</span>
+                      <span class="market-volume">{{
+                        NoGoalPlayerdata.bs
+                        }}</span>
+                    </div>
+                    <div class="market-odd-box lay" [class.suspended-box]="NoGoalPlayerdata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'No Goal',
+                          NoGoalPlayerdata.l,
+                          'lay',
+                          12,
+                          'winner'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        NoGoalPlayerdata.gstatus != "OPEN"
+                        ? ""
+                        : NoGoalPlayerdata.l
+                        }}</span>
+                      <span class="market-volume">{{
+                        NoGoalPlayerdata.ls
+                        }}</span>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ NoGoalPlayerdata.min }}</span>
+                        <span class="w-100 d-block">Max: {{ NoGoalPlayerdata.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Method Of Next Goal -->
+          <div class="game-market market-6 container-fluid container-fluid-5" *ngIf="data">
+            <div class="market-title row row5">Method Of Next Goal</div>
+            <div class="market-header row row5">
+              <div class="col-12 col-md-12 d-none d-md-block">
+                <div class="market-row">
+                  <div class="market-nation-detail"></div>
+                  <div class="market-odd-box back"><b>Back</b></div>
+                  <div class="market-odd-box lay"><b>Lay</b></div>
+                  <div class="fancy-min-max-box"></div>
+                </div>
+              </div>
+              <div class="col-12 col-md-4 d-md-none">
+                <div class="market-row">
+                  <div class="market-nation-detail"></div>
+                  <div class="market-odd-box back"><b>Back</b></div>
+                  <div class="market-odd-box lay"><b>Lay</b></div>
+                  <div class="fancy-min-max-box"></div>
+                </div>
+              </div>
+            </div>
+            <div class="market-body row">
+              <!-- Shot Goal -->
+              <div class="col-12 col-md-12">
+                <div class="fancy-market" data-title="OPEN">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        ShotGoaldata.nat
+                        }}</span>
+                      <span *ngIf="methodOfNextGoalBook.length > 0" [class.text-success]="
+                          methodOfNextGoalBook[0].amount > 0
+                        " [class.text-danger]="methodOfNextGoalBook[0].amount < 0">{{ methodOfNextGoalBook[0].amount
+                        }}</span>
+                    </div>
+                    <div class="market-odd-box back" [class.suspended-box]="ShotGoaldata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Shot Goal',
+                          ShotGoaldata.b,
+                          'back',
+                          21,
+                          'methodOfNextGoal'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        ShotGoaldata.gstatus != "OPEN" ? "" : ShotGoaldata.b
+                        }}</span>
+                      <span class="market-volume">{{ ShotGoaldata.bs }}</span>
+                    </div>
+                    <div class="market-odd-box lay" [class.suspended-box]="ShotGoaldata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Shot Goal',
+                          ShotGoaldata.l,
+                          'lay',
+                          21,
+                          'methodOfNextGoal'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        ShotGoaldata.gstatus != "OPEN" ? "" : ShotGoaldata.l
+                        }}</span>
+                      <span class="market-volume">{{ ShotGoaldata.ls }}</span>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ ShotGoaldata.min }}</span>
+                        <span class="w-100 d-block">Max: {{ ShotGoaldata.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Header Goal -->
+              <div class="col-12 col-md-12">
+                <div class="fancy-market" data-title="OPEN">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        HeaderGoaldata.nat
+                        }}</span>
+                      <span *ngIf="methodOfNextGoalBook.length > 0" [class.text-success]="
+                          methodOfNextGoalBook[1].amount > 0
+                        " [class.text-danger]="methodOfNextGoalBook[1].amount < 0">{{ methodOfNextGoalBook[1].amount
+                        }}</span>
+                    </div>
+                    <div class="market-odd-box back" [class.suspended-box]="HeaderGoaldata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Header Goal',
+                          HeaderGoaldata.b,
+                          'back',
+                          22,
+                          'methodOfNextGoal'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        HeaderGoaldata.gstatus != "OPEN" ? "" : HeaderGoaldata.b
+                        }}</span>
+                      <span class="market-volume">{{ HeaderGoaldata.bs }}</span>
+                    </div>
+                    <div class="market-odd-box lay" [class.suspended-box]="HeaderGoaldata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Header Goal',
+                          HeaderGoaldata.l,
+                          'lay',
+                          22,
+                          'methodOfNextGoal'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        HeaderGoaldata.gstatus != "OPEN" ? "" : HeaderGoaldata.l
+                        }}</span>
+                      <span class="market-volume">{{ HeaderGoaldata.ls }}</span>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ HeaderGoaldata.min }}</span>
+                        <span class="w-100 d-block">Max: {{ HeaderGoaldata.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Penalty Goal -->
+              <div class="col-12 col-md-12">
+                <div class="fancy-market" data-title="OPEN">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        PenaltyGoaldata.nat
+                        }}</span>
+                      <span *ngIf="methodOfNextGoalBook.length > 0" [class.text-success]="
+                          methodOfNextGoalBook[2].amount > 0
+                        " [class.text-danger]="methodOfNextGoalBook[2].amount < 0">{{ methodOfNextGoalBook[2].amount
+                        }}</span>
+                    </div>
+                    <div class="market-odd-box back" [class.suspended-box]="PenaltyGoaldata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Penalty Goal',
+                          PenaltyGoaldata.b,
+                          'back',
+                          23,
+                          'methodOfNextGoal'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        PenaltyGoaldata.gstatus != "OPEN"
+                        ? ""
+                        : PenaltyGoaldata.b
+                        }}</span>
+                      <span class="market-volume">{{
+                        PenaltyGoaldata.bs
+                        }}</span>
+                    </div>
+                    <div class="market-odd-box lay" [class.suspended-box]="PenaltyGoaldata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Penalty Goal',
+                          PenaltyGoaldata.l,
+                          'lay',
+                          23,
+                          'methodOfNextGoal'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        PenaltyGoaldata.gstatus != "OPEN"
+                        ? ""
+                        : PenaltyGoaldata.l
+                        }}</span>
+                      <span class="market-volume">{{
+                        PenaltyGoaldata.ls
+                        }}</span>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ PenaltyGoaldata.min }}</span>
+                        <span class="w-100 d-block">Max: {{ PenaltyGoaldata.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Free Kick Goal -->
+              <div class="col-12 col-md-12">
+                <div class="fancy-market" data-title="OPEN">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        FreeKickGoaldata.nat
+                        }}</span>
+                      <span *ngIf="methodOfNextGoalBook.length > 0" [class.text-success]="
+                          methodOfNextGoalBook[3].amount > 0
+                        " [class.text-danger]="methodOfNextGoalBook[3].amount < 0">{{ methodOfNextGoalBook[3].amount
+                        }}</span>
+                    </div>
+                    <div class="market-odd-box back" [class.suspended-box]="FreeKickGoaldata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Free Kick Goal',
+                          FreeKickGoaldata.b,
+                          'back',
+                          24,
+                          'methodOfNextGoal'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        FreeKickGoaldata.gstatus != "OPEN"
+                        ? ""
+                        : FreeKickGoaldata.b
+                        }}</span>
+                      <span class="market-volume">{{
+                        FreeKickGoaldata.bs
+                        }}</span>
+                    </div>
+                    <div class="market-odd-box lay" [class.suspended-box]="FreeKickGoaldata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'Free Kick Goal',
+                          FreeKickGoaldata.l,
+                          'lay',
+                          24,
+                          'methodOfNextGoal'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        FreeKickGoaldata.gstatus != "OPEN"
+                        ? ""
+                        : FreeKickGoaldata.l
+                        }}</span>
+                      <span class="market-volume">{{
+                        FreeKickGoaldata.ls
+                        }}</span>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ FreeKickGoaldata.min }}</span>
+                        <span class="w-100 d-block">Max: {{ FreeKickGoaldata.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- No Goal (Method) -->
+              <div class="col-12 col-md-12">
+                <div class="fancy-market" data-title="OPEN">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        NoGoalMethoddata.nat
+                        }}</span>
+                      <span *ngIf="methodOfNextGoalBook.length > 0" [class.text-success]="
+                          methodOfNextGoalBook[4].amount > 0
+                        " [class.text-danger]="methodOfNextGoalBook[4].amount < 0">{{ methodOfNextGoalBook[4].amount
+                        }}</span>
+                    </div>
+                    <div class="market-odd-box back" [class.suspended-box]="NoGoalMethoddata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'No Goal',
+                          NoGoalMethoddata.b,
+                          'back',
+                          25,
+                          'methodOfNextGoal'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        NoGoalMethoddata.gstatus != "OPEN"
+                        ? ""
+                        : NoGoalMethoddata.b
+                        }}</span>
+                      <span class="market-volume">{{
+                        NoGoalMethoddata.bs
+                        }}</span>
+                    </div>
+                    <div class="market-odd-box lay" [class.suspended-box]="NoGoalMethoddata.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          'No Goal',
+                          NoGoalMethoddata.l,
+                          'lay',
+                          25,
+                          'methodOfNextGoal'
+                        )
+                      ">
+                      <span class="market-odd">{{
+                        NoGoalMethoddata.gstatus != "OPEN"
+                        ? ""
+                        : NoGoalMethoddata.l
+                        }}</span>
+                      <span class="market-volume">{{
+                        NoGoalMethoddata.ls
+                        }}</span>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ NoGoalMethoddata.min }}</span>
+                        <span class="w-100 d-block">Max: {{ NoGoalMethoddata.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="game-market market-comb container-fluid container-fluid-5" *ngIf="data">
+            <div class="market-title row row5">Method Of Combination Goal</div>
+            <div class="market-header row row5">
+              <div class="col-6 col-md-6 d-none d-md-block">
+                <div class="market-row">
+                  <div class="market-nation-detail"></div>
+                  <div class="market-odd-box back"><b>Back</b></div>
+                  <div class="fancy-min-max-box"></div>
+                </div>
+              </div>
+              <div class="col-6 col-md-6 d-none d-md-block">
+                <div class="market-row">
+                  <div class="market-nation-detail"></div>
+                  <div class="market-odd-box back"><b>Back</b></div>
+                  <div class="fancy-min-max-box"></div>
+                </div>
+              </div>
+              <div class="col-6 col-md-4 d-md-none">
+                <div class="market-row">
+                  <div class="market-nation-detail"></div>
+                  <div class="market-odd-box back"><b>Back</b></div>
+                </div>
+              </div>
+              <div class="col-6 col-md-4 d-md-none">
+                <div class="market-row">
+                  <div class="market-nation-detail"></div>
+                  <div class="market-odd-box back"><b>Back</b></div>
+                </div>
+              </div>
+            </div>
+            <div class="market-body row row5">
+              <!-- Cristiano Ronaldo and Shot Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="CRCombodata[0]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        CRCombodata[0]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0"
+                        [class.text-success]="combinationGoalBook[0].amount > 0"
+                        [class.text-danger]="combinationGoalBook[0].amount < 0">{{ combinationGoalBook[0].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="CRCombodata[0]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          CRCombodata[0]?.nat,
+                          CRCombodata[0]?.b,
+                          'back',
+                          CRCombodata[0]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          CRCombodata[0]?.gstatus != "OPEN"
+                          ? ""
+                          : CRCombodata[0]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          CRCombodata[0]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ CRCombodata[0]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ CRCombodata[0]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Lionel Messi and Shot Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="LMCombodata[0]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        LMCombodata[0]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0"
+                        [class.text-success]="combinationGoalBook[1].amount > 0"
+                        [class.text-danger]="combinationGoalBook[1].amount < 0">{{ combinationGoalBook[1].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="LMCombodata[0]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          LMCombodata[0]?.nat,
+                          LMCombodata[0]?.b,
+                          'back',
+                          LMCombodata[0]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          LMCombodata[0]?.gstatus != "OPEN"
+                          ? ""
+                          : LMCombodata[0]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          LMCombodata[0]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ LMCombodata[0]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ LMCombodata[0]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Robert Lewandowski and Shot Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="RLCombodata[0]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        RLCombodata[0]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0"
+                        [class.text-success]="combinationGoalBook[2].amount > 0"
+                        [class.text-danger]="combinationGoalBook[2].amount < 0">{{ combinationGoalBook[2].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="RLCombodata[0]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          RLCombodata[0]?.nat,
+                          RLCombodata[0]?.b,
+                          'back',
+                          RLCombodata[0]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          RLCombodata[0]?.gstatus != "OPEN"
+                          ? ""
+                          : RLCombodata[0]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          RLCombodata[0]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ RLCombodata[0]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ RLCombodata[0]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Karim Benzema and Shot Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="NJCombodata[0]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        NJCombodata[0]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0"
+                        [class.text-success]="combinationGoalBook[3].amount > 0"
+                        [class.text-danger]="combinationGoalBook[3].amount < 0">{{ combinationGoalBook[3].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="NJCombodata[0]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          NJCombodata[0]?.nat,
+                          NJCombodata[0]?.b,
+                          'back',
+                          NJCombodata[0]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          NJCombodata[0]?.gstatus != "OPEN"
+                          ? ""
+                          : NJCombodata[0]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          NJCombodata[0]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ NJCombodata[0]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ NJCombodata[0]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Edinson Cavani and Shot Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="HKCombodata[0]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        HKCombodata[0]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0"
+                        [class.text-success]="combinationGoalBook[4].amount > 0"
+                        [class.text-danger]="combinationGoalBook[4].amount < 0">{{ combinationGoalBook[4].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="HKCombodata[0]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          HKCombodata[0]?.nat,
+                          HKCombodata[0]?.b,
+                          'back',
+                          HKCombodata[0]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          HKCombodata[0]?.gstatus != "OPEN"
+                          ? ""
+                          : HKCombodata[0]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          HKCombodata[0]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ HKCombodata[0]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ HKCombodata[0]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Luis Suarez and Shot Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="ZICombodata[0]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        ZICombodata[0]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0"
+                        [class.text-success]="combinationGoalBook[5].amount > 0"
+                        [class.text-danger]="combinationGoalBook[5].amount < 0">{{ combinationGoalBook[5].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="ZICombodata[0]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          ZICombodata[0]?.nat,
+                          ZICombodata[0]?.b,
+                          'back',
+                          ZICombodata[0]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          ZICombodata[0]?.gstatus != "OPEN"
+                          ? ""
+                          : ZICombodata[0]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          ZICombodata[0]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ ZICombodata[0]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ ZICombodata[0]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Neymar and Shot Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="RuLCombodata[0]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        RuLCombodata[0]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0"
+                        [class.text-success]="combinationGoalBook[6].amount > 0"
+                        [class.text-danger]="combinationGoalBook[6].amount < 0">{{ combinationGoalBook[6].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="RuLCombodata[0]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          RuLCombodata[0]?.nat,
+                          RuLCombodata[0]?.b,
+                          'back',
+                          RuLCombodata[0]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          RuLCombodata[0]?.gstatus != "OPEN"
+                          ? ""
+                          : RuLCombodata[0]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          RuLCombodata[0]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ RuLCombodata[0]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ RuLCombodata[0]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sergio Aguero and Shot Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="KMCombodata[0]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        KMCombodata[0]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0"
+                        [class.text-success]="combinationGoalBook[7].amount > 0"
+                        [class.text-danger]="combinationGoalBook[7].amount < 0">{{ combinationGoalBook[7].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="KMCombodata[0]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          KMCombodata[0]?.nat,
+                          KMCombodata[0]?.b,
+                          'back',
+                          KMCombodata[0]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          KMCombodata[0]?.gstatus != "OPEN"
+                          ? ""
+                          : KMCombodata[0]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          KMCombodata[0]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ KMCombodata[0]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ KMCombodata[0]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Olivier Giroud and Shot Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="EHCombodata[0]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        EHCombodata[0]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0"
+                        [class.text-success]="combinationGoalBook[8].amount > 0"
+                        [class.text-danger]="combinationGoalBook[8].amount < 0">{{ combinationGoalBook[8].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="EHCombodata[0]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          EHCombodata[0]?.nat,
+                          EHCombodata[0]?.b,
+                          'back',
+                          EHCombodata[0]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          EHCombodata[0]?.gstatus != "OPEN"
+                          ? ""
+                          : EHCombodata[0]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          EHCombodata[0]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ EHCombodata[0]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ EHCombodata[0]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Mohamed Salah and Shot Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="MSCombodata[0]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        MSCombodata[0]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0"
+                        [class.text-success]="combinationGoalBook[9].amount > 0"
+                        [class.text-danger]="combinationGoalBook[9].amount < 0">{{ combinationGoalBook[9].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="MSCombodata[0]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          MSCombodata[0]?.nat,
+                          MSCombodata[0]?.b,
+                          'back',
+                          MSCombodata[0]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          MSCombodata[0]?.gstatus != "OPEN"
+                          ? ""
+                          : MSCombodata[0]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          MSCombodata[0]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ MSCombodata[0]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ MSCombodata[0]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Kylian Mbappe and Shot Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="KMbCombodata[0]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        KMbCombodata[0]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[10].amount > 0
+                        " [class.text-danger]="combinationGoalBook[10].amount < 0">{{ combinationGoalBook[10].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="KMbCombodata[0]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          KMbCombodata[0]?.nat,
+                          KMbCombodata[0]?.b,
+                          'back',
+                          KMbCombodata[0]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          KMbCombodata[0]?.gstatus != "OPEN"
+                          ? ""
+                          : KMbCombodata[0]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          KMbCombodata[0]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ KMbCombodata[0]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ KMbCombodata[0]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Cristiano Ronaldo and Header Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="CRCombodata[1]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        CRCombodata[1]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[11].amount > 0
+                        " [class.text-danger]="combinationGoalBook[11].amount < 0">{{ combinationGoalBook[11].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="CRCombodata[1]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          CRCombodata[1]?.nat,
+                          CRCombodata[1]?.b,
+                          'back',
+                          CRCombodata[1]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          CRCombodata[1]?.gstatus != "OPEN"
+                          ? ""
+                          : CRCombodata[1]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          CRCombodata[1]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ CRCombodata[1]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ CRCombodata[1]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Lionel Messi and Header Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="LMCombodata[1]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        LMCombodata[1]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[12].amount > 0
+                        " [class.text-danger]="combinationGoalBook[12].amount < 0">{{ combinationGoalBook[12].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="LMCombodata[1]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          LMCombodata[1]?.nat,
+                          LMCombodata[1]?.b,
+                          'back',
+                          LMCombodata[1]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          LMCombodata[1]?.gstatus != "OPEN"
+                          ? ""
+                          : LMCombodata[1]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          LMCombodata[1]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ LMCombodata[1]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ LMCombodata[1]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Robert Lewandowski and Header Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="RLCombodata[1]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        RLCombodata[1]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[13].amount > 0
+                        " [class.text-danger]="combinationGoalBook[13].amount < 0">{{ combinationGoalBook[13].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="RLCombodata[1]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          RLCombodata[1]?.nat,
+                          RLCombodata[1]?.b,
+                          'back',
+                          RLCombodata[1]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          RLCombodata[1]?.gstatus != "OPEN"
+                          ? ""
+                          : RLCombodata[1]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          RLCombodata[1]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ RLCombodata[1]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ RLCombodata[1]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Karim Benzema and Header Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="NJCombodata[1]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        NJCombodata[1]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[14].amount > 0
+                        " [class.text-danger]="combinationGoalBook[14].amount < 0">{{ combinationGoalBook[14].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="NJCombodata[1]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          NJCombodata[1]?.nat,
+                          NJCombodata[1]?.b,
+                          'back',
+                          NJCombodata[1]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          NJCombodata[1]?.gstatus != "OPEN"
+                          ? ""
+                          : NJCombodata[1]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          NJCombodata[1]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ NJCombodata[1]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ NJCombodata[1]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Edinson Cavani and Header Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="HKCombodata[1]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        HKCombodata[1]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[15].amount > 0
+                        " [class.text-danger]="combinationGoalBook[15].amount < 0">{{ combinationGoalBook[15].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="HKCombodata[1]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          HKCombodata[1]?.nat,
+                          HKCombodata[1]?.b,
+                          'back',
+                          HKCombodata[1]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          HKCombodata[1]?.gstatus != "OPEN"
+                          ? ""
+                          : HKCombodata[1]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          HKCombodata[1]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ HKCombodata[1]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ HKCombodata[1]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Luis Suarez and Header Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="ZICombodata[1]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        ZICombodata[1]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[16].amount > 0
+                        " [class.text-danger]="combinationGoalBook[16].amount < 0">{{ combinationGoalBook[16].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="ZICombodata[1]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          ZICombodata[1]?.nat,
+                          ZICombodata[1]?.b,
+                          'back',
+                          ZICombodata[1]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          ZICombodata[1]?.gstatus != "OPEN"
+                          ? ""
+                          : ZICombodata[1]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          ZICombodata[1]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ ZICombodata[1]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ ZICombodata[1]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Neymar and Header Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="RuLCombodata[1]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        RuLCombodata[1]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[17].amount > 0
+                        " [class.text-danger]="combinationGoalBook[17].amount < 0">{{ combinationGoalBook[17].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="RuLCombodata[1]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          RuLCombodata[1]?.nat,
+                          RuLCombodata[1]?.b,
+                          'back',
+                          RuLCombodata[1]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          RuLCombodata[1]?.gstatus != "OPEN"
+                          ? ""
+                          : RuLCombodata[1]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          RuLCombodata[1]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ RuLCombodata[1]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ RuLCombodata[1]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sergio Aguero and Header Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="KMCombodata[1]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        KMCombodata[1]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[18].amount > 0
+                        " [class.text-danger]="combinationGoalBook[18].amount < 0">{{ combinationGoalBook[18].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="KMCombodata[1]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          KMCombodata[1]?.nat,
+                          KMCombodata[1]?.b,
+                          'back',
+                          KMCombodata[1]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          KMCombodata[1]?.gstatus != "OPEN"
+                          ? ""
+                          : KMCombodata[1]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          KMCombodata[1]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ KMCombodata[1]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ KMCombodata[1]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Olivier Giroud and Header Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="EHCombodata[1]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        EHCombodata[1]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[19].amount > 0
+                        " [class.text-danger]="combinationGoalBook[19].amount < 0">{{ combinationGoalBook[19].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="EHCombodata[1]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          EHCombodata[1]?.nat,
+                          EHCombodata[1]?.b,
+                          'back',
+                          EHCombodata[1]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          EHCombodata[1]?.gstatus != "OPEN"
+                          ? ""
+                          : EHCombodata[1]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          EHCombodata[1]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ EHCombodata[1]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ EHCombodata[1]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Mohamed Salah and Header Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="MSCombodata[1]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        MSCombodata[1]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[20].amount > 0
+                        " [class.text-danger]="combinationGoalBook[20].amount < 0">{{ combinationGoalBook[20].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="MSCombodata[1]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          MSCombodata[1]?.nat,
+                          MSCombodata[1]?.b,
+                          'back',
+                          MSCombodata[1]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          MSCombodata[1]?.gstatus != "OPEN"
+                          ? ""
+                          : MSCombodata[1]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          MSCombodata[1]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ MSCombodata[1]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ MSCombodata[1]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Kylian Mbappe and Header Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="KMbCombodata[1]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        KMbCombodata[1]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[21].amount > 0
+                        " [class.text-danger]="combinationGoalBook[21].amount < 0">{{ combinationGoalBook[21].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="KMbCombodata[1]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          KMbCombodata[1]?.nat,
+                          KMbCombodata[1]?.b,
+                          'back',
+                          KMbCombodata[1]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          KMbCombodata[1]?.gstatus != "OPEN"
+                          ? ""
+                          : KMbCombodata[1]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          KMbCombodata[1]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ KMbCombodata[1]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ KMbCombodata[1]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Cristiano Ronaldo and Penalty Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="CRCombodata[2]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        CRCombodata[2]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[22].amount > 0
+                        " [class.text-danger]="combinationGoalBook[22].amount < 0">{{ combinationGoalBook[22].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="CRCombodata[2]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          CRCombodata[2]?.nat,
+                          CRCombodata[2]?.b,
+                          'back',
+                          CRCombodata[2]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          CRCombodata[2]?.gstatus != "OPEN"
+                          ? ""
+                          : CRCombodata[2]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          CRCombodata[2]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ CRCombodata[2]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ CRCombodata[2]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Lionel Messi and Penalty Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="LMCombodata[2]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        LMCombodata[2]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[23].amount > 0
+                        " [class.text-danger]="combinationGoalBook[23].amount < 0">{{ combinationGoalBook[23].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="LMCombodata[2]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          LMCombodata[2]?.nat,
+                          LMCombodata[2]?.b,
+                          'back',
+                          LMCombodata[2]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          LMCombodata[2]?.gstatus != "OPEN"
+                          ? ""
+                          : LMCombodata[2]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          LMCombodata[2]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ LMCombodata[2]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ LMCombodata[2]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Robert Lewandowski and Penalty Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="RLCombodata[2]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        RLCombodata[2]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[24].amount > 0
+                        " [class.text-danger]="combinationGoalBook[24].amount < 0">{{ combinationGoalBook[24].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="RLCombodata[2]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          RLCombodata[2]?.nat,
+                          RLCombodata[2]?.b,
+                          'back',
+                          RLCombodata[2]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          RLCombodata[2]?.gstatus != "OPEN"
+                          ? ""
+                          : RLCombodata[2]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          RLCombodata[2]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ RLCombodata[2]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ RLCombodata[2]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Karim Benzema and Penalty Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="NJCombodata[2]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        NJCombodata[2]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[25].amount > 0
+                        " [class.text-danger]="combinationGoalBook[25].amount < 0">{{ combinationGoalBook[25].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="NJCombodata[2]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          NJCombodata[2]?.nat,
+                          NJCombodata[2]?.b,
+                          'back',
+                          NJCombodata[2]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          NJCombodata[2]?.gstatus != "OPEN"
+                          ? ""
+                          : NJCombodata[2]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          NJCombodata[2]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ NJCombodata[2]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ NJCombodata[2]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Edinson Cavani and Penalty Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="HKCombodata[2]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        HKCombodata[2]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[26].amount > 0
+                        " [class.text-danger]="combinationGoalBook[26].amount < 0">{{ combinationGoalBook[26].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="HKCombodata[2]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          HKCombodata[2]?.nat,
+                          HKCombodata[2]?.b,
+                          'back',
+                          HKCombodata[2]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          HKCombodata[2]?.gstatus != "OPEN"
+                          ? ""
+                          : HKCombodata[2]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          HKCombodata[2]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ HKCombodata[2]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ HKCombodata[2]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Luis Suarez and Penalty Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="ZICombodata[2]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        ZICombodata[2]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[27].amount > 0
+                        " [class.text-danger]="combinationGoalBook[27].amount < 0">{{ combinationGoalBook[27].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="ZICombodata[2]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          ZICombodata[2]?.nat,
+                          ZICombodata[2]?.b,
+                          'back',
+                          ZICombodata[2]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          ZICombodata[2]?.gstatus != "OPEN"
+                          ? ""
+                          : ZICombodata[2]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          ZICombodata[2]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ ZICombodata[2]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ ZICombodata[2]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Neymar and Penalty Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="RuLCombodata[2]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        RuLCombodata[2]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[28].amount > 0
+                        " [class.text-danger]="combinationGoalBook[28].amount < 0">{{ combinationGoalBook[28].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="RuLCombodata[2]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          RuLCombodata[2]?.nat,
+                          RuLCombodata[2]?.b,
+                          'back',
+                          RuLCombodata[2]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          RuLCombodata[2]?.gstatus != "OPEN"
+                          ? ""
+                          : RuLCombodata[2]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          RuLCombodata[2]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ RuLCombodata[2]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ RuLCombodata[2]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sergio Aguero and Penalty Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="KMCombodata[2]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        KMCombodata[2]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[29].amount > 0
+                        " [class.text-danger]="combinationGoalBook[29].amount < 0">{{ combinationGoalBook[29].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="KMCombodata[2]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          KMCombodata[2]?.nat,
+                          KMCombodata[2]?.b,
+                          'back',
+                          KMCombodata[2]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          KMCombodata[2]?.gstatus != "OPEN"
+                          ? ""
+                          : KMCombodata[2]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          KMCombodata[2]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ KMCombodata[2]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ KMCombodata[2]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Olivier Giroud and Penalty Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="EHCombodata[2]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        EHCombodata[2]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[30].amount > 0
+                        " [class.text-danger]="combinationGoalBook[30].amount < 0">{{ combinationGoalBook[30].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="EHCombodata[2]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          EHCombodata[2]?.nat,
+                          EHCombodata[2]?.b,
+                          'back',
+                          EHCombodata[2]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          EHCombodata[2]?.gstatus != "OPEN"
+                          ? ""
+                          : EHCombodata[2]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          EHCombodata[2]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ EHCombodata[2]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ EHCombodata[2]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Mohamed Salah and Penalty Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="MSCombodata[2]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        MSCombodata[2]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[31].amount > 0
+                        " [class.text-danger]="combinationGoalBook[31].amount < 0">{{ combinationGoalBook[31].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="MSCombodata[2]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          MSCombodata[2]?.nat,
+                          MSCombodata[2]?.b,
+                          'back',
+                          MSCombodata[2]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          MSCombodata[2]?.gstatus != "OPEN"
+                          ? ""
+                          : MSCombodata[2]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          MSCombodata[2]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ MSCombodata[2]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ MSCombodata[2]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Kylian Mbappe and Penalty Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="KMbCombodata[2]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        KMbCombodata[2]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[32].amount > 0
+                        " [class.text-danger]="combinationGoalBook[32].amount < 0">{{ combinationGoalBook[32].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="KMbCombodata[2]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          KMbCombodata[2]?.nat,
+                          KMbCombodata[2]?.b,
+                          'back',
+                          KMbCombodata[2]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          KMbCombodata[2]?.gstatus != "OPEN"
+                          ? ""
+                          : KMbCombodata[2]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          KMbCombodata[2]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ KMbCombodata[2]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ KMbCombodata[2]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Cristiano Ronaldo and Free Kick Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="CRCombodata[3]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        CRCombodata[3]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[33].amount > 0
+                        " [class.text-danger]="combinationGoalBook[33].amount < 0">{{ combinationGoalBook[33].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="CRCombodata[3]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          CRCombodata[3]?.nat,
+                          CRCombodata[3]?.b,
+                          'back',
+                          CRCombodata[3]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          CRCombodata[3]?.gstatus != "OPEN"
+                          ? ""
+                          : CRCombodata[3]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          CRCombodata[3]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ CRCombodata[3]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ CRCombodata[3]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Lionel Messi and Free Kick Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="LMCombodata[3]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        LMCombodata[3]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[34].amount > 0
+                        " [class.text-danger]="combinationGoalBook[34].amount < 0">{{ combinationGoalBook[34].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="LMCombodata[3]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          LMCombodata[3]?.nat,
+                          LMCombodata[3]?.b,
+                          'back',
+                          LMCombodata[3]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          LMCombodata[3]?.gstatus != "OPEN"
+                          ? ""
+                          : LMCombodata[3]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          LMCombodata[3]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ LMCombodata[3]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ LMCombodata[3]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Robert Lewandowski and Free Kick Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="RLCombodata[3]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        RLCombodata[3]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[35].amount > 0
+                        " [class.text-danger]="combinationGoalBook[35].amount < 0">{{ combinationGoalBook[35].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="RLCombodata[3]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          RLCombodata[3]?.nat,
+                          RLCombodata[3]?.b,
+                          'back',
+                          RLCombodata[3]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          RLCombodata[3]?.gstatus != "OPEN"
+                          ? ""
+                          : RLCombodata[3]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          RLCombodata[3]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ RLCombodata[3]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ RLCombodata[3]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Karim Benzema and Free Kick Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="NJCombodata[3]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        NJCombodata[3]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[36].amount > 0
+                        " [class.text-danger]="combinationGoalBook[36].amount < 0">{{ combinationGoalBook[36].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="NJCombodata[3]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          NJCombodata[3]?.nat,
+                          NJCombodata[3]?.b,
+                          'back',
+                          NJCombodata[3]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          NJCombodata[3]?.gstatus != "OPEN"
+                          ? ""
+                          : NJCombodata[3]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          NJCombodata[3]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ NJCombodata[3]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ NJCombodata[3]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Edinson Cavani and Free Kick Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="HKCombodata[3]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        HKCombodata[3]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[37].amount > 0
+                        " [class.text-danger]="combinationGoalBook[37].amount < 0">{{ combinationGoalBook[37].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="HKCombodata[3]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          HKCombodata[3]?.nat,
+                          HKCombodata[3]?.b,
+                          'back',
+                          HKCombodata[3]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          HKCombodata[3]?.gstatus != "OPEN"
+                          ? ""
+                          : HKCombodata[3]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          HKCombodata[3]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ HKCombodata[3]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ HKCombodata[3]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Luis Suarez and Free Kick Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="ZICombodata[3]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        ZICombodata[3]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[38].amount > 0
+                        " [class.text-danger]="combinationGoalBook[38].amount < 0">{{ combinationGoalBook[38].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="ZICombodata[3]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          ZICombodata[3]?.nat,
+                          ZICombodata[3]?.b,
+                          'back',
+                          ZICombodata[3]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          ZICombodata[3]?.gstatus != "OPEN"
+                          ? ""
+                          : ZICombodata[3]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          ZICombodata[3]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ ZICombodata[3]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ ZICombodata[3]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Neymar and Free Kick Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="RuLCombodata[3]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        RuLCombodata[3]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[39].amount > 0
+                        " [class.text-danger]="combinationGoalBook[39].amount < 0">{{ combinationGoalBook[39].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="RuLCombodata[3]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          RuLCombodata[3]?.nat,
+                          RuLCombodata[3]?.b,
+                          'back',
+                          RuLCombodata[3]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          RuLCombodata[3]?.gstatus != "OPEN"
+                          ? ""
+                          : RuLCombodata[3]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          RuLCombodata[3]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ RuLCombodata[3]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ RuLCombodata[3]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sergio Aguero and Free Kick Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="KMCombodata[3]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        KMCombodata[3]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[40].amount > 0
+                        " [class.text-danger]="combinationGoalBook[40].amount < 0">{{ combinationGoalBook[40].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="KMCombodata[3]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          KMCombodata[3]?.nat,
+                          KMCombodata[3]?.b,
+                          'back',
+                          KMCombodata[3]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          KMCombodata[3]?.gstatus != "OPEN"
+                          ? ""
+                          : KMCombodata[3]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          KMCombodata[3]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ KMCombodata[3]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ KMCombodata[3]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Olivier Giroud and Free Kick Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="EHCombodata[3]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        EHCombodata[3]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[41].amount > 0
+                        " [class.text-danger]="combinationGoalBook[41].amount < 0">{{ combinationGoalBook[41].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="EHCombodata[3]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          EHCombodata[3]?.nat,
+                          EHCombodata[3]?.b,
+                          'back',
+                          EHCombodata[3]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          EHCombodata[3]?.gstatus != "OPEN"
+                          ? ""
+                          : EHCombodata[3]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          EHCombodata[3]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ EHCombodata[3]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ EHCombodata[3]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Mohamed Salah and Free Kick Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="MSCombodata[3]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        MSCombodata[3]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[42].amount > 0
+                        " [class.text-danger]="combinationGoalBook[42].amount < 0">{{ combinationGoalBook[42].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="MSCombodata[3]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          MSCombodata[3]?.nat,
+                          MSCombodata[3]?.b,
+                          'back',
+                          MSCombodata[3]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          MSCombodata[3]?.gstatus != "OPEN"
+                          ? ""
+                          : MSCombodata[3]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          MSCombodata[3]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ MSCombodata[3]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ MSCombodata[3]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Kylian Mbappe and Free Kick Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="KMbCombodata[3]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        KMbCombodata[3]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[43].amount > 0
+                        " [class.text-danger]="combinationGoalBook[43].amount < 0">{{ combinationGoalBook[43].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="KMbCombodata[3]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          KMbCombodata[3]?.nat,
+                          KMbCombodata[3]?.b,
+                          'back',
+                          KMbCombodata[3]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          KMbCombodata[3]?.gstatus != "OPEN"
+                          ? ""
+                          : KMbCombodata[3]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          KMbCombodata[3]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ KMbCombodata[3]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ KMbCombodata[3]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Cristiano Ronaldo and No Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="CRCombodata[4]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        CRCombodata[4]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[44].amount > 0
+                        " [class.text-danger]="combinationGoalBook[44].amount < 0">{{ combinationGoalBook[44].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="CRCombodata[4]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          CRCombodata[4]?.nat,
+                          CRCombodata[4]?.b,
+                          'back',
+                          CRCombodata[4]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          CRCombodata[4]?.gstatus != "OPEN"
+                          ? ""
+                          : CRCombodata[4]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          CRCombodata[4]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ CRCombodata[4]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ CRCombodata[4]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Lionel Messi and No Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="LMCombodata[4]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        LMCombodata[4]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[45].amount > 0
+                        " [class.text-danger]="combinationGoalBook[45].amount < 0">{{ combinationGoalBook[45].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="LMCombodata[4]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          LMCombodata[4]?.nat,
+                          LMCombodata[4]?.b,
+                          'back',
+                          LMCombodata[4]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          LMCombodata[4]?.gstatus != "OPEN"
+                          ? ""
+                          : LMCombodata[4]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          LMCombodata[4]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ LMCombodata[4]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ LMCombodata[4]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Robert Lewandowski and No Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="RLCombodata[4]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        RLCombodata[4]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[46].amount > 0
+                        " [class.text-danger]="combinationGoalBook[46].amount < 0">{{ combinationGoalBook[46].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="RLCombodata[4]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          RLCombodata[4]?.nat,
+                          RLCombodata[4]?.b,
+                          'back',
+                          RLCombodata[4]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          RLCombodata[4]?.gstatus != "OPEN"
+                          ? ""
+                          : RLCombodata[4]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          RLCombodata[4]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ RLCombodata[4]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ RLCombodata[4]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Karim Benzema and No Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="NJCombodata[4]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        NJCombodata[4]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[47].amount > 0
+                        " [class.text-danger]="combinationGoalBook[47].amount < 0">{{ combinationGoalBook[47].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="NJCombodata[4]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          NJCombodata[4]?.nat,
+                          NJCombodata[4]?.b,
+                          'back',
+                          NJCombodata[4]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          NJCombodata[4]?.gstatus != "OPEN"
+                          ? ""
+                          : NJCombodata[4]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          NJCombodata[4]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ NJCombodata[4]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ NJCombodata[4]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Edinson Cavani and No Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="HKCombodata[4]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        HKCombodata[4]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[48].amount > 0
+                        " [class.text-danger]="combinationGoalBook[48].amount < 0">{{ combinationGoalBook[48].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="HKCombodata[4]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          HKCombodata[4]?.nat,
+                          HKCombodata[4]?.b,
+                          'back',
+                          HKCombodata[4]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          HKCombodata[4]?.gstatus != "OPEN"
+                          ? ""
+                          : HKCombodata[4]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          HKCombodata[4]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ HKCombodata[4]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ HKCombodata[4]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Luis Suarez and No Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="ZICombodata[4]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        ZICombodata[4]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[49].amount > 0
+                        " [class.text-danger]="combinationGoalBook[49].amount < 0">{{ combinationGoalBook[49].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="ZICombodata[4]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          ZICombodata[4]?.nat,
+                          ZICombodata[4]?.b,
+                          'back',
+                          ZICombodata[4]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          ZICombodata[4]?.gstatus != "OPEN"
+                          ? ""
+                          : ZICombodata[4]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          ZICombodata[4]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ ZICombodata[4]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ ZICombodata[4]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Neymar and No Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="RuLCombodata[4]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        RuLCombodata[4]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[50].amount > 0
+                        " [class.text-danger]="combinationGoalBook[50].amount < 0">{{ combinationGoalBook[50].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="RuLCombodata[4]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          RuLCombodata[4]?.nat,
+                          RuLCombodata[4]?.b,
+                          'back',
+                          RuLCombodata[4]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          RuLCombodata[4]?.gstatus != "OPEN"
+                          ? ""
+                          : RuLCombodata[4]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          RuLCombodata[4]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ RuLCombodata[4]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ RuLCombodata[4]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sergio Aguero and No Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="KMCombodata[4]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        KMCombodata[4]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[51].amount > 0
+                        " [class.text-danger]="combinationGoalBook[51].amount < 0">{{ combinationGoalBook[51].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="KMCombodata[4]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          KMCombodata[4]?.nat,
+                          KMCombodata[4]?.b,
+                          'back',
+                          KMCombodata[4]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          KMCombodata[4]?.gstatus != "OPEN"
+                          ? ""
+                          : KMCombodata[4]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          KMCombodata[4]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ KMCombodata[4]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ KMCombodata[4]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Olivier Giroud and No Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="EHCombodata[4]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        EHCombodata[4]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[52].amount > 0
+                        " [class.text-danger]="combinationGoalBook[52].amount < 0">{{ combinationGoalBook[52].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="EHCombodata[4]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          EHCombodata[4]?.nat,
+                          EHCombodata[4]?.b,
+                          'back',
+                          EHCombodata[4]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          EHCombodata[4]?.gstatus != "OPEN"
+                          ? ""
+                          : EHCombodata[4]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          EHCombodata[4]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ EHCombodata[4]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ EHCombodata[4]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Mohamed Salah and No Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="MSCombodata[4]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        MSCombodata[4]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[53].amount > 0
+                        " [class.text-danger]="combinationGoalBook[53].amount < 0">{{ combinationGoalBook[53].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="MSCombodata[4]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          MSCombodata[4]?.nat,
+                          MSCombodata[4]?.b,
+                          'back',
+                          MSCombodata[4]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          MSCombodata[4]?.gstatus != "OPEN"
+                          ? ""
+                          : MSCombodata[4]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          MSCombodata[4]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ MSCombodata[4]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ MSCombodata[4]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Kylian Mbappe and No Goal -->
+              <div class="col-6 col-md-6">
+                <div class="fancy-market" [attr.data-title]="KMbCombodata[4]?.gstatus">
+                  <div class="market-row">
+                    <div class="market-nation-detail">
+                      <span class="market-nation-name pointer">{{
+                        KMbCombodata[4]?.nat
+                        }}</span>
+                      <span *ngIf="combinationGoalBook.length > 0" [class.text-success]="
+                          combinationGoalBook[54].amount > 0
+                        " [class.text-danger]="combinationGoalBook[54].amount < 0">{{ combinationGoalBook[54].amount
+                        }}</span>
+                      <i class="d-md-none fa fa-info-circle market-comb-info"></i>
+                    </div>
+                    <div class="blb-box" [class.suspended-box]="KMbCombodata[4]?.gstatus != 'OPEN'" (click)="
+                        openBetForm(
+                          placebet,
+                          KMbCombodata[4]?.nat,
+                          KMbCombodata[4]?.b,
+                          'back',
+                          KMbCombodata[4]?.sid,
+                          'combination Goal'
+                        )
+                      ">
+                      <div class="market-odd-box back">
+                        <span class="market-odd">{{
+                          KMbCombodata[4]?.gstatus != "OPEN"
+                          ? ""
+                          : KMbCombodata[4]?.b
+                          }}</span>
+                        <span class="market-volume">{{
+                          KMbCombodata[4]?.bs
+                          }}</span>
+                      </div>
+                    </div>
+                    <div class="fancy-min-max-box">
+                      <div class="fancy-min-max">
+                        <span class="w-100 d-block">Min: {{ KMbCombodata[4]?.min }}</span>
+                        <span class="w-100 d-block">Max: {{ KMbCombodata[4]?.max | shortNumber }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="casino-last-result-title">
+            <span>Last Result</span><span><a href="/casino-results/goal2">View All</a></span>
+          </div>
+          <div class="casino-last-results">
+            <span *ngFor="let item of results; trackBy: trackByMid">
+              <span class="result result-b" (click)="openResult(result, item['mid'])">R</span>
+            </span>
+          </div>
+        </div>
+
+      </div>
+      <div [class.d-none]="gametab">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Matched Bet</th>
+                <th class="text-end">Odds</th>
+                <th class="text-end">Stake</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of mybets" [ngClass]="item.betType">
+                <td>{{ item["selectionName"] }}</td>
+                <td class="text-end">{{ item["rate"] }}</td>
+                <td class="text-end">{{ item["stake"] }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- sidebar righ -->
+  <div class="sidebar right-sidebar casino-right-sidebar" [class.sticky]="isSticky">
+    <!-- Placebet Section Desktop -->
+    <div class="sidebar-box place-bet-container position-relative" *ngIf="showbetform">
+      <div *ngIf="placeLoader" id="loader-section">
+        <div id="load-inner">
+          <i class="fa fa-spinner fa-spin"></i>
+        </div>
+      </div>
+      <div class="sidebar-title">
+        <h4>Place Bet</h4>
+        <!-- <span>Range: 100 to 1L</span> -->
+      </div>
+      <div class="place-bet-box" [ngClass]="betType">
+        <div class="place-bet-box-header">
+          <div class="place-bet-for">(Bet for)</div>
+          <div class="place-bet-odds">Odds</div>
+          <div class="place-bet-stake">Stake</div>
+          <div class="place-bet-profit">Profit</div>
+        </div>
+        <div class="place-bet-box-body">
+          <div class="place-bet-for">
+            <i class="fas fa-times text-danger me-1"></i>
+            <span>{{ betFor }}</span>
+          </div>
+          <div class="place-bet-odds">
+            <input type="text" [(ngModel)]="odds" name="odds" class="form-control" disabled="" />
+          </div>
+          <div class="place-bet-stake">
+            <input type="number" [(ngModel)]="stake" (keyup)="calcProfit(stake)" name="stake" maxlength="10"
+              class="form-control" value="" />
+          </div>
+          <div class="place-bet-profit"></div>
+        </div>
+        <div class="place-bet-buttons">
+          <button *ngFor="let button of placebetButton; trackBy: trackByFunc" (click)="placeStake(button.value)"
+            class="btn btn-place-bet">
+            +{{ button.name }}
+          </button>
+        </div>
+        <div class="place-bet-action-buttons">
+          <div>
+            <button (click)="openButtons(setButton)" class="btn btn-info">
+              Edit
+            </button>
+          </div>
+          <div>
+            <button class="btn btn-danger me-1" (click)="hideBetPlace()">
+              Reset
+            </button>
+            <button class="btn btn-success" [class.disabled]="!stake" (click)="submitbet()">
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Mybet Desktop -->
+    <div class="sidebar-box my-bet-container">
+      <div class="sidebar-title">
+        <h4>My Bet</h4>
+      </div>
+      <div class="my-bets">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Matched Bet</th>
+                <th class="text-end">Odds</th>
+                <th class="text-end">Stake</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of mybets" [ngClass]="item.betType">
+                <td>{{ item["selectionName"] }}</td>
+                <td class="text-end">{{ item["rate"] }}</td>
+                <td class="text-end">{{ item["stake"] }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Results -->
+<ng-template #result let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title h4">Goal2 Result</div>
+      <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="casino-result-modal">
+      <div class="casino-result-round-id">
+        <span><b>Round Id: </b> {{ temprId }}</span><span>Match Time: {{ mtime }}</span>
+      </div>
+      <div class="row mt-2">
+        <div class="text-center">
+          <div class="goal-result cricket20ballresult">
+            <img src="/img/balls/soccer-ball.png" />
+            <span>{{ tempDesc1 }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Rules -->
+<ng-template #rules let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">Goal2 Rules</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div>
+      <style type="text/css">
+        .rules-section .row.row5 {
+          margin-left: -5px;
+          margin-right: -5px;
+        }
+
+        .rules-section .pl-2 {
+          padding-left: 0.5rem !important;
+        }
+
+        .rules-section .pr-2 {
+          padding-right: 0.5rem !important;
+        }
+
+        .rules-section .pl-4 {
+          padding-left: 1.5rem !important;
+        }
+
+        .rules-section .pr-4 {
+          padding-right: 1.5rem !important;
+        }
+
+        .rules-section .row.row5>[class*="col-"],
+        .rules-section .row.row5>[class*="col"] {
+          padding-left: 5px;
+          padding-right: 5px;
+        }
+
+        .rules-section {
+          text-align: left;
+          margin-bottom: 10px;
+        }
+
+        .rules-section .table {
+          color: #fff;
+          border: 1px solid #444;
+          background-color: #222;
+          font-size: 12px;
+        }
+
+        .rules-section .table td,
+        .rules-section .table th {
+          border-bottom: 1px solid #444;
+        }
+
+        .rules-section ul li,
+        .rules-section p {
+          margin-bottom: 5px;
+        }
+
+        .rules-section::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        .rules-section::-webkit-scrollbar-track {
+          background: #666666;
+        }
+
+        .rules-section::-webkit-scrollbar-thumb {
+          background-color: #333333;
+        }
+
+        .rules-section .rules-highlight {
+          color: #fdcf13;
+          font-size: 16px;
+        }
+
+        .rules-section .rules-sub-highlight {
+          color: #fdcf13;
+          font-size: 14px;
+        }
+
+        .rules-section .list-style,
+        .rules-section .list-style li {
+          list-style: disc;
+        }
+
+        .rules-section .rule-card {
+          height: 20px;
+          margin-left: 5px;
+        }
+
+        .rules-section .card-character {
+          font-family: Card Characters;
+        }
+
+        .rules-section .red-card {
+          color: red;
+        }
+
+        .rules-section .black-card {
+          color: black;
+        }
+
+        .rules-section .cards-box {
+          background: #fff;
+          padding: 6px;
+          display: inline-block;
+          color: #000;
+          min-width: 150px;
+        }
+
+        .rules-section img {
+          max-width: 100%;
+        }
+      </style>
+
+      <div class="rules-section">
+        <h6 class="rules-highlight">1. Objective</h6>
+        <p>
+          The goal of this game is to predict which player or method will result
+          in the next goal, providing players with exciting opportunities to win
+          big.
+        </p>
+      </div>
+      <br />
+    </div>
+    <div>
+      <div class="rules-section">
+        <h6 class="rules-highlight">2. Betting Options</h6>
+        <ul class="pl-2 pr-2">
+          <li>
+            <h6 class="rules-sub-highlight">1. Who Will Goal Next?</h6>
+            <ul class="pl-4 pr-4 list-style">
+              <li>
+                <b>Description:</b> Predict which player (from the available
+                player selection) will score the next goal.
+              </li>
+              <li>
+                <b>Winning Criteria:</b> If the selected player scores the next
+                goal, the bet is won.
+              </li>
+              <li>
+                <b>No Goal Condition:</b> If no goal is scored by any player
+                (i.e., the shot is missed or saved), the bet is considered a No
+                Goal.
+              </li>
+            </ul>
+          </li>
+          <li>
+            <h6 class="rules-sub-highlight">2. Method of the Next Goal</h6>
+            <ul class="pl-4 pr-4 list-style">
+              <li>
+                <b>Description:</b> Predict the method by which the next goal
+                will be scored. The following options are available:
+                <ul class="pl-4 pr-4 list-style">
+                  <li>
+                    <b>Header Goal:</b> The goal scorer must use their head to
+                    score. The last touch on the ball before entering the net
+                    must be from the head.
+                  </li>
+                  <li>
+                    <b>Free-kick Goal:</b> The goal must be scored directly from
+                    a free-kick, meaning no additional touches are allowed
+                    before the ball crosses the goal line.
+                  </li>
+                  <li>
+                    <b>Penalty Goal:</b> The goal must be scored from a penalty,
+                    and the penalty taker must be the one who scores.
+                  </li>
+                  <li>
+                    <b>Shot Goal:</b> This includes all other types of goals
+                    that are not covered by the above categories, including
+                    shots from open play, volleys, or any other direct goals.
+                  </li>
+                </ul>
+              </li>
+
+              <li>
+                <b>Winning Criteria:</b> If the goal is scored by the method
+                selected, the bet is won.
+              </li>
+              <li>
+                <b>No Goal Condition:</b> If the goal attempt fails or is
+                blocked, the bet is considered a No Goal.
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <br />
+    </div>
+    <div>
+      <div class="rules-section">
+        <h6 class="rules-highlight">3. Method Of Combination Goal</h6>
+        <h6 class="rules-sub-highlight">Description</h6>
+        <p>
+          Predict the player who will score the next goal and the method by
+          which the goal will be scored.
+        </p>
+        <p>Examples:</p>
+        <ul class="pl-2 pr-2 list-style">
+          <li>Cristiano Ronaldo + Free-Kick Goal</li>
+          <li>Lionel Messi + Header Goal</li>
+          <li>Cristiano Ronaldo + Penalty Goal</li>
+          <li>Lionel Messi + Shot Goal</li>
+        </ul>
+        <h6 class="rules-sub-highlight">Winning Criteria</h6>
+        <p>Both selections must be correct:</p>
+        <ul class="pl-2 pr-2">
+          <li>1. The selected player must score the next goal; and</li>
+          <li>2. The goal must be scored by the selected method.</li>
+        </ul>
+      </div>
+      <br />
+    </div>
+    <div>
+      <div class="rules-section">
+        <h6 class="rules-highlight">4. Settlement Rules</h6>
+        <ul class="pl-2 pr-2 list-style">
+          <li>
+            If the selected player scores the next goal using the selected
+            method, the bet wins.
+          </li>
+          <li>
+            If the selected player scores but by a different method, the bet
+            loses.
+          </li>
+          <li>
+            If a different player scores using the selected method, the bet
+            loses.
+          </li>
+          <li>
+            If a different player scores by a different method, the bet loses.
+          </li>
+        </ul>
+      </div>
+      <br />
+    </div>
+    <div>
+      <div class="rules-section">
+        <h6 class="rules-highlight">5. General Rules</h6>
+        <p>
+          <b>No Goal Condition:</b> In all instances, if no goal is scored (due
+          to a miss, save, or other reasons), the bet will be marked as a No
+          Goal.
+        </p>
+        <p>
+          <b>Goal Misses or Saved Shots:</b> If a player misses or the shot is
+          saved, bets placed on that player or method will be settled as No
+          Goal.
+        </p>
+        <p>
+          <b>Broadcast Delays:</b> Please note that the video feeds used to
+          confirm goal outcomes may come from different broadcasters, which can
+          result in a delay in updating the scoreboard. However, the final
+          result will be determined by our official rules and the video evidence
+          available at the time.
+        </p>
+      </div>
+      <br />
+    </div>
+    <div>
+      <div class="rules-section">
+        <h6 class="rules-highlight">6. Disclaimers</h6>
+        <p>
+          <b>Official Decision:</b> In case of any disputes regarding the goal,
+          the casino’s decision based on video reviews will be final.
+        </p>
+        <p>
+          <b>Video Evidence:</b> The casino reserves the right to use available
+          video footage to confirm whether a goal was scored by the chosen
+          player or method. If the footage is inconclusive, the bet may be
+          voided and refunded.
+        </p>
+      </div>
+      <br />
+    </div>
+    <div>
+      <div class="rules-section">
+        <h6 class="rules-highlight">7. Terms of Participation</h6>
+        <p>
+          All players must be aware of the potential delay in goal announcements
+          due to broadcast lag.
+        </p>
+        <p>
+          Players accept that the casino's decision is final in the event of any
+          discrepancies.
+        </p>
+        <br />
+        <p class="text-center">
+          <b>"Best of luck! Enjoy the excitement of the casino and win BIG!"</b>
+        </p>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Placebet Section Mobile -->
+<ng-template #placebet let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">Place Bet</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="place-bet-modal casino-bet-modal" [ngClass]="betType">
+        <div *ngIf="placeLoader" id="loader-section">
+          <div id="load-inner">
+            <i class="fa fa-spinner fa-spin"></i>
+          </div>
+        </div>
+        <div class="row row5">
+          <div class="col-6"><b>{{ betFor }}</b></div>
+          <div class="col-6 text-end"><span>Profit:</span></div>
+        </div>
+        <div class="odd-stake-box">
+          <div class="row row5 mt-1">
+            <div class="col-6 text-center">Amount</div>
+            <div class="col-6 text-center">Odds</div>
+          </div>
+          <div class="row row5 mt-1">
+            <div class="col-6"><input type="number" class="stakeinput w-100" [(ngModel)]="stake"
+                (keyup)="calcProfit(stake)" name="stake" maxlength="10" value=""></div>
+            <div class="col-6">
+              <div class="float-end"><input type="text" class="stakeinput" [(ngModel)]="odds" name="odds" disabled=""
+                  value=""></div>
+            </div>
+          </div>
+        </div>
+        <div class="place-bet-buttons mt-1">
+          <button class="btn btn-place-bet" *ngFor="let button of placebetButton; trackBy: trackByFunc"
+            (click)="placeStake(button.value)">+{{ button.name }}</button>
+        </div>
+
+        <div class="mt-1 place-bet-btn-box">
+          <button class="btn btn-link" (click)="resetStake()">clear</button>
+          <button class="btn btn-info" (click)="openButtons(setButton)">Edit</button>
+          <button class="btn btn-danger" (click)="d('Cross click')">Reset</button>
+          <button class="btn btn-success" [class.disabled]="stake <= 1" (click)="submitbet()">Place Bet</button>
+        </div>
+        <div class="mt-3 d-flex justify-content-between align-items-center">
+          <b><span *ngIf="max!=0">Range: {{min}} to {{max | shortNumber}}</span></b>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Set Button Section -->
+<ng-template #setButton let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">Set Button Value</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="mt-1 nav nav-pills" role="tablist">
+        <div class="nav-item">
+          <a role="tab" (click)="clickSetButtonTab('game')" [class.active]="setButtonTab == 'game'"
+            class="nav-link">Game Buttons
+          </a>
+        </div>
+        <div class="nav-item">
+          <a role="tab" (click)="clickSetButtonTab('casino')" [class.active]="setButtonTab == 'casino'"
+            class="nav-link">Casino Buttons
+          </a>
+        </div>
+      </div>
+      <div class="mt-1 tab-content">
+        <div role="tabpanel" class="fade tab-pane show" [class.active]="setButtonTab == 'game'">
+          <form (submit)="updateButtons()">
+            <div class="row row10">
+              <div class="mb-1 col-6">
+                <label class="form-label"><b>Price Label:</b></label>
+              </div>
+              <div class="mb-1 col-6">
+                <label class="form-label"><b>Price Value:</b></label>
+              </div>
+            </div>
+            <div class="row row10" *ngFor="let item of userButtons.gamebutton; let i = index">
+              <div class="mb-3 col-6 position-relative">
+                <input type="text" [name]="'game' + item.name + i" class="form-control" [(ngModel)]="item.name" />
+              </div>
+              <div class="mb-3 col-6 position-relative">
+                <input type="number" [name]="'game' + item.value + i" class="form-control" [(ngModel)]="item.value" />
+              </div>
+            </div>
+
+            <div class="row row10">
+              <div class="mb-3 col-md-6">
+                <button type="submit" class="btn btn-primary btn-block">
+                  Update
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div role="tabpanel" class="fade tab-pane show" [class.active]="setButtonTab == 'casino'">
+          <form (submit)="updateButtons()">
+            <div class="row row10">
+              <div class="mb-1 col-6">
+                <label class="form-label"><b>Price Label:</b></label>
+              </div>
+              <div class="mb-1 col-6">
+                <label class="form-label"><b>Price Value:</b></label>
+              </div>
+            </div>
+            <div class="row row10" *ngFor="let item of userButtons.casinobutton; let i = index">
+              <div class="mb-3 col-6 position-relative">
+                <input type="text" [name]="'casino' + item.name + i" class="form-control" [(ngModel)]="item.name" />
+              </div>
+              <div class="mb-3 col-6 position-relative">
+                <input type="number" [name]="'casino' + item.value + i" class="form-control" [(ngModel)]="item.value" />
+              </div>
+            </div>
+            <div class="row row10">
+              <div class="mb-3 col-md-6">
+                <button type="submit" class="btn btn-primary btn-block">
+                  Update
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

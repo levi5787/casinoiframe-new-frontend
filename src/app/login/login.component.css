@@ -1,0 +1,7 @@
+.form-control:focus {
+  box-shadow: none;
+}
+
+.login-form form small {
+  font-size: 10px !important;
+}

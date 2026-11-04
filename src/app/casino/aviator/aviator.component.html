@@ -1,0 +1,310 @@
+<div style="display: flex; flex-wrap: wrap">
+  <div class="center-container">
+    <div class="casino-page-container">
+      <div class="casino-header">
+        <span class="casino-name">Aviator</span>
+        <span class="casino-controls">
+          <span class="pointer" (click)="toggleSound()">
+
+            <i class="material-icons">
+              {{ soundEnabled ? 'volume_up' : 'volume_off' }}
+            </i>
+
+          </span>
+          <!-- <span class="pointer">
+            <i class="material-icons">music_note</i>
+            <i class="material-icons">music_off</i>
+          </span> -->
+        </span>
+      </div>
+      <!-- Nav Section Mobile -->
+      <div class="casino-title-header-mobile d-xl-none">
+        <ul class="nav nav-tabs menu-tabs">
+          <li class="nav-item">
+            <div (click)="gameTabClicked()" class="nav-link" [class.active]="gametab">Game</div>
+          </li>
+          <li class="nav-item">
+            <div (click)="betTabClicked()" class="nav-link" [class.active]="bettab">Placed Bet ({{betsData.length}})
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- game tab -->
+      <div class="aviator-container" [class.d-none]="bettab">
+        <!-- Main Content -->
+        <main class="main-content">
+          <!-- Game Area -->
+          <div class="game-section">
+            <!-- Multiplier History -->
+            <div *ngIf="!historyCollapse" class="multiplier-history">
+              <span *ngFor="let history of multiplierHistory; let i = index" class="multiplier-chip"
+                [ngClass]="'multiplier-' + history.color" [class.hidden-sm]="i >= 8" [class.hidden-md]="i >= 12"
+                [class.hidden-lg]="i >= 21">
+                {{ history.value }}
+              </span>
+              <button class="more-btn">
+                <i class="material-icons" (click)="showCollapse()">more_horiz</i>
+              </button>
+            </div>
+
+            <!-- Multiplier History show collapse-->
+            <div *ngIf="historyCollapse" class="multiplier-history showHide" style="display: block !important;">
+              <span class="round-history">Round History</span><br>
+              <span *ngFor="let history of multiplierHistory; let i = index" class="multiplier-chip"
+                [ngClass]="'multiplier-' + history.color">
+                {{ history.value }}
+              </span>
+              <button class="more-btn">
+                <i class="material-icons" (click)="hideCollapse()">cancel</i>
+              </button>
+            </div>
+
+            <!-- Game Display -->
+
+            <div class="game-display">
+              <div class="pre-game" *ngIf="isLoading">
+                <img src="https://aviator-demo.spribegaming.com/aviator-logo.c6b742d995765be3.svg">
+                <div class="loader" [class.active]="isLoading"></div>
+              </div>
+              <div class="game-content">
+                <!-- Background -->
+                <div class="background-gradient"></div>
+                <div class="light-container">
+                  <div class="light-rays"></div>
+                </div>
+
+                <!-- Flight Path SVG -->
+                <svg class="flight-path" width="100%" height="100%" viewBox="0 0 1000 400"
+                  preserveAspectRatio="xMidYMid meet">
+                  <defs>
+                    <!--    DEFINE THE MISSING RED OVERLAY GRADIENT -->
+                    <linearGradient id="red-overlay-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="rgba(255, 0, 0, 0.3)" />
+                      <stop offset="100%" stop-color="rgba(255, 0, 0, 0)" />
+                    </linearGradient>
+
+                    <!-- Trail gradient (you already have this) -->
+                    <linearGradient id="trail-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="rgba(255, 0, 0, 0.8)" />
+                      <stop offset="100%" stop-color="rgba(255, 0, 0, 0)" />
+                    </linearGradient>
+
+                    <!--    ENHANCED PLANE FILTERS -->
+                    <filter id="plane-shadow" x="-50%" y="-50%" width="200%" height="200%">
+                      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="rgba(0, 0, 0, 0.4)" />
+                    </filter>
+
+                    <filter id="plane-glow" x="-50%" y="-50%" width="200%" height="200%">
+                      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+                      <feMerge>
+                        <feMergeNode in="blur" />
+                        <feMergeNode in="SourceGraphic" />
+                      </feMerge>
+                    </filter>
+                  </defs>
+
+                  <!-- Red overlay  -->
+                  <path d="M0,400 C200,350 500,200 800,100 C900,70 950,50 1000,40 L1000,400 L0,400 Z"
+                    fill="url(#red-overlay-gradient)" [attr.opacity]="redOverlayOpacity" />
+
+                  <!-- Trail path -->
+                  <path class="trail-path" d="M0,400 C200,350 500,200 800,100 C900,70 950,50 1000,40"
+                    stroke="url(#trail-gradient)" stroke-width="3" fill="none" stroke-dasharray="1000"
+                    [attr.stroke-dashoffset]="trailOffset" />
+
+                  <!-- Auto Cashout Lines -->
+                  <!-- <line *ngIf="autoCashoutEnabled1 && autoCashoutMultiplier1 > 1" [attr.x1]="0" [attr.y1]="400"
+                    [attr.x2]="getAutoCashoutX(autoCashoutMultiplier1)"
+                    [attr.y2]="getAutoCashoutY(autoCashoutMultiplier1)" stroke="yellow" stroke-width="2"
+                    stroke-dasharray="5,5" pointer-events="none" />
+                  <line *ngIf="autoCashoutEnabled2 && autoCashoutMultiplier2 > 1" [attr.x1]="0" [attr.y1]="400"
+                    [attr.x2]="getAutoCashoutX(autoCashoutMultiplier2)"
+                    [attr.y2]="getAutoCashoutY(autoCashoutMultiplier2)" stroke="cyan" stroke-width="2"
+                    stroke-dasharray="5,5" pointer-events="none" /> -->
+
+                  <!-- Clouds -->
+                  <!-- <g class="clouds" opacity="0.3">
+                    <path d="M100,100 Q120,80 140,100 T180,100" fill="none" stroke="white" stroke-width="2"
+                      class="cloud-1" />
+                    <path d="M500,50 Q530,20 560,50 T620,50" fill="none" stroke="white" stroke-width="2"
+                      class="cloud-2" />
+                    <path d="M800,150 Q820,130 840,150 T880,150" fill="none" stroke="white" stroke-width="2"
+                      class="cloud-3" />
+                  </g> -->
+
+
+                  <!--    PLANE IMAGE - Now properly styled -->
+                  <g [attr.transform]="'translate(' + planeX + ',' + planeY + ') rotate(' + planeRotation +')'">
+                    <image [attr.href]="'./img/aviator/plane-2.svg'" width="200" height="150"
+                      preserveAspectRatio="xMidYMid meet"
+                      [attr.filter]="currentMultiplier > 5 ? 'url(#plane-glow)' : 'url(#plane-shadow)'"
+                      style="pointer-events: none;" />
+                  </g>
+                </svg>
+
+
+                <!-- Multiplier Display -->
+                <span class="multiplier-display" [class.crashed]="gameStatus === 'crashed'" *ngIf="!isLoading">
+                  {{ !gameInitialized ? 'Waiting for game...' : (displayStatus || (currentMultiplier.toFixed(2) + 'x'))
+                  }}
+                </span>
+
+                <!-- Connecting Overlay -->
+                <div *ngIf="socketStatus !== 'connected'" class="overlay connecting">
+                  <div class="spinner"></div>
+                  <p>Connecting to Aviator Game...</p>
+                </div>
+              </div>
+
+              <!-- <div class="user-info">
+          <img class="user-avatar" src="https://via.placeholder.com/40" alt="User">
+          <span class="user-score">{{ balance | number }} {{ currency }}</span>
+          <button class="user-menu">
+            <span class="material-icons">more_vert</span>
+          </button>
+        </div> -->
+            </div>
+
+            <!-- Betting Controls -->
+            <div class="betting-section">
+              <div class="bet-panel-hide" *ngIf="!showSecondBetPanel" style="min-width: 25%;"></div>
+              <!-- Bet Panel 1 -->
+              <div class="bet-panel">
+                <div class="bet-tabs">
+                  <button class="tab-btn" [class.active]="activeTab1 === 'bet'" (click)="setActiveTab('bet', 1)">
+                    Place Bet
+                  </button>
+                  <!-- <button class="tab-btn" [class.active]="activeTab1 === 'auto'" (click)="setActiveTab('auto', 1)">
+              Auto
+            </button> -->
+                  <button class="more-btn" (click)="addBetPanel()" *ngIf="!showSecondBetPanel">
+                    <i class="material-icons">add</i>
+                  </button>
+                </div>
+
+                <div class="bet-controls">
+                  <div class="bet-amount-section">
+                    <div class="bet-amount-input">
+                      <span class="amount-display">{{ formatCurrency(betAmount) }}</span>
+                      <button class="increase-btn" (click)="increaseBetAmount1()">+</button>
+                    </div>
+                    <div class="quick-bets">
+                      <button *ngFor="let amount of quickBetAmounts" class="quick-bet-btn"
+                        (click)="setBetAmount(amount)">
+                        +{{ amount >= 1000 ? (amount / 1000) + 'k' : amount }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Cancel Bet Button (only show during betting phase with active bet) -->
+                <div *ngIf="isAutoCashoutEnabled(1)" class="auto-cashout-indicator">
+                  Auto Cashout: {{ getAutoCashoutMultiplier(1).toFixed(2) }}x
+                </div>
+                <button class="place-bet-btn" [class.cashout-mode]="isPanelInCashoutMode(1)"
+                  [class.cancel-mode]="shouldShowCancelBet(1)" [disabled]="isPanelDisabled(1)"
+                  (click)="shouldShowCancelBet(1) ? cancelBet(1): (activeTab1 === 'auto'  ? openAutoPlayModal(): handlePanelAction(1))">
+                  {{ shouldShowCancelBet(1) ? '🚫 Cancel Bet' : getPanelButtonText(1) }}
+                </button>
+
+              </div>
+              <!-- In bet panel -->
+
+              <!-- Bet Panel 2 -->
+              <div class="bet-panel" *ngIf="showSecondBetPanel">
+                <div class="bet-tabs">
+                  <button class="tab-btn" [class.active]="activeTab2 === 'bet'" (click)="setActiveTab('bet', 2)">
+                    Place Bet
+                  </button>
+                  <!-- <button class="tab-btn" [class.active]="activeTab2 === 'auto'" (click)="setActiveTab('auto', 2)">
+              Auto
+            </button> -->
+                  <button class="more-btn" (click)="removeBetPanel()">
+                    <i class="material-icons">remove</i>
+                  </button>
+                </div>
+
+                <div class="bet-controls">
+                  <div class="bet-amount-section">
+                    <div class="bet-amount-input">
+                      <span class="amount-display">{{ formatCurrency(betAmount) }}</span>
+                      <button class="increase-btn" (click)="increaseBetAmount2()">+</button>
+                    </div>
+                    <div class="quick-bets">
+                      <button *ngFor="let amount of quickBetAmounts" class="quick-bet-btn"
+                        (click)="setBetAmount(amount)">
+                        +{{ amount >= 1000 ? (amount / 1000) + 'k' : amount }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="isAutoCashoutEnabled(2)" class="auto-cashout-indicator">
+                  🎯 Auto Cashout: {{ getAutoCashoutMultiplier(2).toFixed(2) }}x
+                </div>
+
+                <button class="place-bet-btn" [class.cashout-mode]="isPanelInCashoutMode(2)"
+                  [class.cancel-mode]="shouldShowCancelBet(2)" [disabled]="isPanelDisabled(2)"
+                  (click)="shouldShowCancelBet(2) ? cancelBet(2): (activeTab1 === 'auto'  ? openAutoPlayModal(): handlePanelAction(2))">
+                  {{ shouldShowCancelBet(2) ? '🚫 Cancel Bet' : getPanelButtonText(2) }}
+                </button>
+
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+
+      <!-- Bet Tab -->
+      <div [class.d-none]="gametab">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Matched Bet</th>
+                <th class="text-end">Odds</th>
+                <th class="text-end">Stake</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of betsData" class="back">
+                <td>{{item.panel}}</td>
+                <td class="text-end">{{item.status}}</td>
+                <td class="text-end">{{item.betAmount}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar right-sidebar casino-right-sidebar" [class.sticky]="isSticky">
+    <div class="sidebar-box my-bet-container">
+      <div class="sidebar-title">
+        <h4>My Bet</h4>
+      </div>
+      <div class="my-bets">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Matched Bet</th>
+                <th class="text-end">Odds</th>
+                <th class="text-end">Stake</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of betsData" class="back">
+                <td>{{item.panel}}</td>
+                <td class="text-end">{{item.status}}</td>
+                <td class="text-end">{{item.betAmount}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

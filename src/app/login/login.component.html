@@ -1,0 +1,83 @@
+<div id="root">
+  <div></div>
+  <div class="wrapper">
+    <div class="login-page">
+      <div class="login-box">
+        <div class="logo-login">
+          <img src="/img/logo.png">
+        </div>
+        <div class="login-form mt-4">
+          <h4 class="text-center login-title">LOGIN <i class="fas fa-hand-point-down"></i></h4>
+          <!-- <div role="alert" class="alert alert-danger" id="errortext" *ngIf="err">{{err}}</div> -->
+          <form role="form" autocomplete="off" #userlogin="ngForm" (ngSubmit)="loginuser(userlogin.value)"
+            id="userlogin" name="userlogin">
+            <div class="mb-4 input-group position-relative">
+              <input (keyup)="clearErr('username')" name="username" type="text" class="form-control"
+                placeholder="Username" ngModel>
+              <span class="input-group-text"><i class="fas fa-user"></i></span>
+              <p *ngIf="this.requirederr.username" class="error-form">This input is required.</p>
+            </div>
+            <div class="mb-4 input-group position-relative">
+              <input (keyup)="clearErr('password')" name="password" type="password" class="form-control"
+                placeholder="Password" ngModel>
+              <span class="input-group-text"><i class="fas fa-key"></i></span>
+              <p *ngIf="this.requirederr.password" class="error-form">This input is required.</p>
+            </div>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary btn-block">Login<i
+                  class="fas fa-sign-in-alt float-end mt-1"></i></button>
+              <button type="button" class="btn btn-primary btn-block mt-2" (click)="demoLogin()">Login with demo ID<i
+                  class="fas fa-sign-in-alt float-end mt-1"></i></button>
+            </div>
+            <small class="recaptchaTerms mt-1">This site is protected by reCAPTCHA and the Google
+              <a href="https://policies.google.com/privacy"> Privacy Policy</a> and<a
+                href="https://policies.google.com/terms">Terms of Service</a> apply.
+            </small>
+            <!-- <p class="mt-1">
+              <a href="javascript:void(0)" class="mail-link">{{'info@allpenalexch.in'}} <span class="ml-1">| </span></a>
+              <a href="javascript:void(0)" target="_blank" class="ml-2">
+                <i class="fa fa-android "></i> Download APK
+              </a>
+            </p> -->
+            <section class="footer footer-login">
+              <div class="footer-top">
+                <div class="footer-links">
+                  <nav class="navbar navbar-expand-sm">
+                    <ul class="navbar-nav">
+                      <li class="nav-item"><a class="nav-link" href="javascript:void(0)"> Terms and
+                          Conditions </a></li>
+                      <li class="nav-item"><a class="nav-link" href="javascript:void(0)"> Responsible
+                          Gaming </a></li>
+                    </ul>
+                  </nav>
+                </div>
+                <div class="support-detail">
+                  <h2>24X7 Support</h2>
+                  <p></p>
+                </div>
+                <div class="social-icons-box">
+                  <div class="social-icon">
+                    <a href="https://www.facebook.com/" target="_blank">
+                      <img src="/img/social-icons/facebook.png" alt="Facebook"></a>
+                  </div>
+                  <div class="social-icon">
+                    <a href="https://instagram.com/" target="_blank">
+                      <img src="/img/social-icons/instagram.png" alt="Instagram"></a>
+                  </div>
+                  <div class="social-icon"><a href="https://t.me/" target="_blank">
+                      <img src="/img/social-icons/telegram.png" alt="Telegram"></a>
+                  </div>
+                  <div class="social-icon"><a href="https://twitter.com/" target="_blank">
+                      <img src="/img/social-icons/twitter.png" alt="Twitter"></a>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<router-outlet></router-outlet>

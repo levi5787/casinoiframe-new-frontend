@@ -1,0 +1,50 @@
+<div id="root">
+  <div style="position: fixed; z-index: 9999; inset: 16px; pointer-events: none;"></div>
+  <div class="wrapper">
+    <app-header></app-header>
+    <div class="main-container">
+      <div class="sidebar left-sidebar">
+        <app-sidebar></app-sidebar>
+      </div>
+      <div class="center-main-container list-page own-casino-page">
+        <div class="center-container" [class.d-none]="showIframe">
+          <div class="container-fluid container-fluid-5">
+            <div class="mt-2 tab-content" [class.position-relative]="loader">
+              <div *ngIf="loader" id="loader-section">
+                <div id="load-inner">
+                  <i class="fa fa-spinner fa-spin"></i>
+                </div>
+              </div>
+              <div *ngIf="!loader" role="tabpanel" class="fade tab-pane active show">
+                <div class="casino-list mt-2 mt-lg-0">
+                  <div class="casino-list-item" *ngFor="let game of games"
+                    (click)="openGame(game)" [title]="game.game_name">
+                    <div class="casino-list-item-banner pointer"
+                      [style.background-image]="game.url_thumb ? 'url(' + game.url_thumb + ')' : null"></div>
+                    <div class="fancy-play"><i class="fas fa-play"></i><i class="fas fa-info-circle fancy-info"></i>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="!games.length" class="no-games-message">No games found.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slot-iframe" [class.show]="showIframe">
+          <div class="slot-header">
+            <div class="title">
+              <h4>{{ selectedGameName }}</h4>
+            </div>
+            <div class="close-slot-frame" (click)="closeIframe()">EXIT</div>
+          </div>
+          <div class="iframe-loader-overlay" *ngIf="iframeLoading">
+            <div class="iframe-loader-spinner"></div>
+            <div class="iframe-loader-text">Loading game…</div>
+          </div>
+          <iframe *ngIf="iframeUrl" scrolling="yes" allow="fullscreen;" [src]="iframeUrl" (load)="onIframeLoad()" style="width: 100%; border: 0px;"></iframe>
+        </div>
+      </div>
+    </div>
+    <app-footer></app-footer>
+  </div>
+</div>

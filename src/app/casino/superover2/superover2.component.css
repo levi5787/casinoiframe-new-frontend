@@ -1,0 +1,17 @@
+.super-over2 .clock.flip-clock-wrapper {
+    left: 50%;
+    top: 50%;
+    right: unset !important;
+    bottom: unset !important;
+    transform: translate(-50%, -50%);
+}
+.clock {
+    position: absolute !important;
+    right: 10px;
+    bottom: 10px;
+    text-align: right !important;
+    top: unset;
+    left: unset;
+    margin: 0 !important;
+    width: auto !important;
+}

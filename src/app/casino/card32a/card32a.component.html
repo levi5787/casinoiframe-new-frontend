@@ -1,0 +1,1083 @@
+<div style="display: flex; flex-wrap: wrap;">
+  <div class="center-container">
+    <div class="casino-page-container cards32a">
+      <div class="casino-header">
+        <span class="casino-name">32 Cards A
+          <a class="ms-1">
+            <small (click)="open(rules)">Rules</small>
+          </a>
+        </span>
+        <span class="casino-rid d-none d-xl-inline-block">
+          <small>
+            Round ID: <span> {{roundId}}</span>
+          </small>
+        </span>
+      </div>
+      <!-- Mobile Nav -->
+      <div class="casino-title-header-mobile d-xl-none">
+        <ul class="nav nav-tabs menu-tabs">
+          <li class="nav-item">
+            <div class="nav-link " (click)="gameTabClicked()" [class.active]="gametab">Game</div>
+          </li>
+          <li class="nav-item">
+            <div class="nav-link" (click)="betTabClicked()" [class.active]="bettab">Placed Bet ({{mybets.length}})</div>
+          </li>
+        </ul>
+        <div class="pe-2">
+          <span class="casino-rid">Round ID:
+            <span> {{roundId}}</span>
+          </span>
+        </div>
+      </div>
+      <!-- Gametab -->
+      <div [class.d-none]="bettab">
+        <div class="casino-video">
+          <div class="video-box-container">
+            <div class="casino-video-box">
+              <iframe [src]="safeURL"></iframe>
+            </div>
+          </div>
+          <div class="casino-video-cards" *ngIf="p8!='0'&&data">
+            <div>
+              <h5 [class.text-success]="p8>=p9 && p8>=p10 && p8>=p11">Player 8:
+                <span class="text-warning">{{p8}}</span>
+              </h5>
+              <div class="flip-card-container">
+                <div class="flip-card" *ngIf="cards[0]!='1'">
+                  <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                      <img [src]="'/img/cards/'+cards[0]+'.png'">
+                    </div>
+                    <div class="flip-card-back">
+                      <img [src]="'/img/cards/'+cards[0]+'.png'">
+                    </div>
+                  </div>
+                </div>
+                <div class="flip-card" *ngIf="cards[4]!='1'">
+                  <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                      <img [src]="'/img/cards/'+cards[4]+'.png'">
+                    </div>
+                    <div class="flip-card-back">
+                      <img [src]="'/img/cards/'+cards[4]+'.png'">
+                    </div>
+                  </div>
+                </div>
+                <div class="flip-card" *ngIf="cards[8]!='1'">
+                  <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                      <img [src]="'/img/cards/'+cards[8]+'.png'">
+                    </div>
+                    <div class="flip-card-back">
+                      <img [src]="'/img/cards/'+cards[8]+'.png'">
+                    </div>
+                  </div>
+                </div>
+                <div class="flip-card" *ngIf="cards[12]!='1'">
+                  <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                      <img [src]="'/img/cards/'+cards[12]+'.png'">
+                    </div>
+                    <div class="flip-card-back">
+                      <img [src]="'/img/cards/'+cards[12]+'.png'">
+                    </div>
+                  </div>
+                </div>
+                <div class="flip-card" *ngIf="cards[16]!='1'">
+                  <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                      <img [src]="'/img/cards/'+cards[16]+'.png'">
+                    </div>
+                    <div class="flip-card-back">
+                      <img [src]="'/img/cards/'+cards[16]+'.png'">
+                    </div>
+                  </div>
+                </div>
+                <div class="flip-card" *ngIf="cards[20]!='1'">
+                  <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                      <img [src]="'/img/cards/'+cards[20]+'.png'">
+                    </div>
+                    <div class="flip-card-back">
+                      <img [src]="'/img/cards/'+cards[20]+'.png'">
+                    </div>
+                  </div>
+                </div>
+                <div class="flip-card" *ngIf="cards[24]!='1'">
+                  <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                      <img [src]="'/img/cards/'+cards[24]+'.png'">
+                    </div>
+                    <div class="flip-card-back">
+                      <img [src]="'/img/cards/'+cards[24]+'.png'">
+                    </div>
+                  </div>
+                </div>
+                <div class="flip-card" *ngIf="cards[28]!='1'">
+                  <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                      <img [src]="'/img/cards/'+cards[28]+'.png'">
+                    </div>
+                    <div class="flip-card-back">
+                      <img [src]="'/img/cards/'+cards[28]+'.png'">
+                    </div>
+                  </div>
+                </div>
+                <div class="flip-card" *ngIf="cards[32]!='1'">
+                  <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                      <img [src]="'/img/cards/'+cards[32]+'.png'">
+                    </div>
+                    <div class="flip-card-back">
+                      <img [src]="'/img/cards/'+cards[32]+'.png'">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-1">
+              <div *ngIf="p9!='0'&& p9!='9'">
+                <h5 [class.text-success]="p9>=p8 && p9>=p10 && p9>=p11">Player 9:
+                  <span class="text-warning">{{p9}}</span>
+                </h5>
+                <div class="flip-card-container">
+                  <div class="flip-card" *ngIf="cards[1]!='1'">
+                    <div class="flip-card-inner ">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[1]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[1]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card" *ngIf="cards[5]!='1'">
+                    <div class="flip-card-inner ">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[5]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[5]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card" *ngIf="cards[9]!='1'">
+                    <div class="flip-card-inner ">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[9]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[9]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card" *ngIf="cards[13]!='1'">
+                    <div class="flip-card-inner ">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[13]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[13]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card" *ngIf="cards[17]!='1'">
+                    <div class="flip-card-inner ">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[17]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[17]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card" *ngIf="cards[21]!='1'">
+                    <div class="flip-card-inner ">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[21]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[21]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card" *ngIf="cards[25]!='1'">
+                    <div class="flip-card-inner ">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[25]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[25]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card" *ngIf="cards[29]!='1'">
+                    <div class="flip-card-inner ">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[29]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[29]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card" *ngIf="cards[33]!='1'">
+                    <div class="flip-card-inner ">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[33]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[33]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-1">
+              <div *ngIf="p10!='0'&&p10!='10'">
+                <h5 [class.text-success]="p10>=p8 && p10>=p9 && p10>=p11">Player 10: <span
+                    class="text-warning">{{p10}}</span></h5>
+                <div class="flip-card-container">
+                  <div class="flip-card" *ngIf="cards[2]!='1'">
+                    <div class="flip-card-inner ">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[2]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[2]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card" *ngIf="cards[6]!='1'">
+                    <div class="flip-card-inner ">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[6]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[6]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card" *ngIf="cards[10]!='1'">
+                    <div class="flip-card-inner">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[10]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[10]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card" *ngIf="cards[14]!='1'">
+                    <div class="flip-card-inner">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[14]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[14]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card" *ngIf="cards[18]!='1'">
+                    <div class="flip-card-inner">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[18]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[18]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card" *ngIf="cards[22]!='1'">
+                    <div class="flip-card-inner">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[22]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[22]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card" *ngIf="cards[26]!='1'">
+                    <div class="flip-card-inner">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[26]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[26]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card" *ngIf="cards[30]!='1'">
+                    <div class="flip-card-inner">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[30]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[30]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card" *ngIf="cards[34]!='1'">
+                    <div class="flip-card-inner ">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[34]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[34]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-1">
+              <div *ngIf="p11!='0' && p11!='11'">
+                <h5 [class.text-success]="p11>=p8 && p11>=p9 && p11>=p10">Player 11: <span
+                    class="text-warning">{{p11}}</span></h5>
+                <div class="flip-card-container">
+                  <div class="flip-card" *ngIf="cards[3]!='1'">
+                    <div class="flip-card-inner ">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[3]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[3]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card" *ngIf="cards[7]!='1'">
+                    <div class="flip-card-inner ">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[7]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[7]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card" *ngIf="cards[11]!='1'">
+                    <div class="flip-card-inner ">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[11]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[11]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card" *ngIf="cards[15]!='1'">
+                    <div class="flip-card-inner ">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[15]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[15]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card" *ngIf="cards[19]!='1'">
+                    <div class="flip-card-inner ">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[19]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[19]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card" *ngIf="cards[23]!='1'">
+                    <div class="flip-card-inner ">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[23]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[23]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card" *ngIf="cards[27]!='1'">
+                    <div class="flip-card-inner ">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[27]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[27]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card" *ngIf="cards[31]!='1'">
+                    <div class="flip-card-inner ">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[31]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[31]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card" *ngIf="cards[35]!='1'">
+                    <div class="flip-card-inner ">
+                      <div class="flip-card-front">
+                        <img [src]="' /img/cards/'+cards[35]+'.png'">
+                      </div>
+                      <div class="flip-card-back">
+                        <img [src]="' /img/cards/'+cards[35]+'.png'">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Flip Clock -->
+          <div id="flipdown" class="flipdown flipdown__theme-dark clock flip-clock-wrapper">
+            <div class="rotor-group">
+              <div class="rotor">
+                <div class="rotor-leaf" [class.flipped]="flipfirst">
+                  <figure class="rotor-leaf-rear">{{cfirstnum}}</figure>
+                  <figure class="rotor-leaf-front">{{cfirstnum}}</figure>
+                </div>
+                <div class="rotor-top">{{cfirstnum}}</div>
+                <div class="rotor-bottom">{{cfirstnum}}</div>
+              </div>
+              <div class="rotor">
+                <div class="rotor-leaf" [class.flipped]="flipsecond">
+                  <figure class="rotor-leaf-rear">{{clastnum}}</figure>
+                  <figure class="rotor-leaf-front">{{clastnum}}</figure>
+                </div>
+                <div class="rotor-top">{{clastnum}}</div>
+                <div class="rotor-bottom">{{clastnum}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="casino-detail">
+          <div class="casino-table" *ngIf="data">
+            <div class="casino-table-box">
+              <div class="casino-table-left-box">
+                <div class="casino-table-header">
+                  <div class="casino-nation-detail"></div>
+                  <div class="casino-odds-box back">Back</div>
+                  <div class="casino-odds-box lay">Lay</div>
+                </div>
+                <div class="casino-table-body">
+                  <div class="casino-table-row ">
+                    <div class="casino-nation-detail">
+                      <div class="casino-nation-name">Player 8</div>
+                      <div class="casino-nation-book text-danger">
+                        <span *ngIf="winnerBook.length>0"
+                          [ngClass]="winnerBook[0].amount>0?'text-success':'text-danger'">{{winnerBook[0].amount}}</span>
+                      </div>
+                    </div>
+                    <div class="casino-odds-box back" [class.suspended-box]="p8gstatus!='ACTIVE'"
+                      (click)="openBetForm(placebet,'Player 8',p8back,'back',1,'Winner', min, max)">
+                      <span class="casino-odds">{{p8gstatus!='ACTIVE'?'':removeDecimal(p8back)}}</span>
+                    </div>
+                    <div class="casino-odds-box lay" [class.suspended-box]="p8gstatus!='ACTIVE'"
+                      (click)="openBetForm(placebet,'Player 8',p8lay,'lay',1,'Winner', min, max)"><span
+                        class="casino-odds">{{p8gstatus!='ACTIVE'?'':removeDecimal(p8lay)}}</span></div>
+                  </div>
+                  <div class="casino-table-row">
+                    <div class="casino-nation-detail">
+                      <div class="casino-nation-name">Player 9</div>
+                      <div class="casino-nation-book text-danger">
+                        <span *ngIf="winnerBook.length>0"
+                          [ngClass]="winnerBook[1].amount>0?'text-success':'text-danger'">{{winnerBook[1].amount}}</span>
+                      </div>
+                    </div>
+                    <div class="casino-odds-box back" [class.suspended-box]="p9gstatus!='ACTIVE'"
+                      (click)="openBetForm(placebet,'Player 9',p9back,'back',2,'Winner', min, max)">
+                      <span class="casino-odds">{{p9gstatus!='ACTIVE'?'':removeDecimal(p9back)}}</span>
+                    </div>
+                    <div class="casino-odds-box lay" [class.suspended-box]="p9gstatus!='ACTIVE'"
+                      (click)="openBetForm(placebet,'Player 9',p9lay,'lay',2,'Winner', min, max)">
+                      <span class="casino-odds">{{p9gstatus!='ACTIVE'?'':removeDecimal(p9lay)}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="casino-table-box-divider"></div>
+              <div class="casino-table-right-box">
+                <div class="casino-table-header d-none d-md-flex">
+                  <div class="casino-nation-detail"></div>
+                  <div class="casino-odds-box back">Back</div>
+                  <div class="casino-odds-box lay">Lay</div>
+                </div>
+                <div class="casino-table-body">
+                  <div class="casino-table-row ">
+                    <div class="casino-nation-detail">
+                      <div class="casino-nation-name">Player 10</div>
+                      <div class="casino-nation-book text-danger">
+                        <span *ngIf="winnerBook.length>0"
+                          [ngClass]="winnerBook[2].amount>0?'text-success':'text-danger'">{{winnerBook[2].amount}}</span>
+                      </div>
+                    </div>
+                    <div class="casino-odds-box back" [class.suspended-box]="p10gstatus!='ACTIVE'"
+                      (click)="openBetForm( placebet ,'Player 10',p10back,'back',3,'Winner', min, max)">
+                      <span class="casino-odds">{{p10gstatus!='ACTIVE'?'':removeDecimal(p10back)}}</span>
+                    </div>
+                    <div class="casino-odds-box lay" [class.suspended-box]="p10gstatus!='ACTIVE'"
+                      (click)="openBetForm( placebet,'Player 10',p10lay,'lay',3,'Winner', min, max)">
+                      <span class="casino-odds">{{p10gstatus!='ACTIVE'?'':removeDecimal(p10lay)}}</span>
+                    </div>
+                  </div>
+                  <div class="casino-table-row">
+                    <div class="casino-nation-detail">
+                      <div class="casino-nation-name">Player 11</div>
+                      <div class="casino-nation-book text-danger">
+                        <span *ngIf="winnerBook.length>0"
+                          [ngClass]="winnerBook[3].amount>0?'text-success':'text-danger'">{{winnerBook[3].amount}}</span>
+                      </div>
+                    </div>
+                    <div class="casino-odds-box back" [class.suspended-box]="p11gstatus!='ACTIVE'"
+                      (click)="openBetForm(placebet,'Player 11',p11back,'back',4,'Winner', min, max)"><span
+                        class="casino-odds">{{p11gstatus!='ACTIVE'?'':removeDecimal(p11back)}}</span></div>
+                    <div class="casino-odds-box lay" [class.suspended-box]="p11gstatus!='ACTIVE'"
+                      (click)="openBetForm(placebet,'Player 11',p11lay,'lay',4,'Winner', min, max)"><span
+                        class="casino-odds">{{p11gstatus!='ACTIVE'?'':removeDecimal(p11lay)}}</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="casino-last-result-title">
+            <span>Last Result</span>
+            <span><a href="/casino-results/card32">View All</a></span>
+          </div>
+          <div class="casino-last-results">
+            <span *ngFor="let item of results;trackBy:trackByMid">
+              <span class="result result-b" *ngIf="item['result']=='1'"
+                (click)="openResult(result,item['mid'])">8</span>
+              <span class="result result-b" *ngIf="item['result']=='2'"
+                (click)="openResult(result,item['mid'])">9</span>
+              <span class="result result-b" *ngIf="item['result']=='3'"
+                (click)="openResult(result,item['mid'])">10</span>
+              <span class="result result-b" *ngIf="item['result']=='4'"
+                (click)="openResult(result,item['mid'])">11</span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <!-- Bettab -->
+      <div [class.d-none]="gametab">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Matched Bet</th>
+                <th class="text-end">Odds</th>
+                <th class="text-end">Stake</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of mybets" [ngClass]="item.betType">
+                <td>{{item['selectionName']}}</td>
+                <td class="text-end">{{item['rate']}}</td>
+                <td class="text-end">{{item['stake']}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar right-sidebar casino-right-sidebar" [class.sticky]="isSticky">
+    <!-- Placebet Section Desktop -->
+    <div class="sidebar-box place-bet-container position-relative" *ngIf="showbetform">
+      <div *ngIf="placeLoader" id="loader-section">
+        <div id="load-inner">
+          <i class="fa fa-spinner fa-spin"></i>
+        </div>
+      </div>
+      <div class="sidebar-title">
+        <h4>Place Bet</h4>
+        <span *ngIf="max!=0">Range: {{min}} to {{max | shortNumber}}</span>
+      </div>
+      <div class="place-bet-box" [ngClass]="betType">
+        <div class="place-bet-box-header">
+          <div class="place-bet-for">(Bet for)</div>
+          <div class="place-bet-odds">Odds</div>
+          <div class="place-bet-stake">Stake</div>
+          <div class="place-bet-profit">Profit</div>
+        </div>
+        <div class="place-bet-box-body">
+          <div class="place-bet-for">
+            <i class="fas fa-times text-danger me-1"></i>
+            <span>{{betFor}}</span>
+          </div>
+          <div class="place-bet-odds">
+            <input type="text" [(ngModel)]="odds" name="odds" class="form-control" disabled="">
+          </div>
+          <div class="place-bet-stake">
+            <input type="number" [(ngModel)]="stake" (keyup)="calcProfit(stake)" name="stake" maxlength="10"
+              class="form-control" value="">
+          </div>
+          <div class="place-bet-profit"></div>
+        </div>
+        <div class="place-bet-buttons">
+          <button *ngFor="let button of placebetButton; trackBy:trackByFunc" (click)="placeStake(button.value)"
+            class="btn btn-place-bet">+{{button.name}}</button>
+        </div>
+        <div class="place-bet-action-buttons">
+          <div><button (click)="openButtons(setButton)" class="btn btn-info">Edit</button></div>
+          <div>
+            <button class="btn btn-danger me-1" (click)="hideBetPlace()">Reset</button>
+            <button class="btn btn-success" [class.disabled]="!stake" (click)="submitbet()">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Mybet desktop -->
+    <div class="sidebar-box my-bet-container">
+      <div class="sidebar-title">
+        <h4>My Bet</h4>
+      </div>
+      <div class="my-bets">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Matched Bet</th>
+                <th class="text-end">Odds</th>
+                <th class="text-end">Stake</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of mybets" [ngClass]="item.betType">
+                <td>{{item['selectionName']}}</td>
+                <td class="text-end">{{item['rate']}}</td>
+                <td class="text-end">{{item['stake']}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Result -->
+<ng-template #result let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title h4">32 Cards A Result</div><button type="button" class="btn-close"
+        (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="casino-result-modal">
+        <div class="casino-result-round-id"><span><b>Round Id: </b> {{temprId}}</span>
+          <!-- <span><b>Match Time:</b>11/12/2024 11:52:06</span> -->
+        </div>
+        <div class="row mt-2">
+          <div class="col-md-3 text-center">
+            <h4 class="result-title">Player 8 <span class="text-warning"></span></h4>
+            <div class="casino-result-cards">
+              <img class="mr-2" [src]="' /img/cards/'+tempCards[0]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[4]!='1'" [src]="' /img/cards/'+tempCards[4]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[8]!='1'" [src]="' /img/cards/'+tempCards[8]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[12]!='1'" [src]="' /img/cards/'+tempCards[12]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[16]!='1'" [src]="' /img/cards/'+tempCards[16]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[20]!='1'" [src]="' /img/cards/'+tempCards[20]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[24]!='1'" [src]="' /img/cards/'+tempCards[24]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[28]!='1'" [src]="' /img/cards/'+tempCards[28]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[32]!='1'" [src]="' /img/cards/'+tempCards[32]+'.png'">
+              <div class="casino-winner-icon" *ngIf="tempWinner=='1'"><i class="fas fa-trophy "></i></div>
+            </div>
+          </div>
+          <div class="col-md-3 text-center">
+            <h4 class="result-title">Player 9 <span class="text-warning"></span></h4>
+            <div class="casino-result-cards">
+              <img class="mr-2" [src]="' /img/cards/'+tempCards[1]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[5]!='1'" [src]="' /img/cards/'+tempCards[5]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[9]!='1'" [src]="' /img/cards/'+tempCards[9]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[13]!='1'" [src]="' /img/cards/'+tempCards[13]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[17]!='1'" [src]="' /img/cards/'+tempCards[17]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[21]!='1'" [src]="' /img/cards/'+tempCards[21]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[25]!='1'" [src]="' /img/cards/'+tempCards[25]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[29]!='1'" [src]="' /img/cards/'+tempCards[29]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[33]!='1'" [src]="' /img/cards/'+tempCards[33]+'.png'">
+              <div class="casino-winner-icon" *ngIf="tempWinner=='2'"><i class="fas fa-trophy "></i></div>
+            </div>
+          </div>
+          <div class="col-md-3 text-center">
+            <h4 class="result-title">Player 10 <span class="text-warning"></span></h4>
+            <div class="casino-result-cards">
+              <img class="mr-2" [src]="' /img/cards/'+tempCards[2]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[6]!='1'" [src]="' /img/cards/'+tempCards[6]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[10]!='1'" [src]="' /img/cards/'+tempCards[10]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[14]!='1'" [src]="' /img/cards/'+tempCards[14]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[18]!='1'" [src]="' /img/cards/'+tempCards[18]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[22]!='1'" [src]="' /img/cards/'+tempCards[22]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[26]!='1'" [src]="' /img/cards/'+tempCards[26]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[30]!='1'" [src]="' /img/cards/'+tempCards[30]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[34]!='1'" [src]="' /img/cards/'+tempCards[34]+'.png'">
+              <div class="casino-winner-icon" *ngIf="tempWinner=='3'"><i class="fas fa-trophy "></i></div>
+            </div>
+          </div>
+          <div class="col-md-3 text-center">
+            <h4 class="result-title">Player 11 <span class="text-warning"></span></h4>
+            <div class="casino-result-cards">
+              <img class="mr-2" [src]="' /img/cards/'+tempCards[3]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[7]!='1'" [src]="' /img/cards/'+tempCards[7]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[11]!='1'" [src]="' /img/cards/'+tempCards[11]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[15]!='1'" [src]="' /img/cards/'+tempCards[15]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[19]!='1'" [src]="' /img/cards/'+tempCards[19]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[23]!='1'" [src]="' /img/cards/'+tempCards[23]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[27]!='1'" [src]="' /img/cards/'+tempCards[27]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[31]!='1'" [src]="' /img/cards/'+tempCards[31]+'.png'">
+              <img class="mr-2" *ngIf="tempCards[35]!='1'" [src]="' /img/cards/'+tempCards[35]+'.png'">
+              <div class="casino-winner-icon" *ngIf="tempWinner=='4'"><i class="fas fa-trophy "></i></div>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-2 justify-content-center">
+          <div class="col-md-6">
+            <div class="casino-result-desc">
+              <div class="casino-result-desc-item">
+                <div>Winner</div>
+                <div>Player
+                  <span *ngIf="tempWinner=='1'"> 8</span>
+                  <span *ngIf="tempWinner=='2'"> 9</span>
+                  <span *ngIf="tempWinner=='3'"> 10</span>
+                  <span *ngIf="tempWinner=='4'"> 11</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Rules -->
+<ng-template #rules let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">32 Cards A Rules</div><button type="button" class="btn-close" aria-label="Close"
+        (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <style type="text/css">
+          .rules-section .row.row5 {
+            margin-left: -5px;
+            margin-right: -5px;
+          }
+
+          .rules-section .pl-2 {
+            padding-left: .5rem !important;
+          }
+
+          .rules-section .pr-2 {
+            padding-right: .5rem !important;
+          }
+
+          .rules-section .row.row5>[class*="col-"],
+          .rules-section .row.row5>[class*="col"] {
+            padding-left: 5px;
+            padding-right: 5px;
+          }
+
+          .rules-section {
+            text-align: left;
+            margin-bottom: 10px;
+          }
+
+          .rules-section .table {
+            color: #fff;
+            border: 1px solid #444;
+            background-color: #222;
+            font-size: 12px;
+          }
+
+          .rules-section .table td,
+          .rules-section .table th {
+            border-bottom: 1px solid #444;
+            border-right: 1px solid #444;
+            vertical-align: middle;
+            text-align: center;
+          }
+
+          .rules-section ul li,
+          .rules-section p {
+            margin-bottom: 5px;
+          }
+
+          .rules-section::-webkit-scrollbar {
+            width: 8px;
+          }
+
+          .rules-section::-webkit-scrollbar-track {
+            background: #666666;
+          }
+
+          .rules-section::-webkit-scrollbar-thumb {
+            background-color: #333333;
+          }
+
+          .rules-section .rules-highlight {
+            color: #FDCF13;
+            font-size: 16px;
+          }
+
+          .rules-section .rules-sub-highlight {
+            color: #FDCF13;
+            font-size: 14px;
+          }
+
+          .rules-section .list-style,
+          .rules-section .list-style li {
+            list-style: disc;
+          }
+
+          .rules-section .rule-card {
+            height: 20px;
+            margin-left: 5px;
+          }
+
+          .rules-section .card-character {
+            font-family: Card Characters;
+          }
+
+          .rules-section .red-card {
+            color: red;
+          }
+
+          .rules-section .black-card {
+            color: black;
+          }
+
+          .rules-section .cards-box {
+            background: #fff;
+            padding: 6px;
+            display: inline-block;
+            color: #000;
+            min-width: 150px;
+          }
+
+          .rules-section .casino-tabs {
+            background-color: #222 !important;
+            border-radius: 0;
+          }
+
+          .rules-section .casino-tabs .nav-tabs .nav-link {
+            color: #fff !important;
+          }
+
+          .rules-section .casino-tabs .nav-tabs .nav-link.active {
+            color: #FDCF13 !important;
+            border-bottom: 3px solid #FDCF13 !important;
+          }
+        </style>
+
+        <div class="rules-section">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Cards Deck</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>6(SPADE) 6(HEART) 6(CLUB) 6(DIAMOND)</td>
+                  <td>6 POINT</td>
+                </tr>
+                <tr>
+                  <td>7(SPADE) 7(HEART) 7(CLUB) 7(DIAMOND)</td>
+                  <td>7 POINT</td>
+                </tr>
+                <tr>
+                  <td>8(SPADE) 8(HEART) 8(CLUB) 8(DIAMOND)</td>
+                  <td>8 POINT</td>
+                </tr>
+                <tr>
+                  <td>9(SPADE) 9(HEART) 9(CLUB) 9(DIAMOND)</td>
+                  <td>9 POINT</td>
+                </tr>
+                <tr>
+                  <td>10(SPADE) 10(HEART) 10(CLUB) 10(DIAMOND)</td>
+                  <td>10 POINT</td>
+                </tr>
+                <tr>
+                  <td>J(SPADE) J(HEART) J(CLUB) J(DIAMOND)</td>
+                  <td>11 POINT</td>
+                </tr>
+                <tr>
+                  <td>Q(SPADE) Q(HEART) Q(CLUB) Q(DIAMOND)</td>
+                  <td>12 POINT</td>
+                </tr>
+                <tr>
+                  <td>K(SPADE) K(HEART) K(CLUB) K(DIAMOND)</td>
+                  <td>13 POINT</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <ul class="pl-4 pr-4 list-style">
+            <li>This is a value card game &amp; Winning result will count on Highest cards total.</li>
+            <li>There are total 4 players, every player have default prefix points. Default points will be consider as
+              following table.</li>
+          </ul>
+          <h6 class="rules-highlight">Playing Game Rules:</h6>
+          <div class="table-responsive">
+            <table class="table">
+              <tbody>
+                <tr>
+                  <td>
+                    <div><b>PLAYER 8</b></div>
+                    <div>8 Point</div>
+                  </td>
+                  <td>
+                    <div><b>PLAYER 9</b></div>
+                    <div>9 Point</div>
+                  </td>
+                  <td>
+                    <div><b>PLAYER 10</b></div>
+                    <div>10 Point</div>
+                  </td>
+                  <td>
+                    <div><b>PLAYER 11</b></div>
+                    <div>11 Point</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <ul class="pl-4 pr-4 list-style">
+            <li>In game, every player has to count sum of default points and their ownopened card's point.</li>
+            <li>If in first level, the sum is same with more than one player, then thatwill be tie and winner tied
+              players go for next level.</li>
+            <li>This sum will go and go upto Single Player Highest Sum of Point.</li>
+            <li>At last Highest Point Cards's Player declare as a Winner.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Placebet Section Mobile -->
+<ng-template #placebet let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">Place Bet</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="place-bet-modal casino-bet-modal" [ngClass]="betType">
+        <div *ngIf="placeLoader" id="loader-section">
+          <div id="load-inner">
+            <i class="fa fa-spinner fa-spin"></i>
+          </div>
+        </div>
+        <div class="row row5">
+          <div class="col-6"><b>{{ betFor }}</b></div>
+          <div class="col-6 text-end"><span>Profit:</span></div>
+        </div>
+        <div class="odd-stake-box">
+          <div class="row row5 mt-1">
+            <div class="col-6 text-center">Amount</div>
+            <div class="col-6 text-center">Odds</div>
+          </div>
+          <div class="row row5 mt-1">
+            <div class="col-6"><input type="number" class="stakeinput w-100" [(ngModel)]="stake"
+                (keyup)="calcProfit(stake)" name="stake" maxlength="10" value=""></div>
+            <div class="col-6">
+              <div class="float-end"><input type="text" class="stakeinput" [(ngModel)]="odds" name="odds" disabled=""
+                  value=""></div>
+            </div>
+          </div>
+        </div>
+        <div class="place-bet-buttons mt-1">
+          <button class="btn btn-place-bet" *ngFor="let button of placebetButton; trackBy: trackByFunc"
+            (click)="placeStake(button.value)">+{{ button.name }}</button>
+        </div>
+
+        <div class="mt-1 place-bet-btn-box">
+          <button class="btn btn-link" (click)="resetStake()">clear</button>
+          <button class="btn btn-info" (click)="openButtons(setButton)">Edit</button>
+          <button class="btn btn-danger" (click)="d('Cross click')">Reset</button>
+          <button class="btn btn-success" [class.disabled]="stake <= 1" (click)="submitbet()">Place Bet</button>
+        </div>
+        <div class="mt-3 d-flex justify-content-between align-items-center">
+          <b><span *ngIf="max!=0">Range: {{min}} to {{max | shortNumber}}</span></b>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Set Button Section -->
+<ng-template #setButton let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">Set Button Value</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="mt-1 nav nav-pills" role="tablist">
+        <div class="nav-item">
+          <a role="tab" (click)="clickSetButtonTab('game')" [class.active]="setButtonTab=='game'" class="nav-link">Game
+            Buttons
+          </a>
+        </div>
+        <div class="nav-item">
+          <a role="tab" (click)="clickSetButtonTab('casino')" [class.active]="setButtonTab=='casino'"
+            class="nav-link">Casino Buttons
+          </a>
+        </div>
+      </div>
+      <div class="mt-1 tab-content">
+        <div role="tabpanel" class="fade tab-pane show" [class.active]="setButtonTab=='game'">
+          <form (submit)="updateButtons()">
+            <div class="row row10">
+              <div class="mb-1 col-6"><label class="form-label"><b>Price Label:</b></label></div>
+              <div class="mb-1 col-6"><label class="form-label"><b>Price Value:</b></label></div>
+            </div>
+            <div class="row row10" *ngFor="let item of userButtons.gamebutton; let i=index;">
+              <div class="mb-3 col-6 position-relative">
+                <input type="text" [name]="'game'+item.name+i" class="form-control" [(ngModel)]="item.name">
+              </div>
+              <div class="mb-3 col-6 position-relative">
+                <input type="number" [name]="'game'+item.value+i" class="form-control" [(ngModel)]="item.value">
+              </div>
+            </div>
+
+            <div class="row row10">
+              <div class="mb-3 col-md-6">
+                <button type="submit" class="btn btn-primary btn-block">Update</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div role="tabpanel" class="fade tab-pane show" [class.active]="setButtonTab=='casino'">
+          <form (submit)="updateButtons()">
+            <div class="row row10">
+              <div class="mb-1 col-6"><label class="form-label"><b>Price Label:</b></label></div>
+              <div class="mb-1 col-6"><label class="form-label"><b>Price Value:</b></label></div>
+            </div>
+            <div class="row row10" *ngFor="let item of userButtons.casinobutton; let i=index;">
+              <div class="mb-3 col-6 position-relative">
+                <input type="text" [name]="'casino'+item.name+i" class="form-control" [(ngModel)]="item.name">
+              </div>
+              <div class="mb-3 col-6 position-relative">
+                <input type="number" [name]="'casino'+item.value+i" class="form-control" [(ngModel)]="item.value">
+              </div>
+            </div>
+            <div class="row row10">
+              <div class="mb-3 col-md-6 ">
+                <button type="submit" class="btn btn-primary btn-block">Update</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

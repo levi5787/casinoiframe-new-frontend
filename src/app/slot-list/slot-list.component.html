@@ -1,0 +1,68 @@
+<div id="root">
+  <div style="position: fixed; z-index: 9999; inset: 16px; pointer-events: none;"></div>
+  <div class="wrapper">
+    <app-header></app-header>
+    <div class="main-container">
+      <div class="sidebar left-sidebar">
+        <app-sidebar></app-sidebar>
+      </div>
+      <app-mmenutab style="width: 100%;" class="d-xl-none"></app-mmenutab>
+      <div class="center-main-container list-page slot-page">
+        <div class="center-container" [class.d-none]="showIframe">
+          <div class="casino-tab-list">
+            <a (click)="tabScroll('right')" class="tabs-arow tabs-arow-left"><i class="fas fa-angle-left"></i></a>
+            <ul class="nav nav-pills casino-tab" id="slot-tab">
+              <li class="nav-item" *ngFor="let item of navItems; let i = index">
+                <a class="nav-link" [class.active]="i === activeIndex" (click)="selectTab(i, $event)">
+                  <span>{{item.name}}</span>
+                </a>
+              </li>
+            </ul>
+            <a (click)="tabScroll('left')" class="tabs-arow tabs-arow-right"><i class="fas fa-angle-right"></i></a>
+          </div>
+          <div class="casino-sub-tab-list">
+            <ul class="nav nav-pills casino-sub-tab" id="casino-sub-tab">
+              <li class="nav-item" *ngFor="let item of subNavItems; let i = index">
+                <a class="nav-link" [class.active]="i === subActiveIndex" (click)="selectSubTab(i, $event)">
+                  <span>{{item.name}}</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="tab-content mt-xl-2 mt-1" [class.position-relative]="loader">
+            <div *ngIf="loader" id="loader-section">
+              <div id="load-inner">
+                <i class="fa fa-spinner fa-spin"></i>
+              </div>
+            </div>
+            <div class="tab-pane active" *ngIf="!loader" id="all-casino">
+              <div class="casino-list">
+                <div class="casino-list-item rect" *ngFor="let game of getGamesForActiveTab()"
+                  (click)="openGame(game)" [title]="game.game_name" style="cursor: pointer;">
+                  <div class="casino-list-item-banner"
+                    [style.background-image]="game.url_thumb ? 'url(' + game.url_thumb + ')' : null">
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="!getGamesForActiveTab().length" class="no-games-message">No games found.</div>
+            </div>
+          </div>
+        </div>
+        <div class="slot-iframe" [class.show]="showIframe">
+          <div class="slot-header">
+            <div class="title">
+              <h4>{{ selectedGameName }}</h4>
+            </div>
+            <div class="close-slot-frame" (click)="closeIframe()">EXIT</div>
+          </div>
+          <div class="iframe-loader-overlay" *ngIf="iframeLoading">
+            <div class="iframe-loader-spinner"></div>
+            <div class="iframe-loader-text">Loading game…</div>
+          </div>
+          <iframe *ngIf="iframeUrl" scrolling="yes" allow="fullscreen;" [src]="iframeUrl" (load)="onIframeLoad()" style="width: 100%; border: 0px;"></iframe>
+        </div>
+      </div>
+    </div>
+    <app-footer></app-footer>
+  </div>
+</div>

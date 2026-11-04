@@ -1,0 +1,13 @@
+/* Teen62Component (teen62)
+   Board + shell styles are global (src/styles.css, src/assets/css/custom.css, responsive.css).
+   Kept empty to match the other casino tables. Add scoped overrides here only if needed. */
+
+/* Highlight the winning side in the result modal, same A/B colors as the Last Result strip badges. */
+.casino-result-modal .result-a {
+  outline: 2px solid #ff4500;
+  border-radius: 8px;
+}
+.casino-result-modal .result-b {
+  outline: 2px solid #ffff33;
+  border-radius: 8px;
+}

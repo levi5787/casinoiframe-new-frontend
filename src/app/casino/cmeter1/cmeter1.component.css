@@ -1,0 +1,5 @@
+/* 1 CARD METER (cmeter1)
+   Board + shell styles are global (src/styles.css `.one-card-meter`,
+   src/assets/css/custom.css, responsive.css). Keep component-scoped overrides
+   here only if a future tweak is needed — matches the other casino tables,
+   whose component css files are intentionally empty. */

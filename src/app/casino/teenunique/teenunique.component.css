@@ -1,0 +1,19 @@
+/* TeenuniqueComponent (teenunique)
+   Board + shell styles are global (src/styles.css, src/assets/css/custom.css, responsive.css).
+   Kept empty to match the other casino tables. Add scoped overrides here only if needed. */
+
+/* Reference site's undealt-slot asset (sequence/1.jpg) is a lock icon; we don't have that file,
+   so this reproduces it with Font Awesome at the same box size as the real card images (80px wide). */
+.unique-teen20-card-locked {
+  width: 80px;
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary65);
+  border-radius: 4px;
+}
+.unique-teen20-card-locked i {
+  font-size: 24px;
+  color: var(--text-primary);
+}

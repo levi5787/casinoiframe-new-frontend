@@ -1,0 +1,809 @@
+<div id="root">
+  <div class="wrapper">
+    <app-header></app-header>
+    <div class="main-container">
+      <div class="sidebar left-sidebar">
+        <app-sidebar></app-sidebar>
+      </div>
+      <!--  -->
+      <div class="center-main-container detail-page" style="display: flex; flex-wrap: wrap;">
+        <div class="center-container">
+          <div class="detail-page-container position-relative">
+            <div *ngIf="isLoading" id="loader-section">
+              <div id="load-inner">
+                <i class="fa fa-spinner fa-spin"></i>
+              </div>
+            </div>
+            <a class="bet-nation-game-name blink-message d-xl-none" href="/casino/btable">
+              <i class="fas fa-info-circle me-1"></i>
+              <div>Bollywood Casino</div>
+            </a>
+            <div class="game-header"><span>{{eventName}}</span><span class="float-right">{{date}}</span></div>
+            <ul class="nav nav-tabs d-xl-none menu-tabs">
+              <li class="nav-item"><a class="nav-link" (click)="gameTabClicked()" [class.active]="gametab">Odds</a></li>
+              <li class="nav-item"><a class="nav-link" (click)="betTabClicked()" [class.active]="bettab">Matched Bet
+                  ({{openBets.length}})</a></li>
+              <li class="nav-item" *ngIf="tv=='True' || match_odds.iplay==true || bookmaker.iplay==true">
+                <a class="nav-link" (click)="liveClicked()"><i class="fas fa-tv"></i></a>
+              </li>
+            </ul>
+            <!-- Live TV -->
+            <div class="live-tv d-xl-none" *ngIf="liveon&&gametab">
+              <!-- prestram loader -->
+              <!-- <div class="pre-stream">
+                <i id="vloader" class="fas fa-spinner fa-spin"></i>
+              </div> -->
+              <!-- prestream loader -->
+              <iframe *ngIf="liveon" [src]="safeURLmbl" width="100%" height="250" class="video-iframe"></iframe>
+            </div>
+
+            <!-- Animation Scoreboard -->
+            <div *ngIf="animationURL" class="scorestats" [class.d-none]="!gametab">
+              <iframe class="animation-iframe" [src]="animationURL"></iframe>
+            </div>
+
+            <!-- Match Odd Market 6 -->
+            <div class="game-market market-4" [class.d-none]="!gametab"
+              *ngIf="match_odds.section&&match_odds.section[0].odds.length==6">
+              <div class="market-title">
+                <span>{{match_odds.mname}}</span>
+                <button *ngIf="match_odds.section.length==2" (click)="clickCashout(placebet, 'MATCH_ODDS')"
+                  class="btn btn-success btn-sm" [class.disabled]="!this.matchOddsBook.length">Cashout</button>
+              </div>
+              <div class="market-header">
+                <div class="market-nation-detail"><span class="market-nation-name">Max:
+                    {{(match_odds.iplay?match_odds.maxb:match_odds.umaxbof) | shortNumber}}</span></div>
+                <div class="market-odd-box no-border d-none d-md-block"></div>
+                <div class="market-odd-box no-border d-none d-md-block"></div>
+                <div class="market-odd-box back"><b>Back</b></div>
+                <div class="market-odd-box lay"><b>Lay</b></div>
+                <div class="market-odd-box"></div>
+                <div class="market-odd-box no-border"></div>
+              </div>
+              <div class="market-body " [attr.data-title]="match_odds.status"
+                [class.suspended-row]="match_odds.status!='OPEN'">
+                <div class="market-row " [attr.data-title]="item.gstatus"
+                  *ngFor="let item of match_odds.section;let i=index;trackBy:trackByFunc"
+                  [class.suspended-row]="item.gstatus!='ACTIVE'&&item.gstatus!='OPEN'&&match_odds.status=='OPEN'">
+                  <div class="market-nation-detail">
+                    <span class="market-nation-name">{{item.nat}}</span>
+                    <div class="market-nation-book">
+                      <span *ngIf="matchOddsBook.length>0" class="float-left"
+                        [class.text-success]="matchOddsBook[i]['amount']>0"
+                        [class.text-danger]="matchOddsBook[i]['amount']<0">{{matchOddsBook[i]['amount']}}</span>
+                      <span *ngIf="matchOddsBook.length==0" class="float-left"></span>
+
+                      <span *ngIf="matchOPreBook.length>0" class="float-right d-none d-xl-block"
+                        [class.text-success]="matchOPreBook[i]['amount']>0"
+                        [class.text-danger]="matchOPreBook[i]['amount']<0">{{matchOPreBook[i]['amount']}}</span>
+                    </div>
+                  </div>
+                  <div class="market-odd-box" *ngFor="let odds of item.odds;trackBy:trackByFunc"
+                    (click)="openBetForm(placebet,item.nat,odds.odds,odds.otype,'MATCH_ODDS',item.sid,odds.oname)"
+                    [ngClass]="odds.oname" [class.betting-disabled]="odds.odds==0"
+                    [class.blink]="valueSpan.innerText != odds.odds&&valueSpan.innerText!='-'">
+                    <span #valueSpan class="market-odd">{{odds.odds==0?'-':odds.odds}}</span>
+                    <span class="market-volume">{{odds.size==0?'':odds.size}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Match Odd Market 2 -->
+            <div class="game-market market-2 " [class.d-none]="bettab"
+              *ngIf="match_odds.section&&match_odds.section[0].odds.length==2">
+              <div class="market-title">
+                <span>{{match_odds.mname}}</span>
+                <button *ngIf="match_odds.section.length==2" (click)="clickCashout(placebet, 'MATCH_ODDS')"
+                  class="btn btn-success btn-sm" [class.disabled]="!this.matchOddsBook.length">Cashout</button>
+              </div>
+              <div class="market-header">
+                <div class="market-nation-detail"><span class="market-nation-name">Max:
+                    {{(match_odds.iplay?match_odds.maxb:match_odds.umaxbof) | shortNumber}}</span></div>
+                <div class="market-odd-box back"><b>Back</b></div>
+                <div class="market-odd-box lay"><b>Lay</b></div>
+              </div>
+              <div class="market-body" [attr.data-title]="match_odds.status"
+                [class.suspended-row]="match_odds.status!='OPEN'">
+                <div class="market-row" [attr.data-title]="item.gstatus"
+                  *ngFor="let item of match_odds.section;let i=index;trackBy:trackByFunc"
+                  [class.suspended-row]="item.gstatus!='ACTIVE'&&item.gstatus!='OPEN'&&match_odds.status=='OPEN'">
+                  <div class="market-nation-detail"><span class="market-nation-name">{{item.nat}}</span>
+                    <div class="market-nation-book">
+                      <span *ngIf="matchOddsBook.length>0" class="float-left"
+                        [class.text-success]="matchOddsBook[i]['amount']>0"
+                        [class.text-danger]="matchOddsBook[i]['amount']<0">{{matchOddsBook[i]['amount']}}</span>
+                      <span *ngIf="matchOddsBook.length==0" class="float-left"></span>
+
+                      <span *ngIf="matchOPreBook.length>0" class="float-right d-none d-xl-block"
+                        [class.text-success]="matchOPreBook[i]['amount']>0"
+                        [class.text-danger]="matchOPreBook[i]['amount']<0">{{matchOPreBook[i]['amount']}}</span>
+                    </div>
+                  </div>
+                  <div class="market-odd-box" *ngFor="let odds of item.odds;trackBy:trackByFunc"
+                    (click)="openBetForm(placebet,item.nat,odds.odds,odds.otype,'MATCH_ODDS',item.sid,odds.oname)"
+                    [ngClass]="odds.oname" [class.betting-disabled]="odds.odds==0"
+                    [class.blink]="valueSpan.innerText != odds.odds&&valueSpan.innerText!='-'">
+                    <span #valueSpan class="market-odd">{{odds.odds==0?'-':odds.odds}}</span>
+                    <span class="market-volume">{{odds.size==0?'':odds.size}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="game-market market-2 " [class.d-none]="bettab" *ngIf="bookmaker.section">
+              <div class="market-title">
+                <span>{{bookmaker.mname}}</span>
+                <button *ngIf="bookmaker.section.length==2" (click)="clickCashout(placebet, 'Bookmaker')"
+                  class="btn btn-success btn-sm" [class.disabled]="!this.bookmakerBook.length">Cashout</button>
+              </div>
+              <div class="market-header">
+                <div class="market-nation-detail"><span class="market-nation-name">Min: {{bookmaker.min}}&nbsp; Max:
+                    {{bookmaker.max | shortNumber}}</span></div>
+                <div class="market-odd-box back"><b>Back</b></div>
+                <div class="market-odd-box lay"><b>Lay</b></div>
+              </div>
+              <div class="market-body" [attr.data-title]="bookmaker.gstatus">
+                <div class="market-row" [attr.data-title]="item.gstatus"
+                  *ngFor="let item of bookmaker.section;let i=index;trackBy:trackByFunc"
+                  [class.suspended-row]="item.gstatus!='ACTIVE'&&item.gstatus!='OPEN'">
+                  <div class="market-nation-detail"><span class="market-nation-name">{{item.nat}}</span>
+                    <div class="market-nation-book">
+                      <span *ngIf="bookmakerBook.length>0" class="float-left"
+                        [class.text-success]="bookmakerBook[i]['amount']>0"
+                        [class.text-danger]="bookmakerBook[i]['amount']<0">{{bookmakerBook[i]['amount']}}</span>
+                      <span *ngIf="bookmakerBook.length==0" class="float-left"></span>
+
+                      <span *ngIf="bmPrebook.length>0" class="float-right d-none d-xl-block"
+                        [class.text-success]="bmPrebook[i]['amount']>0"
+                        [class.text-danger]="bmPrebook[i]['amount']<0">{{bmPrebook[i]['amount']}}</span>
+                    </div>
+                  </div>
+                  <div class="market-odd-box" *ngFor="let odds of item.odds;trackBy:trackByFunc"
+                    (click)="openBetForm(placebet,item.nat,odds.odds,odds.otype,'Bookmaker',item.sid,odds.oname)"
+                    [ngClass]="odds.oname" [class.betting-disabled]="odds.odds==0"
+                    [class.blink]="valueSpan.innerText != odds.odds&&valueSpan.innerText!='-'">
+                    <span #valueSpan class="market-odd">{{odds.odds==0?'-':odds.odds}}</span>
+                    <span class="market-volume">{{odds.size==0?'':odds.size}}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="market-row">
+                <marquee class="market-remark">{{bookmaker.rem}}</marquee>
+              </div>
+            </div>
+            <div class="game-market market-2" [class.d-none]="bettab"
+              *ngFor="let bmovun of bm_over_under;trackBy:trackBymid">
+              <div class="market-title">
+                <span>{{bmovun.mname}}</span>
+                <button *ngIf="bmovun.section.length==2" (click)="clickCashout(placebet, bmovun.mname)"
+                  class="btn btn-success btn-sm"
+                  [class.disabled]="!this.bm_over_underBook[bmovun.mname]?.length">Cashout</button>
+              </div>
+              <div class="market-header">
+                <div class="market-nation-detail"><span class="market-nation-name">Min: {{bmovun.min}}&nbsp; Max:
+                    {{bmovun.max | shortNumber}}</span></div>
+                <div class="market-odd-box back"><b>Back</b></div>
+                <div class="market-odd-box lay"><b>Lay</b></div>
+              </div>
+              <div class="market-body" [attr.data-title]="bm_over_under.gstatus">
+                <div class="market-row" [attr.data-title]="item.gstatus"
+                  *ngFor="let item of bmovun.section;let i=index;trackBy:trackByFunc"
+                  [class.suspended-row]="item.gstatus!='ACTIVE'&&item.gstatus!='OPEN'">
+                  <div class="market-nation-detail">
+                    <span class="market-nation-name">{{item.nat}}</span>
+                    <div class="market-nation-book">
+                      <span *ngIf="bm_over_underBook[bmovun.mname]" class="float-left"
+                        [ngClass]="bm_over_underBook[bmovun.mname][i]['amount']>=0?'text-success':'text-danger'">
+                        {{bm_over_underBook[bmovun.mname][i]['amount']}}
+                      </span>
+                      <span *ngIf="!bm_over_underBook[bmovun.mname]" class="float-left"></span>
+
+                      <span *ngIf="bm_over_underPreBook[bmovun.mname]" class="float-right d-none d-xl-block"
+                        [ngClass]="bm_over_underPreBook[bmovun.mname][i]?.amount>=0?'text-success':'text-danger'">
+                        {{bm_over_underPreBook[bmovun.mname][i]?.amount}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="market-odd-box" *ngFor="let odds of item.odds;trackBy:trackByFunc;"
+                    (click)="openBetForm(placebet,item.nat,odds.odds,odds.otype,bmovun.mname,item.sid,odds.oname)"
+                    [ngClass]="odds.oname" [class.betting-disabled]="odds.odds==0"
+                    [class.blink]="valueSpan.innerText != odds.odds&&valueSpan.innerText!='-'">
+                    <span #valueSpan class="market-odd">{{odds.odds==0?'-':odds.odds}}</span>
+                    <span class="market-volume">{{odds.size==0?'':odds.size | shortNumber}}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="market-row">
+                <marquee class="market-remark"> {{bookmaker.rem}} </marquee>
+              </div>
+            </div>
+            <div class="game-market market-4" [class.d-none]="bettab"
+              *ngFor="let ov_un of over_under;trackBy:trackBymid">
+              <div class="market-title">
+                <span>{{ov_un.mname}}</span>
+                <button *ngIf="ov_un.section.length==2" (click)="clickCashout(placebet, ov_un.mname)"
+                  class="btn btn-success btn-sm"
+                  [class.disabled]="!this.over_underBook[ov_un.mname]?.length">Cashout</button>
+              </div>
+              <div class="market-header">
+                <div class="market-nation-detail"><span class="market-nation-name">Max:
+                    {{(ov_un.iplay?ov_un.maxb:ov_un.umaxbof) | shortNumber}}</span></div>
+                <div class="market-odd-box no-border d-none d-md-block"></div>
+                <div class="market-odd-box no-border d-none d-md-block"></div>
+                <div class="market-odd-box back"><b>Back</b></div>
+                <div class="market-odd-box lay"><b>Lay</b></div>
+                <div class="market-odd-box"></div>
+                <div class="market-odd-box no-border"></div>
+              </div>
+              <div class="market-body" [attr.data-title]="ov_un.status" [class.suspended-row]="ov_un.status!='OPEN'">
+                <div class="market-row" [attr.data-title]="item.gstatus"
+                  *ngFor="let item of ov_un.section;let i=index;trackBy:trackByFunc"
+                  [class.suspended-row]="item.gstatus!='ACTIVE'&&item.gstatus!='OPEN'&&ov_un.status=='OPEN'">
+                  <div class="market-nation-detail"><span class="market-nation-name">{{item.nat}}</span>
+                    <div class="market-nation-book">
+                      <span *ngIf="over_underBook[ov_un.mname]" class="float-left"
+                        [class.text-success]="over_underBook[ov_un.mname][i]['amount']>0"
+                        [class.text-danger]="over_underBook[ov_un.mname][i]['amount']<0">{{over_underBook[ov_un.mname][i]['amount']}}</span>
+                      <span *ngIf="!over_underBook[ov_un.mname]" class="float-left"></span>
+
+                      <span *ngIf="over_underPreBook[ov_un.mname]" class="float-right d-none d-xl-block"
+                        [ngClass]="over_underPreBook[ov_un.mname][i]?.amount>=0?'text-success':'text-danger'">
+                        {{over_underPreBook[ov_un.mname][i]?.amount}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="market-odd-box" *ngFor="let odds of item.odds;trackBy:trackByFunc"
+                    (click)="openBetForm(placebet,item.nat,odds.odds,odds.otype,ov_un.mname,item.sid,odds.oname)"
+                    [ngClass]="odds.oname" [class.betting-disabled]="odds.odds==0"
+                    [class.blink]="valueSpan.innerText != odds.odds&&valueSpan.innerText!='-'">
+                    <span #valueSpan class="market-odd">{{odds.odds==0?'-':odds.odds}}</span>
+                    <span class="market-volume">{{odds.size==0?'':odds.size | shortNumber }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="game-market market-2" [class.d-none]="bettab"
+              *ngFor="let period_winner of period_winner;trackBy:trackBymid">
+              <div class="market-title">
+                <span>{{period_winner.mname}}</span>
+                <button *ngIf="period_winner.section.length==2" (click)="clickCashout(placebet, period_winner.mname)"
+                  class="btn btn-success btn-sm"
+                  [class.disabled]="!this.period_winnerBook[period_winner.mname]?.length">Cashout</button>
+              </div>
+              <div class="market-header">
+                <div class="market-nation-detail"><span class="market-nation-name">Max:
+                    {{(period_winner.iplay?period_winner.maxb:period_winner.umaxbof) | shortNumber}}</span></div>
+                <div class="market-odd-box back"><b>Back</b></div>
+                <div class="market-odd-box lay"><b>Lay</b></div>
+              </div>
+              <div class="market-body" [attr.data-title]="period_winner.status"
+                [class.suspended-row]="period_winner.status!='OPEN'">
+                <div class="market-row" [attr.data-title]="item.gstatus"
+                  *ngFor="let item of period_winner.section;let i=index;trackBy:trackByFunc"
+                  [class.suspended-row]="item.gstatus!='OPEN'&&period_winner.status=='OPEN'">
+                  <div class="market-nation-detail"><span class="market-nation-name">{{item.nat}}</span>
+                    <div class="market-nation-book">
+                      <span *ngIf="period_winnerBook[period_winner.mname]" class="float-left"
+                        [ngClass]="period_winnerBook[period_winner.mname][i]['amount']>=0?'text-success':'text-danger'">
+                        {{period_winnerBook[period_winner.mname][i]['amount']}}
+                      </span>
+                      <span *ngIf="!period_winnerBook[period_winner.mname]" class="float-left"></span>
+
+                      <span *ngIf="period_winnerPreBook[period_winner.mname]" class="float-right d-none d-xl-block"
+                        [ngClass]="period_winnerPreBook[period_winner.mname][i]?.amount>=0?'text-success':'text-danger'">
+                        {{period_winnerPreBook[period_winner.mname][i]?.amount}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="market-odd-box" *ngFor="let odds of item.odds;trackBy:trackByFunc;"
+                    (click)="openBetForm(placebet,item.nat,odds.odds,odds.otype,period_winner.mname,item.sid,odds.oname)"
+                    [ngClass]="odds.oname" [class.betting-disabled]="odds.odds==0"
+                    [class.blink]="valueSpan.innerText != odds.odds&&valueSpan.innerText!='-'">
+                    <span #valueSpan class="market-odd">{{odds.odds==0?'-':odds.odds}}</span>
+                    <span class="market-volume">{{odds.size==0?'':odds.size | shortNumber}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="game-market market-2" [class.d-none]="bettab"
+              *ngFor="let un_ov of under_over;trackBy:trackBymid">
+              <div class="market-title">
+                <span>{{un_ov.mname}}</span>
+                <button *ngIf="un_ov.section.length==2" (click)="clickCashout(placebet, un_ov.mname)"
+                  class="btn btn-success btn-sm"
+                  [class.disabled]="!this.under_overBook[un_ov.mname]?.length">Cashout</button>
+              </div>
+              <div class="market-header">
+                <div class="market-nation-detail"><span class="market-nation-name">Max:
+                    {{(un_ov.iplay?un_ov.maxb:un_ov.umaxbof) | shortNumber}}</span></div>
+                <div class="market-odd-box back"><b>Back</b></div>
+                <div class="market-odd-box lay"><b>Lay</b></div>
+              </div>
+              <div class="market-body " [attr.data-title]="un_ov.status" [class.suspended-row]="un_ov.status!='OPEN'">
+                <div class="market-row " [attr.data-title]="item.gstatus"
+                  *ngFor="let item of un_ov.section;let i=index;trackBy:trackByFunc"
+                  [class.suspended-half]="item.gstatus!='OPEN'&&item.status=='OPEN'">
+                  <div class="market-nation-detail"><span class="market-nation-name">{{item.nat}}</span>
+                    <div class="market-nation-book">
+                      <span *ngIf="under_overBook[un_ov.mname]" class="float-left"
+                        [ngClass]="under_overBook[un_ov.mname][i]['amount']>=0?'text-success':'text-danger'">
+                        {{under_overBook[un_ov.mname][i]['amount']}}
+                      </span>
+                      <span *ngIf="!under_overBook[un_ov.mname]" class="float-left"></span>
+
+                      <span *ngIf="under_overPreBook[un_ov.mname]" class="float-right d-none d-xl-block"
+                        [ngClass]="under_overPreBook[un_ov.mname][i]?.amount>=0?'text-success':'text-danger'">
+                        {{under_overPreBook[un_ov.mname][i]?.amount}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="market-odd-box" *ngFor="let odds of item.odds;trackBy:trackByFunc;"
+                    (click)="openBetForm(placebet,item.nat,odds.odds,odds.otype,un_ov.mname,item.sid,odds.oname)"
+                    [ngClass]="odds.oname" [class.betting-disabled]="odds.odds==0"
+                    [class.blink]="valueSpan.innerText != odds.odds&&valueSpan.innerText!='-'">
+                    <span #valueSpan class="market-odd">{{odds.odds==0?'-':odds.odds}}</span>
+                    <span class="market-volume">{{odds.size==0?'':odds.size | shortNumber}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="game-market market-2" [class.d-none]="bettab"
+              *ngFor="let next_goal of next_goal;trackBy:trackBymid">
+              <div class="market-title">
+                <span>{{next_goal.mname}}</span>
+                <button *ngIf="next_goal.section.length==2" (click)="clickCashout(placebet, next_goal.mname)"
+                  class="btn btn-success btn-sm"
+                  [class.disabled]="!this.next_goalBook[next_goal.mname]?.length">Cashout</button>
+              </div>
+              <div class="market-header">
+                <div class="market-nation-detail"><span class="market-nation-name">Max:
+                    {{(next_goal.iplay?next_goal.maxb:next_goal.umaxbof) | shortNumber}}</span></div>
+                <div class="market-odd-box back"><b>Back</b></div>
+                <div class="market-odd-box lay"><b>Lay</b></div>
+              </div>
+              <div class="market-body" [attr.data-title]="next_goal.status"
+                [class.suspended-row]="next_goal.status!='OPEN'">
+                <div class="market-row" [attr.data-title]="item.gstatus"
+                  *ngFor="let item of next_goal.section;let i=index;trackBy:trackByFunc"
+                  [class.suspended-row]="item.gstatus!='OPEN'&&next_goal.status=='OPEN'">
+                  <div class="market-nation-detail">
+                    <span class="market-nation-name">{{item.nat}}</span>
+                    <div class="market-nation-book">
+                      <span *ngIf="next_goalBook[next_goal.mname]" class="float-left"
+                        [ngClass]="next_goalBook[next_goal.mname][i]['amount']>=0?'text-success':'text-danger'">
+                        {{next_goalBook[next_goal.mname][i]['amount']}}
+                      </span>
+                      <span *ngIf="!next_goalBook[next_goal.mname]" class="float-left"></span>
+
+                      <span *ngIf="next_goalPreBook[next_goal.mname]" class="float-right d-none d-xl-block"
+                        [ngClass]="next_goalPreBook[next_goal.mname][i]?.amount>=0?'text-success':'text-danger'">
+                        {{next_goalPreBook[next_goal.mname][i]?.amount}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="market-odd-box" *ngFor="let odds of item.odds;trackBy:trackByFunc;"
+                    (click)="openBetForm(placebet,item.nat,odds.odds,odds.otype,next_goal.mname,item.sid,odds.oname)"
+                    [ngClass]="odds.oname" [class.betting-disabled]="odds.odds==0"
+                    [class.blink]="valueSpan.innerText != odds.odds&&valueSpan.innerText!='-'">
+                    <span #valueSpan class="market-odd">{{odds.odds==0?'-':odds.odds}}</span><span
+                      class="market-volume">{{odds.size==0?'':odds.size | shortNumber}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="game-market market-2" [class.d-none]="bettab" *ngIf="draw_no_bet.section">
+              <div class="market-title">
+                <span>{{draw_no_bet.mname}}</span>
+                <button *ngIf="draw_no_bet.section.length==2" (click)="clickCashout(placebet, draw_no_bet.mname)"
+                  class="btn btn-success btn-sm"
+                  [class.disabled]="!this.draw_no_betBook[draw_no_bet.mname]?.length">Cashout</button>
+              </div>
+              <div class="market-header">
+                <div class="market-nation-detail"><span class="market-nation-name">Max:
+                    {{(draw_no_bet.iplay?draw_no_bet.maxb:draw_no_bet.umaxbof) | shortNumber}}</span></div>
+                <div class="market-odd-box back"><b>Back</b></div>
+                <div class="market-odd-box lay"><b>Lay</b></div>
+              </div>
+              <div class="market-body" [attr.data-title]="draw_no_bet.status"
+                [class.suspended-row]="draw_no_bet.status!='OPEN'">
+                <div class="market-row" [attr.data-title]="item.gstatus"
+                  *ngFor="let item of draw_no_bet.section;let i=index;trackBy:trackByFunc"
+                  [class.suspended-row]="item.gstatus!='OPEN'&&draw_no_bet.status=='OPEN'">
+                  <div class="market-nation-detail"><span class="market-nation-name">{{item.nat}}</span>
+                    <div class="market-nation-book">
+                      <span *ngIf="draw_no_betBook.length>0" class="float-left"
+                        [ngClass]="draw_no_betBook[i]['amount']>=0?'text-success':'text-danger'">
+                        {{draw_no_betBook[i]['amount']}}
+                      </span>
+                      <span *ngIf="draw_no_betBook.length==0" class="float-left"></span>
+
+                      <span *ngIf="draw_no_betPreBook.length>0" class="float-right d-none d-xl-block"
+                        [ngClass]="draw_no_betPreBook[i]['amount']>0?'text-success':'text-danger'">
+                        {{draw_no_betPreBook[i]['amount']}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="market-odd-box" *ngFor="let odds of item.odds;trackBy:trackByFunc;"
+                    (click)="openBetForm(placebet,item.nat,odds.odds,odds.otype,draw_no_bet.mname,item.sid,odds.oname)"
+                    [ngClass]="odds.oname" [class.betting-disabled]="odds.odds==0"
+                    [class.blink]="valueSpan.innerText != odds.odds&&valueSpan.innerText!='-'">
+                    <span #valueSpan class="market-odd">{{odds.odds==0?'-':odds.odds}}</span><span
+                      class="market-volume">{{odds.size==0?'':odds.size | shortNumber}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="game-market market-2" [class.d-none]="bettab"
+              *ngFor="let both_team_score of both_team_score;trackBy:trackBymid">
+              <div class="market-title">
+                <span>{{both_team_score.mname}}</span>
+                <button *ngIf="both_team_score.section.length==2"
+                  (click)="clickCashout(placebet, both_team_score.mname)" class="btn btn-success btn-sm"
+                  [class.disabled]="!this.both_team_scoreBook[both_team_score.mname]?.length">Cashout</button>
+              </div>
+              <div class="market-header">
+                <div class="market-nation-detail"><span class="market-nation-name">Max:
+                    {{(both_team_score.iplay?both_team_score.maxb:both_team_score.umaxbof) | shortNumber}}</span></div>
+                <div class="market-odd-box back"><b>Back</b></div>
+                <div class="market-odd-box lay"><b>Lay</b></div>
+              </div>
+              <div class="market-body" [attr.data-title]="both_team_score.status"
+                [class.suspended-row]="both_team_score.status!='OPEN'">
+                <div class="market-row" [attr.data-title]="item.gstatus"
+                  *ngFor="let item of both_team_score.section;let i=index;trackBy:trackByFunc"
+                  [class.suspended-row]="item.gstatus!='OPEN'&&both_team_score.status=='OPEN'">
+                  <div class="market-nation-detail"><span class="market-nation-name">{{item.nat}}</span>
+                    <div class="market-nation-book">
+                      <span *ngIf="both_team_scoreBook[both_team_score.mname]" class="float-left"
+                        [ngClass]="both_team_scoreBook[both_team_score.mname][i]['amount']>=0?'text-success':'text-danger'">
+                        {{both_team_scoreBook[both_team_score.mname][i]['amount']}}
+                      </span>
+                      <span *ngIf="!both_team_scoreBook[both_team_score.mname]" class="float-left"></span>
+
+                      <span *ngIf="both_team_scorePreBook[both_team_score.mname]" class="float-right d-none d-xl-block"
+                        [ngClass]="both_team_scorePreBook[both_team_score.mname][i]?.amount>=0?'text-success':'text-danger'">
+                        {{both_team_scorePreBook[both_team_score.mname][i]?.amount}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="market-odd-box" *ngFor="let odds of item.odds;trackBy:trackByFunc;"
+                    (click)="openBetForm(placebet,item.nat,odds.odds,odds.otype,both_team_score.mname,item.sid,odds.oname)"
+                    [ngClass]="odds.oname" [class.betting-disabled]="odds.odds==0"
+                    [class.blink]="valueSpan.innerText != odds.odds&&valueSpan.innerText!='-'">
+                    <span #valueSpan class="market-odd">{{odds.odds==0?'-':odds.odds}}</span>
+                    <span class="market-volume">{{odds.size==0?'':odds.size | shortNumber}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="game-market market-2" [class.d-none]="bettab" *ngIf="goal_odd_even.section">
+              <div class="market-title">
+                <span>{{goal_odd_even.mname}}</span>
+                <button *ngIf="goal_odd_even.section.length==2" (click)="clickCashout(placebet, goal_odd_even.mname)"
+                  class="btn btn-success btn-sm"
+                  [class.disabled]="!this.goal_odd_evenBook[goal_odd_even.mname]?.length">Cashout</button>
+              </div>
+              <div class="market-header">
+                <div class="market-nation-detail"><span class="market-nation-name">Max:
+                    {{(goal_odd_even.iplay?goal_odd_even.maxb:goal_odd_even.umaxbof) | shortNumber}}</span></div>
+                <div class="market-odd-box back"><b>Back</b></div>
+                <div class="market-odd-box lay"><b>Lay</b></div>
+              </div>
+              <div class="market-body" [attr.data-title]="goal_odd_even.status"
+                [class.suspended-row]="goal_odd_even.status!='OPEN'">
+                <div class="market-row " [attr.data-title]="item.gstatus"
+                  *ngFor="let item of goal_odd_even.section;let i=index;trackBy:trackByFunc"
+                  [class.suspended-row]="item.gstatus!='OPEN'&&goal_odd_even.status=='OPEN'">
+                  <div class="market-nation-detail">
+                    <span class="market-nation-name">{{item.nat}}</span>
+                    <div class="market-nation-book">
+                      <span *ngIf="goal_odd_evenBook.length>0" class="float-left"
+                        [ngClass]="goal_odd_evenBook[i]['amount']>=0?'text-success':'text-danger'">
+                        {{goal_odd_evenBook[i]['amount']}}
+                      </span>
+                      <span *ngIf="goal_odd_evenBook.length==0" class="float-left"></span>
+
+                      <span *ngIf="goal_odd_evenPreBook.length>0" class="float-right d-none d-xl-block"
+                        [ngClass]="goal_odd_evenPreBook[i]['amount']>0?'text-success':'text-danger'">
+                        {{goal_odd_evenPreBook[i]['amount']}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="market-odd-box" *ngFor="let odds of item.odds;trackBy:trackByFunc;"
+                    (click)="openBetForm(placebet,item.nat,odds.odds,odds.otype,goal_odd_even.mname,item.sid,odds.oname)"
+                    [ngClass]="odds.oname" [class.betting-disabled]="odds.odds==0"
+                    [class.blink]="valueSpan.innerText != odds.odds&&valueSpan.innerText!='-'">
+                    <span #valueSpan class="market-odd">{{odds.odds==0?'-':odds.odds}}</span>
+                    <span class="market-volume">{{odds.size==0?'':odds.size | shortNumber}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="game-market market-1" [class.d-none]="bettab" *ngIf="ht_ft.section">
+              <div class="market-title">
+                <span>{{ht_ft.mname}}</span>
+                <button *ngIf="ht_ft.section.length==2" (click)="clickCashout(placebet, ht_ft.mname)"
+                  class="btn btn-success btn-sm"
+                  [class.disabled]="!this.ht_ftBook[ht_ft.mname]?.length">Cashout</button>
+              </div>
+              <div class="market-row" [attr.data-title]="ht_ft.status" [class.suspended-row]="ht_ft.status!='OPEN'">
+                <div class="market-1-item" *ngFor="let item of ht_ft.section;let i=index;trackBy:trackByFunc"
+                  [class.suspended-row]="item.gstatus!='OPEN'&&ht_ft.status=='OPEN'">
+                  <div>{{item.nat}}<div class="market-nation-book">
+                      <span *ngIf="ht_ftBook.length>0" class="market-book"
+                        [ngClass]="ht_ftBook[i]['amount']>=0?'text-success':'text-danger'">
+                        {{ht_ftBook[i]['amount']}}
+                      </span>
+                      <span *ngIf="ht_ftBook.length==0" class="market-book"></span>
+
+                      <span *ngIf="ht_ftPreBook.length>0" class="float-right d-none d-xl-block"
+                        [ngClass]="ht_ftPreBook[i]['amount']>0?'text-success':'text-danger'">
+                        {{ht_ftPreBook[i]['amount']}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="market-odd-box" *ngFor="let odds of item.odds;trackBy:trackByFunc;"
+                    (click)="openBetForm(placebet,item.nat,odds.odds,odds.otype,ht_ft.mname,item.sid,odds.oname)"
+                    [ngClass]="odds.oname" [class.betting-disabled]="odds.odds==0"
+                    [class.blink]="valueSpan.innerText != odds.odds&&valueSpan.innerText!='-'">
+                    <span #valueSpan class="market-odd">{{odds.odds==0?'-':odds.odds}}</span>
+                    <span class="market-volume">{{odds.size==0?'':odds.size | shortNumber}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive w-100" *ngIf="bettab">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Matched Bet</th>
+                    <th class="text-end">Odds</th>
+                    <th class="text-end">Stake</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of openBets" [ngClass]="item.betType">
+                    <td>{{item.selectionName}}</td>
+                    <td class="text-end">{{item.rate}}</td>
+                    <td class="text-end">{{item.stake}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar right-sidebar" [class.sticky]="isSticky">
+          <a class="bet-nation-game-name blink-message" href="/casino/btable"><i class="fas fa-info-circle me-1"></i>
+            <div>Bollywood Casino</div>
+          </a>
+          <div class="sidebar-box" *ngIf="tv=='True' || match_odds.iplay==true || bookmaker.iplay==true"
+            (click)="liveClicked()">
+            <div class="sidebar-title">
+              <h4>Live Match</h4>
+            </div>
+            <div class="live-tv" *ngIf="liveon">
+              <!-- prestram loader -->
+              <!-- <div class="pre-stream">
+                <i id="vloader" class="fas fa-spinner fa-spin"></i>
+              </div> -->
+              <!-- prestream loader -->
+              <iframe *ngIf="liveon" [src]="safeURL" width="100%" height="250" class="video-iframe"></iframe>
+            </div>
+          </div>
+          <div class="sidebar-box place-bet-container" *ngIf="showbetform">
+            <div class="sidebar-title">
+              <h4>Place Bet</h4>
+              <!-- <span>Range: 100 to 1L</span> -->
+            </div>
+            <div class="place-bet-box position-relative" [ngClass]="betType">
+              <div *ngIf="placeLoader" id="loader-section">
+                <div id="load-inner"><i class="fa fa-spinner fa-spin"></i></div>
+              </div>
+              <div class="place-bet-box-header">
+                <div class="place-bet-for">(Bet for)</div>
+                <div class="place-bet-odds">Odds</div>
+                <div class="place-bet-stake">Stake</div>
+                <div class="place-bet-profit">Profit</div>
+              </div>
+              <div class="place-bet-box-body">
+                <div class="place-bet-for">
+                  <i class="fas fa-times text-danger me-1"></i>
+                  <span>{{betFor}}</span>
+                </div>
+                <div class="place-bet-odds">
+                  <input type="text" [(ngModel)]="rate" name="rate" class="form-control" disabled>
+                  <div class="spinner-buttons input-group-btn btn-group-vertical">
+                    <button (click)="ratePlus()" [class.disabled]="oddsType=='Bookmaker'||oddsType=='Fancy'"
+                      class="btn-default"><i class="fa fa-angle-up"></i></button>
+                    <button (click)="rateMinus()" [class.disabled]="oddsType=='Bookmaker'||oddsType=='Fancy'"
+                      class="btn-default"><i class="fa fa-angle-down"></i></button>
+                  </div>
+                </div>
+                <div class="place-bet-stake">
+                  <input type="number" [(ngModel)]="stake" (keyup)="calcProfit()" name="stake" min="0" maxlength="10"
+                    class="form-control">
+                </div>
+                <div class="place-bet-profit">{{profit}}</div>
+              </div>
+              <div class="place-bet-buttons">
+                <button *ngFor="let button of placebetButton; trackBy:trackByFunc" (click)="placeStake(button.value)"
+                  class="btn btn-place-bet">+{{button.name}}</button>
+              </div>
+              <div class="place-bet-action-buttons">
+                <div><button (click)="openButtons(setButton)" class="btn btn-info">Edit</button></div>
+                <div>
+                  <button class="btn btn-danger me-1" (click)="closeBetform()">Reset</button>
+                  <button class="btn btn-success" [class.disabled]="stake==0" (click)="betsubmit()">Submit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="sidebar-box my-bet-container">
+            <div class="sidebar-title">
+              <h4>My Bet</h4>
+            </div>
+            <div class="my-bets">
+              <div class="table-responsive w-100">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Matched Bet</th>
+                      <th class="text-end">Odds</th>
+                      <th class="text-end">Stake</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of openBets" [ngClass]="item.betType">
+                      <td>{{item.selectionName}}</td>
+                      <td class="text-end">{{twoDecimal(item.rate)}}</td>
+                      <td class="text-end">{{twoDecimal(item.stake)}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <app-footer></app-footer>
+  </div>
+</div>
+
+
+<!-- mobile placebet section -->
+<ng-template #placebet let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">Place Bet</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="place-bet-modal" [ngClass]="betType">
+        <div *ngIf="placeLoader" id="loader-section">
+          <div id="load-inner"><i class="fa fa-spinner fa-spin"></i></div>
+        </div>
+        <div class="row row5">
+          <div class="col-6"><b>{{betFor}}</b></div>
+          <div class="col-6 text-end"><span>Profit: {{profit}}</span></div>
+        </div>
+        <div class="odd-stake-box">
+          <div class="row row5 mt-1">
+            <div class="col-6 text-center">Odds</div>
+            <div class="col-6 text-center">Amount</div>
+          </div>
+          <div class="row row5 mt-1">
+            <div class="col-6">
+              <div class="float-end">
+                <button class="stakeactionminus btn" (click)="rateMinus()">
+                  <span class=" fa fa-minus"></span>
+                </button>
+                <input type="text" class="stakeinput" [(ngModel)]="rate" name="odds" value="" disabled="" />
+                <button class="stakeactionminus btn" (click)="ratePlus()">
+                  <span class="fa fa-plus"></span>
+                </button>
+              </div>
+            </div>
+            <div class="col-6">
+              <input type="number" class="stakeinput w-100" [(ngModel)]="stake" (keyup)="calcProfit()" name="stake"
+                maxlength="10" value="" />
+            </div>
+          </div>
+        </div>
+        <div class="place-bet-buttons mt-1">
+          <button *ngFor="let button of placebetButton; trackBy:trackByFunc" (click)="placeStake(button.value)"
+            class="btn btn-place-bet">+{{button.name}}</button>
+        </div>
+        <div class="mt-1 place-bet-btn-box">
+          <button class="btn btn-link" (click)="resetStake()">Clear</button>
+          <button class="btn btn-info" (click)="openButtons(setButton)">Edit</button>
+          <button class="btn btn-danger" (click)="d('Cross click')">Reset</button>
+          <button class="btn btn-success" [class.disabled]="stake<=1" (click)="betsubmit()">Place Bet</button>
+        </div>
+        <div class="mt-1 d-flex"></div>
+        <div class="odds-count mt-1" *ngIf="preBook.length!=0">
+          <div class="row mt-2" *ngFor="let item of preBook">
+            <div class="col-4"><span>{{item.selectionName}}</span></div>
+            <div class="col-4 text-center">
+              <span
+                [ngClass]="item.oldAmount>0?'text-success':item.oldAmount<0?'text-danger':''">{{item.oldAmount}}</span>
+            </div>
+            <div class="col-4 text-end"><span
+                [ngClass]="item.amount>0?'text-success':'text-danger'">{{item.amount}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #setButton let-c="close" let-d="dismiss">
+  <div role="document">
+    <div class="modal-header">
+      <div class="modal-title h4">Set Button Value</div>
+      <button type="button" class="btn-close" (click)="d('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="mt-1 nav nav-pills" role="tablist">
+        <div class="nav-item">
+          <a role="tab" (click)="clickSetButton('game')" [class.active]="setButtonTab=='game'" class="nav-link">Game
+            Buttons
+          </a>
+        </div>
+        <div class="nav-item">
+          <a role="tab" (click)="clickSetButton('casino')" [class.active]="setButtonTab=='casino'"
+            class="nav-link">Casino Buttons
+          </a>
+        </div>
+      </div>
+      <div class="mt-1 tab-content">
+        <div role="tabpanel" class="fade tab-pane show" [class.active]="setButtonTab=='game'">
+          <form (submit)="updateButtons()">
+            <div class="row row10">
+              <div class="mb-1 col-6"><label class="form-label"><b>Price Label:</b></label></div>
+              <div class="mb-1 col-6"><label class="form-label"><b>Price Value:</b></label></div>
+            </div>
+            <div class="row row10" *ngFor="let item of userButtons.gamebutton; let i=index;">
+              <div class="mb-3 col-6 position-relative">
+                <input type="text" [name]="'game'+item.name+i" class="form-control" [(ngModel)]="item.name">
+              </div>
+              <div class="mb-3 col-6 position-relative">
+                <input type="number" [name]="'game'+item.value+i" class="form-control" [(ngModel)]="item.value">
+              </div>
+            </div>
+
+            <div class="row row10">
+              <div class="mb-3 col-md-6">
+                <button type="submit" class="btn btn-primary btn-block">Update</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div role="tabpanel" class="fade tab-pane show" [class.active]="setButtonTab=='casino'">
+          <form (submit)="updateButtons()">
+            <div class="row row10">
+              <div class="mb-1 col-6"><label class="form-label"><b>Price Label:</b></label></div>
+              <div class="mb-1 col-6"><label class="form-label"><b>Price Value:</b></label></div>
+            </div>
+            <div class="row row10" *ngFor="let item of userButtons.casinobutton; let i=index;">
+              <div class="mb-3 col-6 position-relative">
+                <input type="text" [name]="'casino'+item.name+i" class="form-control" [(ngModel)]="item.name">
+              </div>
+              <div class="mb-3 col-6 position-relative">
+                <input type="number" [name]="'casino'+item.value+i" class="form-control" [(ngModel)]="item.value">
+              </div>
+            </div>
+            <div class="row row10">
+              <div class="mb-3 col-md-6 ">
+                <button type="submit" class="btn btn-primary btn-block">Update</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
