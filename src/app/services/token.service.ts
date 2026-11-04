@@ -1,7 +1,7 @@
 import { Injectable, Injector } from '@angular/core';
 import { UserauthService } from './userauth.service';
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { catchError, Observable, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,46 +14,20 @@ export class TokenInterceptorService implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     let auth_service = this.injector.get(UserauthService)
+    const token = auth_service.getToken();
 
-    if (req.headers.has('Skip-Interceptor')) {
-      const clonedRequest = req.clone({
-        headers: req.headers.delete('Skip-Interceptor'), // Remove the custom header
-        setHeaders: {
-          Authorization: `${auth_service.getToken()}`,
-        }
-      });
-      return next.handle(clonedRequest);
-    }
-
+    // Plain JSON (no payload encryption); client JWT sent as Bearer token.
     let tokenizedReq = req.clone({
-      setHeaders: {
-        Authorization: `${auth_service.getToken()}`,
-      },
-      body: { data: auth_service.EncryptData(req.body) }
+      headers: req.headers.delete('Skip-Interceptor'),
+      setHeaders: token ? { Authorization: `Bearer ${token}` } : {}
     })
+
     return next.handle(tokenizedReq).pipe(
-      map((event: HttpEvent<any>) => {
-        if (event instanceof HttpResponse) {
-          const decryptedData = auth_service.DecryptData(event.body.data);
-          //console.log('Response Data:', decryptedData);
-          return event.clone({ body: decryptedData });
-        }
-        return event;
-      }),
       catchError((error: any) => {
-        if (error instanceof HttpErrorResponse) {
-          //console.error('HTTP Error:', error);
-          if (error.error && error.error.data) {
-            const decryptedErrorData = auth_service.DecryptData(error.error.data);
-            if (decryptedErrorData?.logout) {
-              auth_service.logOut();
-            }
-            return throwError({ ...error, error: decryptedErrorData });
-          }
-        } else {
-          //console.error('Error:', error);
+        if (error instanceof HttpErrorResponse && error.error?.logout) {
+          auth_service.logOut();
         }
-        return throwError(error);
+        return throwError(() => error);
       })
     );
   }

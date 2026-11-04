@@ -1,8 +1,8 @@
+import { SidebarComponent } from '../sidebar/sidebar.component';
 import { Component } from "@angular/core";
 import { UserauthService } from "../services/userauth.service";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { HeaderComponent } from "../header/header.component";
-import { SidebarComponent } from "../sidebar/sidebar.component";
 import { FooterComponent } from "../footer/footer.component";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
@@ -11,9 +11,8 @@ declare var $: any;
 @Component({
   selector: "app-withdraw-statement",
   standalone: true,
-  imports: [
+  imports: [SidebarComponent, 
     HeaderComponent,
-    SidebarComponent,
     FooterComponent,
     CommonModule,
     FormsModule,

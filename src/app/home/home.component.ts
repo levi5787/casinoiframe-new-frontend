@@ -1,9 +1,9 @@
+import { SidebarComponent } from '../sidebar/sidebar.component';
 import { Component, ChangeDetectorRef, inject, ViewChild } from '@angular/core';
 import { Router, RouterOutlet, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
-import { SidebarComponent } from '../sidebar/sidebar.component';
 import { MatchService } from '../services/match.service';
 import { UserauthService } from '../services/userauth.service';
 import { CommonModule } from '@angular/common';
@@ -14,7 +14,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [FormsModule, HeaderComponent, RouterLink, FooterComponent, SidebarComponent, CommonModule, MmenutabComponent],
+  imports: [SidebarComponent, FormsModule, HeaderComponent, RouterLink, FooterComponent, CommonModule, MmenutabComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })

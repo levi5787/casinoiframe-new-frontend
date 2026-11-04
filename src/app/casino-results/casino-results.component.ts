@@ -1,9 +1,9 @@
+import { SidebarComponent } from '../sidebar/sidebar.component';
 import { Component, inject } from '@angular/core';
 import { Router, RouterOutlet, RouterLink, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
-import { SidebarComponent } from '../sidebar/sidebar.component';
 import { MatchService } from '../services/match.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -13,7 +13,7 @@ declare const $: any;
 @Component({
   selector: 'app-casino-results',
   standalone: true,
-  imports: [FormsModule, HeaderComponent, FooterComponent, SidebarComponent, CommonModule],
+  imports: [SidebarComponent, FormsModule, HeaderComponent, FooterComponent, CommonModule],
   templateUrl: './casino-results.component.html',
   styleUrl: './casino-results.component.css'
 })

@@ -51,19 +51,24 @@ export class UserauthService {
   }
 
   getUserDetails() {
-    let token = localStorage.getItem('token')
+    let token = this.getToken()
     let payload = JSON.parse(this.GetTokenDecoded(token))
     return payload;
   }
   getUsername() {
-    let token = localStorage.getItem('token')
+    let token = this.getToken()
     let payload = JSON.parse(this.GetTokenDecoded(token))
     return payload?.username
   }
   getUserBalance() {
     this.http.get<any>(this.apiurl + '/getuserbalance').subscribe({
       next: (res) => {
-        (res.logout) ? this.logOut() : this.balance = res.balance, this.exposure = res.exposure
+        if (res.logout) {
+          this.logOut();
+        } else {
+          this.balance = res.balance;
+          this.exposure = res.exposure;
+        }
       },
       error: (e) => console.log(e)
     })
@@ -97,19 +102,23 @@ export class UserauthService {
   authStatus() {
     return this.isAuthenticated;
   }
+  // Token comes from the iframe URL (signed by the client site) and is kept per-tab.
   setToken(token: any, auth: boolean) {
     this.isAuthenticated = auth;
-    localStorage.setItem('token', token)
+    sessionStorage.setItem('token', token)
   }
   getToken() {
-    return localStorage.getItem('token')
+    return sessionStorage.getItem('token')
+  }
+  // Verify the client JWT with our backend (used on lobby and game page entry).
+  validateToken(token: string): Observable<{ valid: boolean, message?: string }> {
+    return this.http.post<{ valid: boolean, message?: string }>(this.apiurl + '/validateClientToken', { token })
   }
   logOut() {
-    // Invalidate the token server-side (blocklist) before clearing it locally.
-    try { this.http.post(this.apiurl + '/logout', {}, { headers: { 'Skip-Interceptor': 'true' } }).subscribe({ next: () => { }, error: () => { } }); } catch (e) { }
-    localStorage.removeItem('token')
+    // No login page in the iframe: clear the session and show the expired page.
+    sessionStorage.removeItem('token')
     this.isAuthenticated = false;
-    this.router.navigate(['/login'])
+    this.router.navigate(['/session-expired'])
     // if (window.innerWidth <= 990) {
     //   this.router.navigate(['m/login']);
     // } else if (window.innerWidth > 990) {

@@ -1,8 +1,8 @@
+import { SidebarComponent } from '../sidebar/sidebar.component';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
-import { SidebarComponent } from '../sidebar/sidebar.component';
 import { MatchService } from '../services/match.service';
 import { CommonModule } from '@angular/common';
 import { MmenutabComponent } from '../mmenutab/mmenutab.component';
@@ -36,7 +36,7 @@ function sortByKeywordPriority(games: CrashGame[], keywords: string[]): CrashGam
 @Component({
   selector: 'app-crash-list',
   standalone: true,
-  imports: [FormsModule, MmenutabComponent, HeaderComponent, FooterComponent, CommonModule, SidebarComponent],
+  imports: [SidebarComponent, FormsModule, MmenutabComponent, HeaderComponent, FooterComponent, CommonModule],
   templateUrl: './crash-list.component.html',
   styleUrl: './crash-list.component.css'
 })

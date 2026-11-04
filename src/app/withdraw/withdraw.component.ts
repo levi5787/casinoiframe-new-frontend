@@ -1,7 +1,7 @@
+import { SidebarComponent } from '../sidebar/sidebar.component';
 import { Component, OnInit } from "@angular/core";
 import { HeaderComponent } from "../header/header.component";
 import { FooterComponent } from "../footer/footer.component";
-import { SidebarComponent } from "../sidebar/sidebar.component";
 import { UserauthService } from "../services/userauth.service";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ToastrService } from "ngx-toastr";
@@ -11,10 +11,9 @@ import { FormsModule } from "@angular/forms";
 @Component({
   selector: "app-withdraw",
   standalone: true,
-  imports: [
+  imports: [SidebarComponent, 
     HeaderComponent,
     FooterComponent,
-    SidebarComponent,
     CommonModule,
     FormsModule,
   ],

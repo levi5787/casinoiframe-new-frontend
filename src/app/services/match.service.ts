@@ -25,7 +25,7 @@ export class MatchService {
     if (this.username) {
       return this.username;
     } else {
-      let token = localStorage.getItem('token')
+      let token = sessionStorage.getItem('token')
       let payload = JSON.parse(this.GetTokenDecoded(token))
       this.username = payload?.username
       return this.username

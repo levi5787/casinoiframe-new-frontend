@@ -11,18 +11,11 @@ export class AuthGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+      // No login page in the iframe: missing/expired token goes to the expired page.
       if(!this.auth.getToken()||!this.auth.authStatus()){
-        this.router.navigate(['/login'])
-        return false;
-      }else{
-        if (localStorage.getItem("first")) {
-          let url = state.url.split('/').pop()
-          if (url && url != 'changepasswordlogin') {
-            this.router.navigate(['changepasswordlogin'])
-          }
-        }
-        return true;
+        return this.router.createUrlTree(['/session-expired']);
       }
+      return true;
   }
   
 }

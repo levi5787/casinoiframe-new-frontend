@@ -1,9 +1,9 @@
+import { SidebarComponent } from '../sidebar/sidebar.component';
 import { Component, inject } from '@angular/core';
 import { Router, RouterOutlet, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
-import { SidebarComponent } from '../sidebar/sidebar.component';
 import { UserauthService } from '../services/userauth.service';
 import { ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-secure-auth',
   standalone: true,
-  imports: [FormsModule, HeaderComponent, FooterComponent, SidebarComponent, CommonModule],
+  imports: [SidebarComponent, FormsModule, HeaderComponent, FooterComponent, CommonModule],
   templateUrl: './secure-auth.component.html',
   styleUrl: './secure-auth.component.css'
 })

@@ -1,9 +1,9 @@
+import { SidebarComponent } from '../sidebar/sidebar.component';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
-import { SidebarComponent } from '../sidebar/sidebar.component';
 import { MatchService } from '../services/match.service';
 import { CommonModule } from '@angular/common';
 import { MmenutabComponent } from "../mmenutab/mmenutab.component";
@@ -32,7 +32,7 @@ function sortProviders(values: string[]): string[] {
 @Component({
   selector: 'app-virtual-list',
   standalone: true,
-  imports: [FormsModule, CommonModule, HeaderComponent, FooterComponent, SidebarComponent, MmenutabComponent],
+  imports: [SidebarComponent, FormsModule, CommonModule, HeaderComponent, FooterComponent, MmenutabComponent],
   templateUrl: './virtual-list.component.html',
   styleUrl: './virtual-list.component.css'
 })

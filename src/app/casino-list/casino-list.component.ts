@@ -1,9 +1,9 @@
+import { SidebarComponent } from '../sidebar/sidebar.component';
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { Router, RouterOutlet, RouterLink, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
-import { SidebarComponent } from '../sidebar/sidebar.component';
 import { CommonModule } from '@angular/common';
 import { MmenutabComponent } from "../mmenutab/mmenutab.component";
 import { ToastrService } from 'ngx-toastr';
@@ -11,7 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-casino-list',
   standalone: true,
-  imports: [FormsModule, RouterLink, HeaderComponent, FooterComponent, SidebarComponent, CommonModule, MmenutabComponent],
+  imports: [SidebarComponent, FormsModule, RouterLink, HeaderComponent, FooterComponent, CommonModule, MmenutabComponent],
   templateUrl: './casino-list.component.html',
   styleUrl: './casino-list.component.css'
 })
@@ -19,6 +19,7 @@ export class CasinoListComponent {
 
   casinoListTab = ""; loader=true;
   Id = "";
+  token = "";
   navItems = [
     { name: 'All Casino', id: '35' },
     { name: 'Roulette', id: '31' },
@@ -50,6 +51,8 @@ export class CasinoListComponent {
 
   ngOnInit() {
     this.activatedRoute.params.subscribe((params: any) => {
+      // Lobby is opened as /casino/lobby/:token; game links carry the same token.
+      this.token = params['token'] || sessionStorage.getItem('token') || "";
       if (params['id']) {
         this.Id = params['id'];
         this.activeIndex = this.navItems.findIndex((f: any) => f.id == this.Id)

@@ -1,3 +1,4 @@
+import { SidebarComponent } from '../sidebar/sidebar.component';
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
@@ -7,12 +8,11 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { MatchService } from '../services/match.service';
 import { CommonModule } from '@angular/common';
-import { SidebarComponent } from '../sidebar/sidebar.component';
 
 @Component({
   selector: 'app-mac88',
   standalone: true,
-  imports: [HeaderComponent, FooterComponent, CommonModule, SidebarComponent],
+  imports: [SidebarComponent, HeaderComponent, FooterComponent, CommonModule],
   templateUrl: './mac88.component.html',
   styleUrl: './mac88.component.css'
 })

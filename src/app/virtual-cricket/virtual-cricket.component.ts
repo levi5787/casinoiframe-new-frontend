@@ -1,3 +1,4 @@
+import { SidebarComponent } from '../sidebar/sidebar.component';
 import { Component, ChangeDetectorRef, inject, NgModule, OnInit, HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -11,14 +12,13 @@ import { SocketService } from '../services/socket.service';
 import { UserauthService } from '../services/userauth.service'; 
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
-import { SidebarComponent } from '../sidebar/sidebar.component';
 import { ContainerComponent } from '../container/container.component';
 import { ShortNumberPipe } from '../pipes/short-number.pipe';
 
 @Component({
   selector: 'app-virtual-cricket',
   standalone: true,
-  imports: [FormsModule, CommonModule, HeaderComponent, FooterComponent, SidebarComponent,ShortNumberPipe],
+  imports: [SidebarComponent, FormsModule, CommonModule, HeaderComponent, FooterComponent,ShortNumberPipe],
   templateUrl: './virtual-cricket.component.html',
   styleUrl: './virtual-cricket.component.css'
 })

@@ -1,3 +1,4 @@
+import { SidebarComponent } from '../sidebar/sidebar.component';
 import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterOutlet, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -5,7 +6,6 @@ import { HttpClient } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
-import { SidebarComponent } from '../sidebar/sidebar.component';
 import { ContainerComponent } from '../container/container.component';
 import { UserauthService } from '../services/userauth.service';
 import { ToastrService } from 'ngx-toastr';
@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-cpass-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, RouterOutlet, HttpClientModule, HeaderComponent, FooterComponent, SidebarComponent, ContainerComponent],
+  imports: [SidebarComponent, CommonModule, FormsModule, RouterLink, RouterOutlet, HttpClientModule, HeaderComponent, FooterComponent, ContainerComponent],
   templateUrl: './cpass-home.component.html',
   styleUrl: './cpass-home.component.css'
 })

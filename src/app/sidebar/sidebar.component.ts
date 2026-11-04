@@ -1,32 +1,24 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { UserauthService } from '../services/userauth.service';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
-  isRacingSportsOpen = true;
-  isOthersOpen = true;
-  isSportsOpen = true;
-  isHorseOpen = false;
+  isMenuOpen = true;
+  token: string | null = '';
 
-  toggleHorse() {
-    this.isHorseOpen = !this.isHorseOpen;
+  constructor(private userauth: UserauthService) {
+    this.token = this.userauth.getToken();
   }
 
-  toggleRacingSports() {
-    this.isRacingSportsOpen = !this.isRacingSportsOpen
-  }
-
-  toggleOthers() {
-    this.isOthersOpen = !this.isOthersOpen
-  }
-
-  toggleAllSports() {
-    this.isSportsOpen = !this.isSportsOpen
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
   }
 }

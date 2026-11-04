@@ -18,6 +18,8 @@ import { ToastrService } from 'ngx-toastr';
 export class HeaderComponent {
 
   showbalance = true; showexp = true;
+  iframeMode = true; // casino iframe: hide sports/account menus
+  token: string | null = "";
   isSearchInputShow: boolean = false;
   isAccountClicked: boolean = false;
   @Input() username!: string;
@@ -40,7 +42,7 @@ export class HeaderComponent {
   ngOnInit(): void {
     this.username = this.userauth.getUsername();
     this.dwstatus = this.userauth.getUserDetails().dwstatus;
-    this.socket_service.listenForceLogout(); // real-time single-session force logout
+    this.token = this.userauth.getToken();
     this.userauth.getUserBalance(); this.getBalance(); this.getExposure();
     setTimeout(() => {
       this.getBalance(); this.getExposure();
