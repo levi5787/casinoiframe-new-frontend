@@ -3,7 +3,6 @@ import { Component, inject } from "@angular/core";
 import { Router, RouterOutlet, RouterLink } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { HeaderComponent } from "../header/header.component";
-import { FooterComponent } from "../footer/footer.component";
 import { UserauthService } from "../services/userauth.service";
 import { CommonModule } from "@angular/common";
 import { ToastrService } from "ngx-toastr";
@@ -15,7 +14,6 @@ import { ToastrService } from "ngx-toastr";
     FormsModule,
     CommonModule,
     HeaderComponent,
-    FooterComponent,
   ],
   templateUrl: "./current-bet.component.html",
   styleUrl: "./current-bet.component.css",

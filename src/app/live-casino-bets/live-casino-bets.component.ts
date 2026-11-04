@@ -3,7 +3,6 @@ import { Component, inject } from '@angular/core';
 import { Router, RouterOutlet, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
-import { FooterComponent } from '../footer/footer.component';
 import { UserauthService } from '../services/userauth.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 declare var $: any;
@@ -11,7 +10,7 @@ declare var $: any;
 @Component({
   selector: 'app-live-casino-bets',
   standalone: true,
-  imports: [SidebarComponent, FormsModule, HeaderComponent, FooterComponent],
+  imports: [SidebarComponent, FormsModule, HeaderComponent],
   templateUrl: './live-casino-bets.component.html',
   styleUrl: './live-casino-bets.component.css'
 })

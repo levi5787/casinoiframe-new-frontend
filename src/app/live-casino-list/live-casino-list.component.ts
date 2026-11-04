@@ -3,7 +3,6 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
-import { FooterComponent } from '../footer/footer.component';
 import { MatchService } from '../services/match.service';
 import { CommonModule } from '@angular/common';
 import { MmenutabComponent } from "../mmenutab/mmenutab.component";
@@ -40,7 +39,7 @@ function sortWithPriority(values: string[], priority: string[]): string[] {
 @Component({
   selector: 'app-live-casino-list',
   standalone: true,
-  imports: [SidebarComponent, FormsModule, CommonModule, HeaderComponent, FooterComponent, MmenutabComponent],
+  imports: [SidebarComponent, FormsModule, CommonModule, HeaderComponent, MmenutabComponent],
   templateUrl: './live-casino-list.component.html',
   styleUrl: './live-casino-list.component.css'
 })

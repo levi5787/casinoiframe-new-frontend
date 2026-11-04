@@ -2,7 +2,6 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
-import { FooterComponent } from '../footer/footer.component';
 import { CommonModule } from '@angular/common';
 import { MmenutabComponent } from "../mmenutab/mmenutab.component";
 import { ToastrService } from 'ngx-toastr';
@@ -10,7 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-casino-list-virtual',
   standalone: true,
-  imports: [SidebarComponent, HeaderComponent, FooterComponent, CommonModule, RouterLink, MmenutabComponent],
+  imports: [SidebarComponent, HeaderComponent, CommonModule, RouterLink, MmenutabComponent],
   templateUrl: './casino-list-virtual.component.html',
   styleUrl: './casino-list-virtual.component.css'
 })

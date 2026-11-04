@@ -1,5 +1,4 @@
 import { Routes } from "@angular/router";
-import { HomeComponent } from "./home/home.component";
 import { CasinoComponent } from "./casino/casino.component";
 import { SuperoverComponent } from "./casino/superover/superover.component";
 import { Race20Component } from "./casino/race20/race20.component";
@@ -32,13 +31,9 @@ import { Lucky7Component } from "./casino/lucky7/lucky7.component";
 import { Dt202Component } from "./casino/dt202/dt202.component";
 import { PokerComponent } from "./casino/poker/poker.component";
 import { Poker20Component } from "./casino/poker20/poker20.component";
-import { WithdrawComponent } from "./withdraw/withdraw.component";
-import { WithdrawStatementComponent } from "./withdraw-statement/withdraw-statement.component";
 import { CurrentBetComponent } from "./current-bet/current-bet.component";
-import { CasinoResultsComponent } from "./casino-results/casino-results.component";
 import { LiveCasinoBetsComponent } from "./live-casino-bets/live-casino-bets.component";
 import { CpassHomeComponent } from "./cpass-home/cpass-home.component";
-import { VirtualCricketComponent } from "./virtual-cricket/virtual-cricket.component";
 import { SecureAuthComponent } from "./secure-auth/secure-auth.component";
 import { CasinoListComponent } from "./casino-list/casino-list.component";
 import { CasinoListVirtualComponent } from "./casino-list-virtual/casino-list-virtual.component";
@@ -46,7 +41,6 @@ import { CasinoListVirtualComponent } from "./casino-list-virtual/casino-list-vi
 // import { LiveCasinoListComponent } from './live-casino-list/live-casino-list.component';
 // import { SlotListComponent } from './slot-list/slot-list.component';
 // import { VirtualListComponent } from './virtual-list/virtual-list.component';
-import { CrashListComponent } from "./crash-list/crash-list.component";
 import { AuthGuard } from "./guards/auth.guard";
 import { tokenGuard } from "./guards/token.guard";
 import { SessionExpiredComponent } from "./session-expired/session-expired.component";
@@ -82,7 +76,6 @@ import { Roulette13Component } from "./casino/roulette13/roulette13.component";
 import { TeenpattiJokerComponent } from "./casino/teenpatti-joker/teenpatti-joker.component";
 import { Race17Component } from "./casino/race17/race17.component";
 import { UnlimitedJoker2020Component } from "./casino/unlimited-joker-20-20/unlimited-joker-20-20.component";
-import { Mac88Component } from "./mac88/mac88.component";
 import { Cmeter1Component } from "./casino/cmeter1/cmeter1.component";
 import { Roulette12Component } from "./casino/roulette12/roulette12.component";
 import { Race2Component } from "./casino/race2/race2.component";
@@ -198,13 +191,6 @@ export const routes: Routes = [
     component: CasinoListComponent,
     canActivate: [tokenGuard],
   },
-  { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
-
-  {
-    path: "int-play/:gameId",
-    component: Mac88Component,
-    canActivate: [AuthGuard],
-  },
 
   {
     path: "casino",
@@ -218,23 +204,8 @@ export const routes: Routes = [
   },
 
   {
-    path: "withdraw-statement",
-    component: WithdrawStatementComponent,
-    canActivate: [AuthGuard],
-  },
-  {
     path: "current-bet",
     component: CurrentBetComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: "casino-results",
-    component: CasinoResultsComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: "casino-results/:eventId",
-    component: CasinoResultsComponent,
     canActivate: [AuthGuard],
   },
   {
@@ -294,11 +265,6 @@ export const routes: Routes = [
   // },
   // { path: "slot-list", component: SlotListComponent, canActivate: [AuthGuard] },
   // { path: "virtual-list", component: VirtualListComponent, canActivate: [AuthGuard] },
-  {
-    path: "crash-list",
-    component: CrashListComponent,
-    canActivate: [AuthGuard],
-  },
   {
     path: "secure-auth",
     component: SecureAuthComponent,

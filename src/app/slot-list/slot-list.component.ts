@@ -3,7 +3,6 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
-import { FooterComponent } from '../footer/footer.component';
 import { MatchService } from '../services/match.service';
 import { CommonModule } from '@angular/common';
 import { MmenutabComponent } from "../mmenutab/mmenutab.component";
@@ -32,7 +31,7 @@ function sortProviders(values: string[]): string[] {
 @Component({
   selector: 'app-slot-list',
   standalone: true,
-  imports: [SidebarComponent, FormsModule, CommonModule, HeaderComponent, FooterComponent, MmenutabComponent],
+  imports: [SidebarComponent, FormsModule, CommonModule, HeaderComponent, MmenutabComponent],
   templateUrl: './slot-list.component.html',
   styleUrl: './slot-list.component.css'
 })

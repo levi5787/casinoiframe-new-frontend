@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
 import { HeaderComponent } from '../header/header.component';
-import { FooterComponent } from '../footer/footer.component';
 import { ContainerComponent } from '../container/container.component';
 import { UserauthService } from '../services/userauth.service';
 import { ToastrService } from 'ngx-toastr';
@@ -14,7 +13,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-cpass-home',
   standalone: true,
-  imports: [SidebarComponent, CommonModule, FormsModule, RouterLink, RouterOutlet, HttpClientModule, HeaderComponent, FooterComponent, ContainerComponent],
+  imports: [SidebarComponent, CommonModule, FormsModule, RouterLink, RouterOutlet, HttpClientModule, HeaderComponent, ContainerComponent],
   templateUrl: './cpass-home.component.html',
   styleUrl: './cpass-home.component.css'
 })
