@@ -1,0 +1,7 @@
+/* Left sidebar removed: let the casino page (video + markets) take the full width.
+   Desktop only — below 1200px the layout is already full width. */
+@media only screen and (min-width: 1200px) {
+  .center-main-container.casino-page {
+    width: 100%;
+  }
+}

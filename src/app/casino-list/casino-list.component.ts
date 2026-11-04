@@ -1,4 +1,3 @@
-import { SidebarComponent } from '../sidebar/sidebar.component';
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { Router, RouterOutlet, RouterLink, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -10,7 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-casino-list',
   standalone: true,
-  imports: [SidebarComponent, FormsModule, RouterLink, HeaderComponent, CommonModule, MmenutabComponent],
+  imports: [FormsModule, RouterLink, HeaderComponent, CommonModule, MmenutabComponent],
   templateUrl: './casino-list.component.html',
   styleUrl: './casino-list.component.css'
 })

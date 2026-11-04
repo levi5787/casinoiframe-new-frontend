@@ -1,0 +1,16 @@
+
+/* Left sidebar removed: game list uses the full width.
+   Desktop only — below 1200px the layout is already full width. */
+@media only screen and (min-width: 1200px) {
+  .center-main-container.list-page {
+    width: 100%;
+  }
+}
+
+/* Smaller game tiles on desktop: 10 per row instead of 7.
+   Tiles are square (banner height follows width), so height shrinks too. */
+@media only screen and (min-width: 1200px) {
+  .casino-list-item {
+    width: calc(10% - 2px);
+  }
+}

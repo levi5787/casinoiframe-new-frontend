@@ -36,7 +36,6 @@ import { LiveCasinoBetsComponent } from "./live-casino-bets/live-casino-bets.com
 import { CpassHomeComponent } from "./cpass-home/cpass-home.component";
 import { SecureAuthComponent } from "./secure-auth/secure-auth.component";
 import { CasinoListComponent } from "./casino-list/casino-list.component";
-import { CasinoListVirtualComponent } from "./casino-list-virtual/casino-list-virtual.component";
 // import { FantasyListComponent } from './fantasy-list/fantasy-list.component';
 // import { LiveCasinoListComponent } from './live-casino-list/live-casino-list.component';
 // import { SlotListComponent } from './slot-list/slot-list.component';
@@ -218,31 +217,7 @@ export const routes: Routes = [
     component: LiveCasinoBetsComponent,
     canActivate: [AuthGuard],
   },
-  {
-    path: "casino-list",
-    component: CasinoListComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: "casino-list/LC/4",
-    component: CasinoListComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: "casino-list/LC/4/:id",
-    component: CasinoListComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: "casino-list/LC/19",
-    component: CasinoListVirtualComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: "casino-list/LC/19/:id",
-    component: CasinoListVirtualComponent,
-    canActivate: [AuthGuard],
-  },
+
   // {
   //   path: "fantasy-list",
   //   component: FantasyListComponent,

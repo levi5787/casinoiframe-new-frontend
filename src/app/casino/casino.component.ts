@@ -1,4 +1,3 @@
-import { SidebarComponent } from '../sidebar/sidebar.component';
 import { Component, inject } from '@angular/core';
 import { Router, RouterOutlet, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -10,7 +9,7 @@ import { ContainerComponent } from '../container/container.component';
 @Component({
   selector: 'app-casino',
   standalone: true,
-  imports: [SidebarComponent, FormsModule, RouterLink, RouterOutlet, HttpClientModule, HeaderComponent, ContainerComponent],
+  imports: [FormsModule, RouterLink, RouterOutlet, HttpClientModule, HeaderComponent, ContainerComponent],
   templateUrl: './casino.component.html',
   styleUrl: './casino.component.css'
 })

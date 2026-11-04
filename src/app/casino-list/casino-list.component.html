@@ -5,9 +5,6 @@
   <div class="wrapper">
     <app-header></app-header>
     <div class="main-container">
-      <div class="sidebar left-sidebar">
-        <app-sidebar></app-sidebar>
-      </div>
       <!-- <app-mmenutab style="width: 100%;" class="d-xl-none"></app-mmenutab> -->
       <!-- <ul class="nav nav-tabs d-xl-none menu-tabs">
         <li class="nav-item"><a class="nav-link" routerLink="/sports-book/33">Lottery</a></li>
@@ -24,13 +21,8 @@
           <div class="casino-tab-list d-xl-none">
             <ul class="nav nav-pills casino-tab" id="casino-tab">
               <li class="nav-item">
-                <a class="nav-link active" routerLink="/casino-list/LC/4"
+                <a class="nav-link active" [routerLink]="['/casino/lobby', token]"
                   ><span>Our Casino</span></a
-                >
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" routerLink="/casino-list/LC/19"
-                  ><span>Our Virtual</span></a
                 >
               </li>
             </ul>

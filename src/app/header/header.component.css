@@ -1,25 +1,133 @@
-.navbar-expand .navbar-nav {
-  flex-direction: row;
+.app-header {
+  width: 100%;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 
-.navbar-nav {
+.app-navbar {
   display: flex;
-  flex-direction: column;
-  padding-left: 0;
-  margin-bottom: 0;
-  list-style: none;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 56px;
+  padding: 8px 15px;
 }
 
-.withdraw-btn,
-.deposit-btn {
-  padding: 5px 10px;
-  border-radius: 5px;
-
-  margin: 0 10px;
+.nav-home {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
+  color: var(--text-primary);
+  border-radius: 4px;
 }
 
-.withdraw-btn a,
-.deposit-btn a {
-  text-decoration: none;
-  color: white;
+.nav-home:hover {
+  opacity: 0.8;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  min-width: 0;
+}
+
+.nav-stats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nav-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  white-space: nowrap;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.label-short {
+  display: none;
+}
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  min-width: 0;
+  max-width: 180px;
+}
+
+.user-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+/* Tablet */
+@media (max-width: 991px) {
+  .app-navbar {
+    min-height: 50px;
+    padding: 6px 12px;
+  }
+  .nav-right,
+  .nav-stats {
+    gap: 12px;
+  }
+  .nav-stat,
+  .nav-user {
+    font-size: 13px;
+  }
+  .nav-user {
+    max-width: 140px;
+  }
+}
+
+/* Mobile: Bal/Exp stacked in one right-aligned column + compact user chip */
+@media (max-width: 575px) {
+  .app-navbar {
+    min-height: 46px;
+    padding: 4px 10px;
+  }
+  .nav-home {
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+  }
+  .nav-right {
+    gap: 10px;
+  }
+  .nav-stats {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+  }
+  .nav-stat {
+    font-size: 12px;
+    gap: 3px;
+  }
+  .label-full {
+    display: none;
+  }
+  .label-short {
+    display: inline;
+  }
+  .nav-user {
+    font-size: 12px;
+    max-width: 100px;
+    padding: 4px 8px;
+    border: 1px solid currentColor;
+    border-radius: 4px;
+  }
 }
